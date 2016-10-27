@@ -5,7 +5,7 @@ import mediaApp from './src/reducers/reducer';
 import initState from './src/initState';
 import App from './src/components/App';
 
-const store = createStore(mediaApp);
+const store = createStore(mediaApp, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 initState(store);
 
 store.subscribe(render);

@@ -3,7 +3,8 @@ const library = (
 		id: '',
 		tracks: [],
 		genres: [],
-		search: []
+		search: [],
+		filter: ''
 	}, action) => {
 	switch (action.type) {
 		case 'IMPORT_LIB':
@@ -12,9 +13,13 @@ const library = (
 				tracks: action.tracks,
 				genres: action.genres
 			});
-		case 'FILTER_LIB':
+		case 'SEARCH_LIB':
 			return Object.assign({}, library, {
 				search: action.results
+			});
+		case 'SET_FILTER':
+			return Object.assign({}, library, {
+				filter: action.filter
 			});
 		default:
 			return library;

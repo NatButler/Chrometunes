@@ -1,7 +1,14 @@
 import React from 'react';
-import { getAlbum } from '../library';
+import { addTrack, addAlbum, addRemAlbum, playTrack, skipTrack } from '../actions/actions';
 
 const { Component } = React;
+
+
+class VisibleTable extends Component {
+	render() {
+		
+	}
+}
 
 
 const Table = ({store, state}) => {
@@ -17,53 +24,46 @@ const Table = ({store, state}) => {
 						<th>Title</th>
 					</tr>
 				</thead>
-				<TableBody store={store} tracks={state.library.search} />
+				<TableBody store={store} state={state} tracks={state.library.search} />
 				<TableFooter state={state.library.search.length} />
 			</table>
 		</div>
 	);
 }
 
-const TableBody = ({store, tracks}) => {
-	let rows = tracks.map((trk, i) => {
-		return <TableRow key={i} track={trk} store={store} tracks={tracks} />
+const TableBody = ({store, state, tracks}) => {
+	let rows = tracks.map( (trk, i) => {
+		return <TableRow key={i} track={trk} store={store} tracks={tracks} state={state} />
 	});
 	return <tbody>{rows}</tbody>;
 }
 
-const TableRow = ({track, store, tracks}) => {
+const TableRow = ({track, store, tracks, state}) => {
 	return (
 		<tr 
 			data-id={track.PId} 
-			onDoubleClick={() => {
-				let album = getAlbum(track.Album);
-				store.dispatch({
-					type: 'ADD_REM_ALBUM',
-					album: album,
-					index: track.TrackNum -1
-				});
+			onDoubleClick={ () => {
+				store.dispatch( addRemAlbum(track) );
+				store.dispatch( playTrack(state.playmode, track) );
 			}}>
 			<td>{track.Artist}</td>
 			<td>{track.Duration}</td>
 			<td className="album">
 				<a href="#" className="album" onClick={(e) => {
 	                e.preventDefault;
-					let album = getAlbum(track.Album);
-					store.dispatch({
-						type: 'ADD_ALBUM',
-						album: album
-					})
-				}}>{track.Album}</a>
+					store.dispatch( addAlbum(track.Album) )
+				}}>
+					{track.Album}
+				</a>
 			</td>
 			<td>{track.TrackNum}</td>
 			<td className="title">
 				<a href="#" className="track" onClick={(e) => {
 	           		e.preventDefault;
-					store.dispatch({
-						type: 'ADD_TRACK',
-						track: track
-					});
-				}}>{track.Name}</a>
+					store.dispatch( addTrack(track) );
+				}}>
+					{track.Name}
+				</a>
 			</td>
 		</tr>
 	);

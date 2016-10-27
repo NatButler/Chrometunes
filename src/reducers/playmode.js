@@ -1,13 +1,12 @@
-const playmode = (state = 'NORMAL', action) => {
+const playmode = (playmode = 'normal', action) => {
 	switch (action.type) {
 		case 'SET_PLAYMODE':
-			return action.playmode;
-			// if (state.playmode == 'NORMAL') { return 'REAPEAT_ALL'; }
-			// else if (state.playmode == 'REAPEAT_ALL') { return 'REPEAT_ONE'; }
-			// else if (state.playmode == 'REPEAT_ONE') { return 'SHUFFLE'; }
-			// else { return 'NORMAL'; }
+			if (playmode == 'normal') { return playmode = 'repeat'; }
+			else if (playmode == 'repeat') { return playmode = 'refresh'; }
+			else if (playmode == 'refresh') { return playmode = 'random'; }
+			else { return playmode = 'normal'; }
 		default:
-			return state;
+			return playmode;
 	}
 }
 

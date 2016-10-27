@@ -1,4 +1,4 @@
-const upnext = (upnext = [], action, index = 0) => {
+const upnext = (upnext = [], action) => {
 	switch (action.type) {
 		case 'ADD_TRACK':
 			return [
@@ -16,7 +16,7 @@ const upnext = (upnext = [], action, index = 0) => {
 			];
 		case 'LOAD_PLAYLIST':
 			return [
-				...action.list
+				...action.tracks
 			];
 		case 'DEL_TRACK':
 			return [
@@ -26,7 +26,19 @@ const upnext = (upnext = [], action, index = 0) => {
 		case 'CLEAR_TRACKS':
 			return [];
 		case 'SKIP_TRACK':
-			return upnext.slice(1);
+			switch (action.playmode) {
+				case 'normal':
+					return upnext.slice(1);
+				case 'repeat':
+					return [
+						...upnext.slice(1),
+						...upnext.slice(0, 1)
+					];
+				case 'random':
+					return upnext;
+				default:
+					return upnext;
+			}
 		default:
 			return upnext;
 	}
