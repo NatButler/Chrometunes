@@ -4,12 +4,13 @@ import Table from './table';
 import SidePanel from './sidePanel';
 
 
-const App = ({store, state}) => (
+const App = ({store}) => (
 	<div>
-		<Header store={store} state={state} />
-		<Table store={store} state={state} />
-		<SidePanel store={store} state={state} />
+		<Header store={store} />
+		<Table store={store} />
+		<SidePanel store={store} />
 	</div>
 );
+
 
 export default App

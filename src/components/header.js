@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Button } from './components';
-import { search } from '../library';
-import { skipTrack, playTrack, filterLib, filterGenre } from '../actions/actions';
+import { search, lib } from '../library';
+import { filterLib, filterGenre, setFilter, filter, clearSearch, setQuery } from '../actions/actions';
 
-const { Component } = React;
-
-
+/**
+ * text input / filter interaction needs addressing
+ */
 class Header extends Component {
 	constructor({store}) {
 		super();
@@ -15,101 +15,75 @@ class Header extends Component {
 
 	render() {
 		const state = this.store.getState();
-		let genreList = state.library.genres.map( (genre, i) => {
-			return <option key={i} value={genre}>{genre}</option>
+
+		let genreList = lib.genres.map( (genre, i) => {
+			let selected = (genre == state.library.filter);
+			return <option key={i} value={genre} selected={selected}>{genre}</option>
 		});
 
 		return (
 			<nav className="navbar navbar-default">
-	                <input
-	                	ref={node => {
-	                		this.input = node;
-	                	}}
-	                	type="text"
-	                	name="q"
-	                	id="q"
-	                	spellCheck="false"
-	                	autoComplete="off"
-	                	autoFocus="true"
-	                	onKeyUp={ () => {
-	                		this.handleSearch(this.input.value, this.select.value);
-	                	}}
-	                />
+				<img src="img/logo.png" alt="logo" className="logo" />
+				
+                <input
+                	ref={node => {
+                		this.input = node;
+                	}}
+                	type="text"
+                	name="q"
+                	id="q"
+                	spellCheck="false"
+                	autoComplete="off"
+                	autoFocus="true"
+                	placeholder={state.library.query}
+                	onKeyUp={ () => {
+                		this.handleSearch(this.input.value, this.select.value);
+                	}}
+                />
 
-	                         
-	                <select 
-			        	ref={node => {
-			        		this.select = node;
-			        	}}
-			        	name="genres"
-			        	className="form-inline"
-			        	id="genres"
-			        	onChange={ () => {
-			        		this.store.dispatch({
-			        			type: 'SET_FILTER',
-			        			filter: this.select.value
-			        		});
-			        	}}
-			        >
-			        	<option defaultValue="" value="">Genres</option>
-			        	{genreList}
-			        </select>
-
-	                <div id="controls">
-						<Button
-					        className={'btn btn-default ' + state.playmode} 
-							icon="step-forward"
-							disabled={!state.upnext.length ? 'disabled' : ''}
-							handler={ () => {
-				              	this.store.dispatch( playTrack(state.playmode, state.upnext[0]) );
-				              	this.store.dispatch( skipTrack(state.playmode) );
-			            	}}
-						/>
-
-						<Button
-					        className={'btn btn-default ' + state.playmode}
-				        	icon={(state.playmode == 'normal') ? 'repeat' : state.playmode + ' text-success'}
-				        	handler={ () => {
-				            	this.store.dispatch({ type: 'SET_PLAYMODE' });
-				        	}}
-						/>
-					</div>
+                <select
+		        	ref={node => {
+		        		this.select = node;
+		        	}}
+		        	name="genres"
+		        	className="form-inline"
+		        	id="genres"
+		        	onChange={ () => { 
+		        		this.store.dispatch( setFilter(this.select.value) );
+		        		this.store.dispatch( filter(this.select.value, 'Genre', state.library.search) );
+		        	}}
+		        >
+		        	<option value="">Library</option>
+		        	{genreList}
+		        </select>
 			</nav>
 		);
 	}
 
-	handleSearch(q, filter) {
+	handleSearch(q, genreFilter) {
 		clearTimeout( this.timer );
-		if (!q.length) { this.store.dispatch( filterLib() ) }
+		if (!q.length) { 
+			this.store.dispatch( clearSearch() );
+			this.store.dispatch( filter(this.select.value, 'Genre', this.store.getState().library.search) );
+		}
 		else {
 			this.timer = (q.length >= 3) && setTimeout( () => {
-				this.store.dispatch( filterLib(search(q, filter)) );
+				let results = search(q);
+
+				this.store.dispatch( setQuery(q) );
+
+				if (genreFilter) {
+					this.store.dispatch( filterLib( results ) );
+					this.store.dispatch( filter( genreFilter, 'Genre', results ) );					
+				}
+				else {
+					this.store.dispatch( filterLib( results ) );
+				}
+				
 			}, 500);
 		}
 	}
 }
 
-// const GenreSelect = ({store, genres}) => {
-// 	// <GenreSelect store={this.store} genres={state.library.genres} />
-// 	let select, genreList = genres.map( (genre, i) => {
-// 		return <option key={i} value={genre}>{genre}</option>
-// 	});
-// 	return (
-//         <select 
-//         	ref={node => {
-//         		select = node;
-//         	}}
-//         	name="genres"
-//         	className="form-inline"
-//         	id="genres"
-//         	onChange={ () => {
-//         		store.dispatch( filterGenre(select.value) )
-//         	}}
-//         >
-//         	<option defaultValue="">Genres</option>
-//         	{genreList}
-//         </select>
-// 	);
-// }
 
 export default Header

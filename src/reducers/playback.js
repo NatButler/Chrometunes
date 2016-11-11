@@ -1,13 +1,17 @@
 const playback = (
 	playback = {
 		state: '',
-		track: ''
+		track: '',
+		volume: 1
 	}, action) => {
 	switch (action.type) {
-		case 'CURRENT_TRACK':
+		case 'PLAY_TRACK':
 			return Object.assign({}, playback, {
-				track: action.track,
-				state: 'play'
+				track: action.track
+			});
+		case 'SET_PLAYBACK':
+			return Object.assign({}, playback, {
+				state: action.state
 			});
 		case 'TOGGLE_PLAYBACK':
 			if ( playback.state == 'pause' ) {
@@ -20,6 +24,10 @@ const playback = (
 					state: 'pause'
 				});
 			}
+		case 'SET_VOL': 
+			return Object.assign({}, playback, {
+				volume: action.volume
+			});
 		default:
 			return playback;
 	}

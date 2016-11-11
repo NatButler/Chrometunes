@@ -1,54 +1,56 @@
 import React from 'react';
 import { Button } from './components';
-import { delTrack, saveList, filterArtist, filterAlbum } from '../actions/actions';
+import { delTrack, saveList, filterArtist, filterAlbum, togglePlayback, clearTracks } from '../actions/actions';
 
 
-const UpNext = ({store, state}) => {
-	let currentTrack = (state.playback.track) ? <NowPlaying playback={state.playback} store={store} /> : '';
-	let tracks = state.upnext.map( (trk, i) => {
-		return (
-			<li key={i}>
-				<Button
-					className="close"
-					icon="remove-circle"
-					handler={ () => {
-						store.dispatch( delTrack(i) );
-					}}
-				/>
-				<UpNextItem index={i} trk={trk} store={store} />
-			</li>
-		);
-	});
+const UpNext = ({store}) => {
+	const state = store.getState();
+
+	let currentTrack = (state.playback.track) ? <NowPlaying store={store} playback={state.playback} /> : '',
+		tracks = state.upnext.map( (trk, i) => {
+			return (
+				<li key={i}>
+					<Button
+						className="close"
+						icon="remove-circle"
+						handler={ () => {
+							store.dispatch( delTrack(i) );
+						}}
+					/>
+					<UpNextItem store={store} trk={trk} />
+				</li>
+			);
+		});
 
 	return (
 	    <div id="up-next" className="tab-pane active" role="tab-pane">
-	    	{currentTrack}
         	<ul id="up-next-ul">
+		    	{currentTrack}
         		{tracks}
         	</ul>
-        	<UpNextControls store={store} />
+        	<UpNextControls store={store} state={state} />
         </div>
 	);
 }
 
-const NowPlaying = ({playback, store}) => {
+const NowPlaying = ({store, playback}) => {
 	const audio = document.getElementById('player');
 	return (
-		<div id="current-track">
+		<li id="current-track">
 			<Button 
 				icon={(playback.state == 'play') ? 'pause' : 'play'}
 				className="playback"
 				handler={ () => {
-					store.dispatch({ type: 'TOGGLE_PLAYBACK' } );
+					store.dispatch( togglePlayback() );
 					(playback.state == 'play') ? audio.pause() : audio.play();
 				}}
 			/>
-			<UpNextItem trk={playback.track} store={store} />
-		</div>
+			<UpNextItem store={store} trk={playback.track} />
+		</li>
 	);
 }
 
-const UpNextItem = ({index, trk, store}) => {
+const UpNextItem = ({store, trk}) => {
 	return (
 		<div className="up-next-item">
 			<h5>
@@ -76,23 +78,24 @@ const UpNextItem = ({index, trk, store}) => {
 	);
 }
 
-const UpNextControls = ({store}) => {
-	let upnext = store.getState().upnext;
+const UpNextControls = ({store, state}) => {
 	return (
 		<footer id="up-next-controls">
 		    <Button
-		    	icon="floppy-disk"
-				disabled={upnext.length ? '' : 'disabled'}
+		    	// icon="floppy-disk"
+		    	label="[ SAVE ]"
+				disabled={state.upnext.length ? '' : 'disabled'}
 				handler={ () => {
-					store.dispatch( saveList(upnext) );
+					store.dispatch( saveList(state.upnext, state.playback.track) );
 				}}
 		    />
 
 			<Button
-				icon="trash"
-				disabled={upnext.length ? '' : 'disabled'}
+				// icon="trash"
+				label="[ CLEAR ]"
+				disabled={state.upnext.length ? '' : 'disabled'}
 		    	handler={ () => {
-		    		store.dispatch({ type: 'CLEAR_TRACKS' });
+		    		store.dispatch( clearTracks() );
 				}}
 			/>
 		</footer>

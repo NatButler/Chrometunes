@@ -1,5 +1,4 @@
-import React from 'react';
-const { Component } = React;
+import React, { Component, PropTypes } from 'react';
 
 
 export class Button extends Component {
@@ -22,18 +21,19 @@ export class Button extends Component {
 }
 
 Button.propTypes = {
-	type: React.PropTypes.string,
-	label: React.PropTypes.string,
-	className: React.PropTypes.string,
-	icon: React.PropTypes.string,
-	disabled: React.PropTypes.string,
-	handler: React.PropTypes.func.isRequired
+	type: PropTypes.string,
+	label: PropTypes.string,
+	className: PropTypes.string,
+	icon: PropTypes.string,
+	disabled: PropTypes.string,
+	handler: PropTypes.func.isRequired
 }
 
 Button.defaultProps = {
 	type: 'button',
 	className: 'btn btn-default active ',
-	label: ''
+	label: '',
+	icon: ''
 }
 
 
@@ -46,31 +46,42 @@ export class Audio extends Component {
 				autoPlay={this.props.autoPlay}
 				preload={this.props.preload}
 				controls
-				ref={(node) => this.audioEl = node}
+				ref={ (node) => {
+					// this.audioEl = node;
+					this.handleControls(node);
+				}}
 				src={this.props.src}
-				onEnded={this.props.handler}
+				onEnded={this.props.endedHandler}
+				onPlay={this.props.playHandler}
+				onPause={this.props.pauseHandler}
 			>
 			</audio>
 		);
 	}
+
+	handleControls(elem) {
+		// volume
+		// position
+		// duration
+	}
 }
 
 Audio.propTypes = {
-	className: React.PropTypes.string,
-	autoPlay: React.PropTypes.string,
-	children: React.PropTypes.array,
-	listenInterval: React.PropTypes.number,
-	onAbort: React.PropTypes.func,
-	onCanPlay: React.PropTypes.func,
-	onCanPlayThrough: React.PropTypes.func,
-	onEnded: React.PropTypes.func,
-	onError: React.PropTypes.func,
-	onListen: React.PropTypes.func,
-	onPause: React.PropTypes.func,
-	onPlay: React.PropTypes.func,
-	onSeeked: React.PropTypes.func,
-	preload: React.PropTypes.string,
-	src: React.PropTypes.string
+	className: PropTypes.string,
+	autoPlay: PropTypes.string,
+	children: PropTypes.array,
+	listenInterval: PropTypes.number,
+	onAbort: PropTypes.func,
+	onCanPlay: PropTypes.func,
+	onCanPlayThrough: PropTypes.func,
+	onEnded: PropTypes.func,
+	onError: PropTypes.func,
+	onListen: PropTypes.func,
+	onPause: PropTypes.func,
+	onPlay: PropTypes.func,
+	onSeeked: PropTypes.func,
+	preload: PropTypes.string,
+	src: PropTypes.string
 }
 
 Audio.defaultProps = {
