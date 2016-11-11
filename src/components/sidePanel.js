@@ -1,12 +1,14 @@
 import React from 'react';
 import UpNext from './upnext';
 import Playlists from './playlists';
-import Footer from './footer';
+import Playback from './playback';
 
 
-const SidePanel = ({store, state}) => {
+const SidePanel = ({store}) => {
+	let state = store.getState();
 	return (
 		<div className="col-md-3" id="side-panel">
+           	<Playback store={store} />
 			<ul className="nav nav-pills">
                 <li className="active">
                 	<a data-toggle="pill" href="#up-next" role="tab">
@@ -19,11 +21,12 @@ const SidePanel = ({store, state}) => {
                 	</a>
                 </li>
             </ul>
+            
             <div className="tab-content">
-	            <UpNext store={store} state={state} />
+	            <UpNext store={store} />
 	            <Playlists store={store} playlists={state.playlists} />
-	            <Footer store={store} state={state} />
 	        </div>
+           	
 		</div>
 	);
 }

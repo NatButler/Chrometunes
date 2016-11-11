@@ -1,4 +1,4 @@
-const playlists = (playlists = [], action) => { // SHOULD BE RETRIEVED FROM LOCAL STORAGE ON PAGE LOAD: SEE EPISODE 2 "Loading initial state"
+const playlists = (playlists = [], action) => {
 	switch (action.type) {
 		case 'SAVE_LIST':
 			let list = {};

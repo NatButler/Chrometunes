@@ -14,7 +14,7 @@ const upnext = (upnext = [], action) => {
 			return [
 				...action.album.slice(action.index)
 			];
-		case 'LOAD_PLAYLIST':
+		case 'LOAD_LIST':
 			return [
 				...action.tracks
 			];
@@ -32,10 +32,8 @@ const upnext = (upnext = [], action) => {
 				case 'repeat':
 					return [
 						...upnext.slice(1),
-						...upnext.slice(0, 1)
+						action.currentTrack
 					];
-				case 'random':
-					return upnext;
 				default:
 					return upnext;
 			}
