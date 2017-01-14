@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import configureStore from './configureStore';
-import App from './components/App';
+import App from './containers/App';
 
 
 const store = configureStore();
@@ -13,4 +13,4 @@ function render() {
 		<App store={store} />, 
 		document.getElementById('root')
 	);	
-}
+}	

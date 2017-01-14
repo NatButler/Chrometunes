@@ -13,20 +13,6 @@ const Playback = ({store}) => {
 
 	return (
 		<div className="playback">
-			<Button
-		        className={'btn btn-default skip '} 
-				icon="step-forward"
-				disabled={!state.upnext.length ? 'disabled' : ''}
-				handler={ () => {
-					if (state.playmode != 'refresh') {
-	              		store.dispatch( playTrack(state.playmode, state.upnext, state.playback.track) );
-	              		store.dispatch( skipTrack(state.playmode, state.playback.track) );
-	              	} else {
-						audioElem.load();
-					}
-            	}}
-			/>
-
 			<Audio
 				className="audio"
 				src={src}
@@ -45,6 +31,20 @@ const Playback = ({store}) => {
 				pauseHandler={ () => {
 					store.dispatch( setPlayback('pause') );
 				}}
+			/>
+			
+			<Button
+		        className={'btn btn-default skip '} 
+				icon="step-forward"
+				disabled={!state.upnext.length ? 'disabled' : ''}
+				handler={ () => {
+					if (state.playmode != 'refresh') {
+	              		store.dispatch( playTrack(state.playmode, state.upnext, state.playback.track) );
+	              		store.dispatch( skipTrack(state.playmode, state.playback.track) );
+	              	} else {
+						audioElem.load();
+					}
+            	}}
 			/>
 			
 			<Button

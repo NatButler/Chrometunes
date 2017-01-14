@@ -65,7 +65,7 @@ thead {
 }
 
 tbody {
-	height: 86vh;
+	height: 87vh;
 	overflow-y: auto;
 	overflow-x: hidden;
 }
@@ -88,7 +88,7 @@ tfoot td {
 .table-condensed>thead>tr>th {
 	padding: 2px;
 	font-size: 14px;
-	font-weight: 600;
+	font-weight: 400;
 }
 
 
@@ -104,13 +104,13 @@ tfoot td {
 
 div.playback {
 	border: 1px solid #ccc;
-	height: 34px;
+	height: 67px;
 	margin-bottom: 9px;
-	background-color: #f7f7f7;
+	background-color: #ccc;
 }
 
 audio {
-	width: 76%;
+	width: 100%;
 	background: #e7e7e7;
 }
 
@@ -135,7 +135,7 @@ audio {
 /* UP NEXT */
 div.tab-content {
 	position: relative;
-	height: 81vh;
+	height: 77vh;
 }
 
 #up-next-ul li#current-track {
@@ -288,14 +288,15 @@ button.btn {
 
 button.skip {
 	position: relative;
-	top: -12px;
+	top: -5px;
 	left: -1px;
+	background: #f7f7f7;
 }
 
 button.playmode {
 	position: relative;
-	top: -12px;
-	right: -4px;
+	top: -5px;
+	right: 2px;
 }
 
 button.close {
@@ -316,6 +317,10 @@ button.normal, button.normal:hover, button.normal:focus {
 
 button.normal:hover {
 	color: green;
+}
+
+button.skip, button.skip:hover, button.skip:focus {
+	outline: none;
 }
 
 button.repeat, button.repeat:hover, button.repeat:focus {

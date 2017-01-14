@@ -14,6 +14,10 @@ const upnext = (upnext = [], action) => {
 			return [
 				...action.album.slice(action.index)
 			];
+		case 'PLAY_FROM':
+			return [
+				...upnext.slice(action.index)
+			];
 		case 'LOAD_LIST':
 			return [
 				...action.tracks

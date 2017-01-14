@@ -13,7 +13,7 @@ class Table extends Component {
 
 	render() {
 		const state = this.store.getState();
-		let tracks = (state.library.filtered.length) ? state.library.filtered : state.library.search;
+		let tracks = state.library.search;
 
 		return (
 			<div className="col-md-9">
@@ -35,7 +35,7 @@ class Table extends Component {
 						</tr>
 					</thead>
 					<TableBody store={this.store} tracks={tracks} colWidths={this.colWidths} />
-					<TableFooter state={state.library.search.length} />
+					<TableFooter searchLen={state.library.search.length} />
 				</table>
 			</div>
 		);
@@ -66,7 +66,7 @@ class Table extends Component {
 	}
 }
 
-const TableBody = ({store, tracks, colWidths}) => {
+const TableBody = ({store, tracks, colWidths}) => {	
 	let rows = tracks.map( (trk, i) => {
 		return <TableRow key={i} store={store} track={trk} colWidths={colWidths} />
 	});
@@ -108,11 +108,11 @@ const TableRow = ({store, track, colWidths}) => {
 	);
 }
 
-const TableFooter = ({resultsLength}) => {
+const TableFooter = ({searchLen}) => {
 	return (
 		<tfoot>
 			<tr>
-				<td colSpan="5">{resultsLength} tracks</td>
+				<td colSpan="5">{searchLen} tracks</td>
 			</tr>
 		</tfoot>
 	);

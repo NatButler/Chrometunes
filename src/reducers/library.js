@@ -1,8 +1,10 @@
 const library = (
 	library = {
 		id: '',
-		query: '',
+		tracks: [],
+		genres: [],
 		search: [],
+		query: '',
 		filtered: [],
 		filter: ''
 	}, action) => {
@@ -10,28 +12,28 @@ const library = (
 		case 'IMPORT_LIB':
 			return Object.assign({}, library, {
 				id: action.id,
-			});
-		case 'SET_QUERY':
-			return Object.assign({}, library, {
-				query: action.query
+				tracks: action.tracks,
+				genres: action.genres
 			});
 		case 'SEARCH_LIB':
 			return Object.assign({}, library, {
-				search: action.results
+				search: action.results,
+				query: action.query
 			});
 		case 'FILTER_LIB':
 			return Object.assign({}, library, {
-				filtered: action.results
-			});
-		case 'SET_FILTER':
-			return Object.assign({}, library, {
+				filtered: action.results,
 				filter: action.filter
 			});
 		case 'CLEAR_SEARCH':
 			return Object.assign({}, library, {
 				search: [],
-				filter: [],
 				query: ''
+			});
+		case 'CLEAR_FILTERED':
+			return Object.assign({}, library, {
+				filtered: [],
+				filter: ''
 			});
 		default:
 			return library;

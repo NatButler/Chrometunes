@@ -1,11 +1,11 @@
 {
   "name": "Chromecast",
   "version": "1.0.0",
-  "description": "Web app for Chromecast iTunes library",
+  "description": "Web app for Chromecasting your iTunes library",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/NatButler/react-player.git"
+    "url": "https://github.com/NatButler/Chrometunes.git"
   },
   "scripts": {
     "start": "webpack-dev-server"

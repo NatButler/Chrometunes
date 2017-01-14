@@ -1,40 +1,37 @@
 import { getAlbum, getArtist, getGenre, trkFilter } from '../library';
 import * as types from '../constants/actionTypes';
+import * as filters from '../constants/filters';
 
 
 // LIBRARY
-export const filterLib = (results = []) => ({ type: types.SEARCH_LIB, results });
-export const setQuery = (query) => ({ type: types.SET_QUERY, query });
-export const filterArtist = (artist) => ({ 
+export const searchLib = (results, query) => ({ 
 	type: types.SEARCH_LIB, 
-	results: getArtist(artist) 
+	results: results, 
+	query: query 
 });
-export const filterAlbum = (album) => ({ 
-	type: types.SEARCH_LIB, 
-	results: getAlbum(album) 
+export const filterLib = (results, filter) => ({ 
+	type: types.FILTER_LIB,
+	results: results,
+	filter: filter
 });
-export const filterGenre = (genre) => ({ 
-	type: types.SEARCH_LIB, 
-	results: getGenre(genre) 
-});
-export const filter = (q, term, tracks) => ({ 
-	type: types.FILTER_LIB, 
-	results: trkFilter(q, term, tracks) 
-});
-export const setFilter = (filter) => ({ type: types.SET_FILTER, filter });
 export const clearSearch = () => ({ type: types.CLEAR_SEARCH });
+export const clearFiltered = () => ({ type: types.CLEAR_FILTERED });
 
 
 // UP NEXT
 export const addTrack = (track) => ({ type: types.ADD_TRACK, track });
 export const addAlbum = (album) => ({
 	type: types.ADD_ALBUM,
-	album: getAlbum(album)
+	album: trkFilter(album, filters.ALBUM)
 });
 export const addRemAlbum = (track) => ({
 	type: types.ADD_REM_ALBUM,
-	album: getAlbum(track.Album),
+	album: trkFilter(track.Album, filters.ALBUM),
 	index: track.TrackNum
+});
+export const playFrom = (trackIdx) => ({
+	type: types.PLAY_FROM,
+	index: trackIdx + 1
 });
 export const delTrack = (index) => ({ type: types.DEL_TRACK, index });
 export const skipTrack = (playmode, currentTrack) => ({

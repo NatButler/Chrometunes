@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { Button } from './components';
-import { search, lib } from '../library';
-import { filterLib, filterGenre, setFilter, filter, clearSearch, setQuery } from '../actions/actions';
+import { search, trkFilter, lib } from '../library';
+import { filterLib, searchLib, clearSearch, clearFiltered } from '../actions/actions';
+import * as filters from '../constants/filters';
 
-/**
- * text input / filter interaction needs addressing
- */
+
 class Header extends Component {
 	constructor({store}) {
 		super();
@@ -17,8 +16,8 @@ class Header extends Component {
 		const state = this.store.getState();
 
 		let genreList = lib.genres.map( (genre, i) => {
-			let selected = (genre == state.library.filter);
-			return <option key={i} value={genre} selected={selected}>{genre}</option>
+			let defaultVal = (genre == state.library.filter);
+			return <option key={i} value={genre} defaultValue={defaultVal}>{genre}</option>
 		});
 
 		return (
@@ -27,17 +26,15 @@ class Header extends Component {
 				
                 <input
                 	ref={node => {
-                		this.input = node;
+                		this.searchInput = node;
                 	}}
                 	type="text"
                 	name="q"
-                	id="q"
                 	spellCheck="false"
                 	autoComplete="off"
                 	autoFocus="true"
-                	placeholder={state.library.query}
                 	onKeyUp={ () => {
-                		this.handleSearch(this.input.value, this.select.value);
+                		this.handleSearch(this.searchInput.value);
                 	}}
                 />
 
@@ -49,38 +46,51 @@ class Header extends Component {
 		        	className="form-inline"
 		        	id="genres"
 		        	onChange={ () => { 
-		        		this.store.dispatch( setFilter(this.select.value) );
-		        		this.store.dispatch( filter(this.select.value, 'Genre', state.library.search) );
+		        		this.handleFilter(this.select.value, this.searchInput.value);
 		        	}}
 		        >
-		        	<option value="">Library</option>
+		        	<option value="">Genre</option>
 		        	{genreList}
 		        </select>
 			</nav>
 		);
 	}
 
-	handleSearch(q, genreFilter) {
+	handleSearch(query) {
+		let library = this.store.getState().library;
 		clearTimeout( this.timer );
-		if (!q.length) { 
+
+		if (!query) { // No query
 			this.store.dispatch( clearSearch() );
-			this.store.dispatch( filter(this.select.value, 'Genre', this.store.getState().library.search) );
+			if (library.filter) { this.store.dispatch( searchLib(library.filtered, query) ); }
 		}
-		else {
-			this.timer = (q.length >= 3) && setTimeout( () => {
-				let results = search(q);
-
-				this.store.dispatch( setQuery(q) );
-
-				if (genreFilter) {
-					this.store.dispatch( filterLib( results ) );
-					this.store.dispatch( filter( genreFilter, 'Genre', results ) );					
-				}
-				else {
-					this.store.dispatch( filterLib( results ) );
-				}
-				
+		else { // New query
+			this.timer = (query.length >= 3 && query != library.query) && setTimeout( () => {
+				let results = search(query, library.filtered);
+				if (!results) { this.store.dispatch( clearSearch() ); }
+				else { this.store.dispatch( searchLib( results, query ) ); }
 			}, 500);
+		}
+	}
+
+	handleFilter(filter, query) {
+		if (!filter) { // No filter, clear any filtered results from store
+			this.store.dispatch( clearFiltered() );
+			// If query, display associated results
+			if (query) { this.store.dispatch( searchLib( search(query), query ) ); }
+		}
+		else { // New filter
+			let results = trkFilter(filter, filters.GENRE);
+			this.store.dispatch( filterLib(results, filter) );
+			if (query) { // Re-query filtered results
+				let newResults = search(query, results);
+				if (newResults) { this.store.dispatch( searchLib(newResults, query) ); } // If query matches filtered results, display
+				else { this.store.dispatch( searchLib(results, query) ); } // Else display filtered results
+			}
+			else { // Filter, no query
+				this.store.dispatch( filterLib(results, filter) );
+				this.store.dispatch( searchLib(results, query) );
+			}
 		}
 	}
 }

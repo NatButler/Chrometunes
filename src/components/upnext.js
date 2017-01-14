@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from './components';
-import { delTrack, saveList, filterArtist, filterAlbum, togglePlayback, clearTracks } from '../actions/actions';
+import { trkFilter } from '../library';
+import { delTrack, saveList, togglePlayback, clearTracks, searchLib, playFrom, playTrack } from '../actions/actions';
 
 
 const UpNext = ({store}) => {
@@ -17,7 +18,7 @@ const UpNext = ({store}) => {
 							store.dispatch( delTrack(i) );
 						}}
 					/>
-					<UpNextItem store={store} trk={trk} />
+					<UpNextItem store={store} trk={trk} idx={i} />
 				</li>
 			);
 		});
@@ -50,9 +51,15 @@ const NowPlaying = ({store, playback}) => {
 	);
 }
 
-const UpNextItem = ({store, trk}) => {
+const UpNextItem = ({store, trk, idx}) => {
 	return (
-		<div className="up-next-item">
+		<div 
+			className="up-next-item"
+			onDoubleClick={ () => {
+				store.dispatch( playFrom(idx) );
+				store.dispatch( playTrack('normal', [trk]) );
+			}}
+		>
 			<h5>
 				{trk.Name}
 				<span className="duration">{' [ ' + trk.Duration + ' ]'}</span>
@@ -60,7 +67,7 @@ const UpNextItem = ({store, trk}) => {
 			<h6
 				className="up-next-artist"
 				onClick={ () => {
-					store.dispatch( filterArtist(trk.Artist) );
+					store.dispatch( searchLib( trkFilter(trk.Artist, 'Artist'), trk.Artist ) );
 				}}
 			>
 				{trk.Artist}  
@@ -69,7 +76,7 @@ const UpNextItem = ({store, trk}) => {
 			<h6
 				className="up-next-album"
 				onClick={ () => {
-					store.dispatch( filterAlbum(trk.Album) );
+					store.dispatch( searchLib( trkFilter(trk.Album, 'Album'), trk.Album) );
 				}}
 			>
 				{trk.Album}
