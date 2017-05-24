@@ -46,4 +46,4 @@ const upnext = (upnext = [], action) => {
 	}
 }
 
-export default upnext
+export default upnext;

@@ -17,4 +17,4 @@ const playlists = (playlists = [], action) => {
 	}
 }
 
-export default playlists
+export default playlists;

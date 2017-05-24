@@ -1,0 +1,23 @@
+{
+  "name": "Chrometunes",
+  "description": "Chromecast your iTunes library",
+  "version": "0.1",
+  "manifest_version": 2,
+  "icons": { "16": "img/icon-16.png", "128": "img/icon-128.png" },
+  "app": {
+    "background": {
+      "scripts": ["js/background.js"]
+    }
+  },
+  "permissions": [
+    "storage",
+    { "fileSystem": ["write", "directory"] },
+    "contextMenus",
+    "system.network"
+  ],
+  "sockets": {
+    "tcpServer": {
+      "listen": ["*"]
+    }
+  }
+}

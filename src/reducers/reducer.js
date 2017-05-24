@@ -3,15 +3,14 @@ import library from './library';
 import upnext from './upnext';
 import playlists from './playlists';
 import playback from './playback';
-import playmode from './playmode';
-
+import app from './app';
 
 const mediaApp = combineReducers({
+	app: app,
 	library: library,
-	upnext: upnext,
-	playlists: playlists,
 	playback: playback,
-	playmode: playmode
+	playlists: playlists,
+	upnext: upnext
 });
 
-export default mediaApp
+export default mediaApp;

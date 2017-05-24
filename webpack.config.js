@@ -1,9 +1,14 @@
+const { resolve } = require('path');
+
 module.exports = {
-	entry: './src/main.js',
+	entry: './src/main.jsx',
 	output: {
-		filename: 'index.js',
-		path: '/public'
+		filename: 'app.js',
+		path: resolve(__dirname, 'app/js')
 	},
+	resolve: {
+    extensions: ['.js', '.jsx']
+  },
 	devServer: {
 		inline: true,
 		port: 3332
@@ -11,12 +16,13 @@ module.exports = {
 	module: {
 		loaders: [
 			{
-				test: /\.js$/,
-				exclude: /node_modules/,
-				loader: 'babel',
-				query: {
-					presets: ['es2015', 'react']
-				}
+				test: /\.(js|jsx)$/,
+				exclude: /(node_modules|browser_components)/,
+				loader: 'babel-loader'
+			},
+			{
+				test: /\.css$/,
+				use: ['style-loader', 'css-loader']
 			}
 		]
 	}

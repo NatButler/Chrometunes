@@ -1,0 +1,10 @@
+div.prompt {
+	display: flex;
+	width: 250px;
+	height: 100px;
+	background: #FFF;
+}
+
+div.prompt input {
+	display: flex;
+}

@@ -1,22 +1,39 @@
 {
-  "name": "Chromecast",
+  "name": "Chrometunes",
   "version": "1.0.0",
-  "description": "Web app for Chromecasting your iTunes library",
-  "main": "index.js",
+  "description": "Chromecast your iTunes library",
+  "main": "main.jsx",
   "repository": {
     "type": "git",
     "url": "https://github.com/NatButler/Chrometunes.git"
   },
   "scripts": {
-    "start": "webpack-dev-server"
+    "start": "webpack-dev-server",
+    "lint": "eslint src",
+    "build:babel": "babel src -d dist",
+    "build:prod": "webpack -p"
   },
   "author": "Nat Butler",
   "license": "ISC",
   "dependencies": {
+    "babel-polyfill": "^6.23.0",
     "lodash": "^4.16.4",
+    "prop-types": "^15.5.8",
     "react": "^15.3.1",
     "react-dom": "^15.3.1",
     "react-redux": "^4.4.5",
     "redux": "^3.6.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.14.0",
+    "babel-loader": "^6.2.5",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-preset-env": "^1.2.2",
+    "babel-preset-es2015": "^6.14.0",
+    "babel-preset-react": "^6.11.1",
+    "css-loader": "^0.28.0",
+    "eslint": "^3.19.0",
+    "eslint-plugin-react": "^6.10.3",
+    "webpack": "^2.3.2"
   }
 }

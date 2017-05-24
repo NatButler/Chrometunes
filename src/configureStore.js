@@ -2,37 +2,60 @@ import { createStore } from 'redux';
 import mediaApp from './reducers/reducer';
 import throttle from 'lodash/throttle';
 import { loadState, saveState } from './localStorage';
+import { loadLibrary } from './libraryLoad';
+import getIP from './getIP';
+import { importLib, setServerUrl } from './actions/actions';
 
+const addLoggingToDispatch = store => {
+	const rawDispatch = store.dispatch;
+	if (!console.group) { return rawDispatch; }
+	return action => {
+		console.group(action.type);
+		console.log('%c prev state', 'color: gray', store.getState());
+		console.log('%c action', 'color: blue', action);
+		const returnValue = rawDispatch(action);
+		console.log('%c next state', 'color: green', store.getState());
+		console.groupEnd(action.type);
+	}
+}
 
 const configureStore = () => {
-	const persistedState = loadState();
+	return new Promise(resolve => {
+		const library = loadLibrary();
+		let server;
+		getIP().then(addr => { server = 'http://' + addr + ':8080/'; });
 
-	// if (!persistedState.library.id) {
-	// 	alert('No library loaded!');
-	// }
+		library.then(lib => {
 
-	const store = createStore(
-					mediaApp, 
-					persistedState, 
+			// Serve library directory: lib.dir
+
+			const persistedState = loadState(lib.id);
+
+			persistedState.then(state => {
+				const store = createStore(
+					mediaApp,
+					state, 
 					window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 				);
 
-	store.subscribe(throttle( () => {
-		let state = store.getState();
-		saveState(state);
-	}), 1000);
+				if (process.env.NODE_ENV !== 'production') {
+					store.dispatch = addLoggingToDispatch(store);
+				}
 
-	return store;
+				store.dispatch( setServerUrl(server) );
+				store.dispatch( importLib(lib) ); 
+
+				store.subscribe(throttle( () => {
+					saveState( store.getState() );
+				}, 2000, {'leading': true} ));
+
+				resolve(store);
+			});
+		})
+		.catch(reason => {
+			console.error(reason);
+		});
+	});
 }
 
-export default configureStore
-
-
-// Selective saved state
-// {
-// 			library: state.library,
-// 			playlists: state.playlists,
-// 			upnext: state.upnext,
-// 			playback: state.playback,
-// 			playmode: state.playmode
-// 		}
+export default configureStore;

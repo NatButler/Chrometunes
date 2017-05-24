@@ -1,43 +1,54 @@
 const library = (
 	library = {
 		id: '',
+		dir: '',
+		mediaDir: '',
 		tracks: [],
 		genres: [],
 		search: [],
 		query: '',
 		filtered: [],
-		filter: ''
+		filter: '',
+		filterType: ''
 	}, action) => {
 	switch (action.type) {
 		case 'IMPORT_LIB':
-			return Object.assign({}, library, {
+			return {...library, 
 				id: action.id,
-				tracks: action.tracks,
-				genres: action.genres
-			});
+				dir: action.dir,
+				mediaDir: action.mediaDir,
+				tracks: action.tracks, 
+				genres: action.genres,
+				filter: action.filter,
+				filterType: action.filterType,
+				filtered: action.filtered,
+				query: action.query,
+				search: action.search
+			}
 		case 'SEARCH_LIB':
-			return Object.assign({}, library, {
+			return {...library,
 				search: action.results,
 				query: action.query
-			});
+			}
 		case 'FILTER_LIB':
-			return Object.assign({}, library, {
+			return {...library,
 				filtered: action.results,
-				filter: action.filter
-			});
+				filter: action.filter,
+				filterType: action.filterType
+			}
 		case 'CLEAR_SEARCH':
-			return Object.assign({}, library, {
+			return {...library,
 				search: [],
 				query: ''
-			});
+			}
 		case 'CLEAR_FILTERED':
-			return Object.assign({}, library, {
+			return {...library,
 				filtered: [],
 				filter: ''
-			});
+			}
 		default:
 			return library;
 	}
 }
 
-export default library
+export default library;

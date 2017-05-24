@@ -1,20 +1,24 @@
-export const loadState = () => {
+export const loadState = libID => {
 	try {
-		const serializedState = localStorage.getItem('state');
-		if (serializedState === null) {
-			return undefined;
-		}
-		return JSON.parse(serializedState);
-	} catch (err) {
+		return new Promise(resolve => {
+			chrome.storage.local.get(libID, state => {
+				if (state === null) {
+					return undefined;
+				}
+				resolve(state[libID]);
+			});
+		});	
+	} catch(err) {
 		return undefined;
 	}
 }
 
-export const saveState = (state) => {
+export const saveState = state => {
 	try {
-		const serializedState = JSON.stringify(state);
-		localStorage.setItem('state', serializedState);
-	} catch (err) {
+		chrome.storage.local.set({[state.library.id]: state}, () => {
+			// console.log('State saved:', state);
+		});
+	} catch(err) {
 		// Ignore write errors.
 	}
 }
