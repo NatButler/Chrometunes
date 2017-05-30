@@ -1,3 +1,3 @@
-Chrometunes
+# Chrometunes
 
-Allows chromecasting of iTunes library.
+To cast your iTunes library.
