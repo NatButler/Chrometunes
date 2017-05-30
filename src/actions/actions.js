@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { trkFilter, sortByTrackNo, sortResults } from '../librarySearch';
 import * as types from '../constants/actionTypes';
 import * as filters from '../constants/filters';

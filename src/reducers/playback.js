@@ -56,6 +56,10 @@ const playback = (
 			return {...playback,
 				volume: action.volume
 			}
+		case 'SET_VOL': 
+			return Object.assign({}, playback, {
+				volume: action.volume
+			});
 		default:
 			return playback;
 	}
