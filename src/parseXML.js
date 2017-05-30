@@ -25,6 +25,9 @@ const parseXML = (xml, dir) => {
 					else if (key === 'Disc Count') { trk['DiscCount'] = +prop; }
 					else if (key === 'Track Number') { trk['Track'] = +prop; }
 					else if (key === 'Track Count') { trk['TrackCount'] = +prop }
+					else if (key === 'Year') { trk['Year'] = +prop }
+					else if (key === 'Bit Rate') { trk['BitRate'] = +prop }
+					else if (key === 'Sample Rate') { trk['SampleRate'] = +prop }
 					else if (key === 'Persistent ID') { trk['PId'] = prop; }
 					else if (key === 'Name') { trk['Title'] = prop; }
 					else if (key === 'Artist') { trk['Artist'] = prop; }
@@ -34,12 +37,12 @@ const parseXML = (xml, dir) => {
 						trk['Genre'] = prop;
 					}
 					else if (key === 'Kind') { trk['Kind'] = (prop === 'MPEG audio file') ? 'audio/mp3' : 'audio/wav'; }
+					else if (key === 'Comments') { trk['Info'] = prop }
 					else if (key === 'Location') { trk['Location'] = '..' + prop.substr( prop.indexOf('c/') + 1, prop.length ); }
 				}
 			}
 			lib.tracks.push(trk);
 		}
-
 		lib.mediaDir = lib.tracks[0].Location.substr(0, (lib.tracks[0].Location.lastIndexOf('/Music/')+7) );
 		lib.genres.sort();
 		resolve(lib);

@@ -1,7 +1,9 @@
+import * as playmodes from '../constants/playModes';
+
 const playback = (
 	playback = {
-		state: '',
-		mode: 'normal',
+		state: 'disabled',
+		mode: playmodes.NORMAL,
 		track: '',
 		volume: 1
 	}, action) => {
@@ -19,31 +21,35 @@ const playback = (
 				return {...playback,
 					state: 'play'
 				}
-			} 
+			}
 			else {
 				return {...playback,
 					state: 'pause'
 				}
 			}
 		case 'SET_PLAYMODE':
-			if (playback.mode === 'normal') { 
+			return {...playback,
+				mode: action.mode
+			}
+		case 'TOGGLE_PLAYMODE':
+			if (playback.mode === playmodes.NORMAL) { 
 				return {...playback,
-					mode: 'repeat'
+					mode: playmodes.REPEAT
 				}
 			}
-			else if (playback.mode === 'repeat') { 
+			else if (playback.mode === playmodes.REPEAT) { 
 				return {...playback,
-					mode: 'refresh'
+					mode: playmodes.REPEAT1
 				}
 			}
-			else if (playback.mode === 'refresh') { 
+			else if (playback.mode === playmodes.REPEAT1) { 
 				return {...playback,
-					mode: 'random'
+					mode: playmodes.SHUFFLE
 				}
 			}
 			else { 
 				return {...playback,
-					mode: 'normal'
+					mode: playmodes.NORMAL
 				}
 			}
 		case 'SET_VOL': 

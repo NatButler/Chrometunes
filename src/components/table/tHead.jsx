@@ -1,10 +1,9 @@
 import React from 'react';
 
-const THead = ({ colHeads, colWidth }) => {
+const THead = ({ colHeads }) => {
 	const ths = colHeads.map( (heading, i) => {
-		let w = (i%2 != 1) ? colWidth : "auto";
 		let cName = (i%2 != 1) ? 'wide' : "";
-		return <th key={i} className={cName} width={w}>{heading}</th>;
+		return <th key={i} className={cName}>{heading}</th>;
 	});
 
 	return (

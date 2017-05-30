@@ -1,6 +1,7 @@
 import { trkFilter, sortByTrackNo, sortResults } from '../librarySearch';
 import * as types from '../constants/actionTypes';
 import * as filters from '../constants/filters';
+import * as playmodes from '../constants/playModes';
 
 // APP
 export const setServerUrl = url => ({
@@ -77,17 +78,17 @@ export const clearTracks = () => ({
 // PLAYBACK
 export const playTrack = (playmode, upnext, currentTrack) => {
 	switch (playmode) {
-		case 'normal':
+		case playmodes.NORMAL:
 			return {
 				type: types.PLAY_TRACK,
 				track: upnext[0]
 			}
-		case 'refresh': // Not currently necessary as element needs to .load() to play same track again
+		case playmodes.REPEAT1: // Not currently necessary as element needs to .load() to play same track again
 			return {
 				type: types.PLAY_TRACK,
 				track: currentTrack
 			}
-		case 'random':
+		case playmodes.SHUFFLE:
 			return {
 				type: types.PLAY_TRACK,
 				track: upnext[randomTrack(upnext.length)]
@@ -99,24 +100,25 @@ export const playTrack = (playmode, upnext, currentTrack) => {
 			}
 	}
 }
-export const togglePlayback = () => ({ 
-	type: types.TOGGLE_PLAYBACK 
-});
 export const setPlayback = state => ({ 
 	type: types.SET_PLAYBACK, state 
 });
-export const setPlaymode = () => ({ 
-	type: types.SET_PLAYMODE
+export const togglePlayback = () => ({ 
+	type: types.TOGGLE_PLAYBACK
+});
+export const setPlaymode = mode => ({
+	type: types.SET_PLAYMODE, mode
+});
+export const togglePlaymode = () => ({
+	type: types.TOGGLE_PLAYMODE
 });
 
 // PLAYLISTS
-export const saveList = (upnext, currentTrack) => {
-	let listName = prompt('Enter playlist name.');
+export const saveList = (upnext, currentTrack, title = 'Untitled') => {
 	let list = (currentTrack) ? [currentTrack, ...upnext] : upnext;
-
 	return {
 		type: types.SAVE_LIST,
-		name: listName,
+		name: title,
 		tracks: list
 	}
 }
@@ -128,6 +130,6 @@ export const delPlaylist = index => ({
 });
 
 // UTILS
-const randomTrack = (len) => {
+const randomTrack = len => {
 	return Math.floor(Math.random() * len);
 }

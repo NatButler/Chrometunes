@@ -1,15 +1,16 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
-import { Button } from '../components';
+import Button from '../Button';
 import { saveList, clearTracks } from '../../actions/actions';
 
 const Controls = (props, { store }) => {
 	const state = store.getState();
 
 	return (
-		<footer id="up-next-controls">
+		<div id="up-next-controls">
 			<Button
 				label="SAVE"
+				// icon="floppy-disk"
 				disabled={state.upnext.length ? '' : 'disabled'}
 				handler={ () => {
 					store.dispatch( saveList(state.upnext, state.playback.track) );
@@ -23,7 +24,7 @@ const Controls = (props, { store }) => {
 					store.dispatch( clearTracks() );
 				}}
 			/>
-		</footer>
+		</div>
 	);
 }
 

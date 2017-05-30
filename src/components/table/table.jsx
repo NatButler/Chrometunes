@@ -6,13 +6,6 @@ import TBody from './tBody';
 import { setTableWidth, setColWidth } from '../../actions/actions';
 
 class Table extends Component {
-	constructor() {
-		super();
-		this.width;
-		this.ths;
-		this.colWidths = 0;
-	}
-
 	// componentDidMount() {
 	// 	const { store } = this.context;
 	// 	this.unsubscribe = store.subscribe( () =>
@@ -35,8 +28,8 @@ class Table extends Component {
 		return (
 			<div className="col-md-9 table-container">
 				<table className="table-striped table-condensed">
-					<THead colHeads={state.app.tableHds} colWidth={state.app.colsW} />
-					<TBody tracks={tracks} colWidth={state.app.colsW} />
+					<THead colHeads={state.app.tableHds} />
+					<TBody tracks={tracks} />
 
 					<tfoot>
 						<tr><td colSpan="5">{tracks.length} tracks</td></tr>
@@ -46,26 +39,26 @@ class Table extends Component {
 		);
 	}
 
-	calcColWidths() {
-		let colWidth, narrowCols = 0;
+	// calcColWidths() {
+	// 	let colWidth, narrowCols = 0;
 
-		for (let i = 0; i < this.ths.length; i++) {
-			if (i%2 == 1) {
-				narrowCols += this.ths[i].offsetWidth;
-			}
-		}
+	// 	for (let i = 0; i < this.ths.length; i++) {
+	// 		if (i%2 == 1) {
+	// 			narrowCols += this.ths[i].offsetWidth;
+	// 		}
+	// 	}
 
-		colWidth = Math.floor( (this.width - narrowCols) / 3 );
+	// 	colWidth = Math.floor( (this.width - narrowCols) / 3 );
 
-		for (let i = 0; i < this.ths.length; i++) {
-			if (i%2 != 1) { 
-				this.ths[i].width = colWidth;
-				this.colWidths.push(colWidth);
-			} else {
-				this.colWidths.push(this.ths[i].offsetWidth);
-			}
-		}
-	}
+	// 	for (let i = 0; i < this.ths.length; i++) {
+	// 		if (i%2 != 1) { 
+	// 			this.ths[i].width = colWidth;
+	// 			this.colWidths.push(colWidth);
+	// 		} else {
+	// 			this.colWidths.push(this.ths[i].offsetWidth);
+	// 		}
+	// 	}
+	// }
 }
 
 Table.contextTypes = {

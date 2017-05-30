@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
-import { Button } from './components';
+import Button from './Button';
 
 const Prompt = (props, { store }) => {
 	const state = store.getState();

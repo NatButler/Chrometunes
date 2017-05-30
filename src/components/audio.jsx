@@ -1,42 +1,11 @@
 import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 
-export class Button extends Component {
-	render() {
-		let icon = this.props.icon !== '' ? <span className={'glyphicon glyphicon-' + this.props.icon}></span> : '';
-		let label = this.props.label !== '' ? <label>{this.props.label}</label> : '';
-		
-		return(
-			<button
-				type={this.props.type}
-				className={this.props.className}
-				disabled={this.props.disabled}
-				onClick={this.props.handler}
-			>
-				{icon}
-				{label}
-			</button>
-		);
+class AudioPlayer extends Component {
+	constructor() {
+		super();
 	}
-}
 
-Button.propTypes = {
-	type: PropTypes.string,
-	label: PropTypes.string,
-	className: PropTypes.string,
-	icon: PropTypes.string,
-	disabled: PropTypes.string,
-	handler: PropTypes.func.isRequired
-}
-
-Button.defaultProps = {
-	type: 'button',
-	className: 'btn btn-default active ',
-	label: '',
-	icon: ''
-}
-
-export class AudioPlayer extends Component {
 	render() {
 		return(
 			<audio
@@ -45,9 +14,8 @@ export class AudioPlayer extends Component {
 				autoPlay={this.props.autoPlay}
 				preload={this.props.preload}
 				controls
-				ref={ node => {
-					// this.audioEl = node;
-					this.handleControls(node);
+				ref={node => {
+					this.audioEl = node;
 				}}
 				src={this.props.src}
 				onEnded={this.props.endedHandler}
@@ -61,9 +29,7 @@ export class AudioPlayer extends Component {
 	}
 
 	handleControls(elem) {
-		// volume
-		// position
-		// duration
+
 	}
 }
 
@@ -86,6 +52,8 @@ AudioPlayer.propTypes = {
 }
 
 AudioPlayer.defaultProps = {
-	autoPlay: 'true',
+	autoPlay: 'false',
 	src: ''
 }
+
+export default AudioPlayer;
