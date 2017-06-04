@@ -1,11 +1,9 @@
 const playlists = (playlists = [], action) => {
 	switch (action.type) {
 		case 'SAVE_LIST':
-			let list = {};
-			list[action.name] = action.tracks;
 			return [
 				...playlists,
-				list
+				action.list
 			];
 		case 'DEL_LIST':
 			return [

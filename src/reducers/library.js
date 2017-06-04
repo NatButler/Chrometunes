@@ -1,3 +1,5 @@
+import * as filterTypes from '../constants/filterTypes';
+
 const library = (
 	library = {
 		id: '',
@@ -9,7 +11,7 @@ const library = (
 		query: '',
 		filtered: [],
 		filter: '',
-		filterType: ''
+		filterType: filterTypes.GENRE
 	}, action) => {
 	switch (action.type) {
 		case 'IMPORT_LIB':
@@ -18,12 +20,7 @@ const library = (
 				dir: action.dir,
 				mediaDir: action.mediaDir,
 				tracks: action.tracks, 
-				genres: action.genres,
-				filter: action.filter,
-				filterType: action.filterType,
-				filtered: action.filtered,
-				query: action.query,
-				search: action.search
+				genres: action.genres
 			}
 		case 'SEARCH_LIB':
 			return {...library,
@@ -44,7 +41,8 @@ const library = (
 		case 'CLEAR_FILTERED':
 			return {...library,
 				filtered: [],
-				filter: ''
+				filter: '',
+				filterType: filterTypes.GENRE
 			}
 		default:
 			return library;

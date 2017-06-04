@@ -1,41 +1,29 @@
 import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
-// import { connect } from 'react-redux';
+import { connect } from 'react-redux';
 import THead from './tHead';
 import TBody from './tBody';
-import { setTableWidth, setColWidth } from '../../actions/actions';
 
 class Table extends Component {
-	// componentDidMount() {
-	// 	const { store } = this.context;
-	// 	this.unsubscribe = store.subscribe( () =>
-	// 		this.forceUpdate()
- //    );
-	// }
-
-	// componentWillUnmount() {
-	// 	this.unsubscribe();
+	// shouldComponentUpdate(nextProps, nextState) {
+	// 	console.log(this.props, nextProps);
 	// }
 
 	render() {
-		const { store } = this.context;
-		const state = store.getState();
-		let tracks;
-		if (state.library.query) { tracks = state.library.search; }
-		else if (state.library.filtered.length > 0) { tracks = state.library.filtered; }
-		else { tracks = state.library.tracks; }
+		console.log('Rendering Table.');
+		const props = this.props;
+		let tracks = props.libTracks;
+		if (props.libQuery) { tracks = props.libSearch; }
+		else if (props.libFiltered.length > 0) { tracks = props.libFiltered; }
 
 		return (
-			<div className="col-md-9 table-container">
-				<table className="table-striped table-condensed">
-					<THead colHeads={state.app.tableHds} />
-					<TBody tracks={tracks} />
-
-					<tfoot>
-						<tr><td colSpan="5">{tracks.length} tracks</td></tr>
-					</tfoot>
-				</table>
-			</div>
+			<table className="col-md-9 table-striped table-condensed">
+				<THead colHeads={props.tHds} />
+				<TBody tracks={tracks} />
+				<tfoot>
+					<tr><td colSpan="5">{tracks.length} tracks</td></tr>
+				</tfoot>
+			</table>
 		);
 	}
 
@@ -61,20 +49,13 @@ class Table extends Component {
 	// }
 }
 
-Table.contextTypes = {
-	store: PropTypes.object
-}
+const mapStateToProps = state => ({
+	libQuery: state.library.query,
+	libSearch: state.library.search,
+	libFiltered: state.library.filtered,
+	libTracks: state.library.tracks,
+	tHds: state.app.tableHds,
+	currentTrk: state.playback.track
+});
 
-// const mapStateToProps = (state) => {
-// 	return {
-
-// 	}
-// }
-
-// const mapDispatchToProps = (dispatch) => {
-// 	return {
-
-// 	}
-// }
-
-export default Table;
+export default connect(mapStateToProps)(Table);

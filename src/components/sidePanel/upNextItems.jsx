@@ -2,23 +2,20 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 import Button from '../Button';
 import { delTrack, togglePlayback, filterLib, playFrom, playTrack, clearSearch } from '../../actions/actions'
-import { trkFilter } from '../../librarySearch';
-import * as filters from '../../constants/filters';
+import * as filterTypes from '../../constants/filterTypes';
 
-export const UpNextItem = ({ trk, idx }, { store }) => {
-	return (
-		<li>
-			<Button
-				className="close"
-				icon="remove-circle"
-				handler={ () => {
-					store.dispatch( delTrack(idx) );
-				}}
-			/>
-			<Item trk={trk} idx={idx} />
-		</li>
-	);
-}
+export const UpNextItem = ({ trk, idx }, { store }) => (
+	<li>
+		<Button
+			className="close"
+			icon="remove-circle"
+			handler={ () => {
+				store.dispatch( delTrack(idx) );
+			}}
+		/>
+		<Item trk={trk} idx={idx} />
+	</li>
+);
 
 UpNextItem.contextTypes = {
 	store: PropTypes.object
@@ -26,12 +23,13 @@ UpNextItem.contextTypes = {
 
 export const Item = ({ trk, idx }, { store }) => {
 	const tracks = store.getState().library.tracks;
+
 	return (
-		<div 
+		<div
 			className="up-next-item"
 			onDoubleClick={ () => {
-				store.dispatch( playFrom(idx) );
-				store.dispatch( playTrack('normal', [trk]) );
+				store.dispatch( playFrom(trk, idx) );
+				// store.dispatch( playTrack(store.getState().playback.status, [trk]) );
 			}}
 		>
 			<div className="title-wrap">
@@ -45,7 +43,7 @@ export const Item = ({ trk, idx }, { store }) => {
 					className="up-next-artist"
 					onClick={ () => {
 						store.dispatch( clearSearch() );
-						store.dispatch( filterLib( trkFilter(trk.Artist, filters.ARTIST, tracks), trk.Artist, filters.ARTIST ) );
+						store.dispatch( filterLib(tracks, trk[filterTypes.ARTIST], filterTypes.ARTIST) );
 					}}
 				>
 					{trk.Artist}  
@@ -55,7 +53,7 @@ export const Item = ({ trk, idx }, { store }) => {
 					className="up-next-album"
 					onClick={ () => {
 						store.dispatch( clearSearch() );
-						store.dispatch( filterLib( trkFilter(trk.Album, filters.ALBUM, tracks), trk.Album, filters.ALBUM) );
+						store.dispatch( filterLib(tracks, trk, filterTypes.ALBUM) );
 					}}
 				>
 					{trk.Album}

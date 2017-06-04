@@ -14,8 +14,12 @@ export const loadState = libID => {
 }
 
 export const saveState = state => {
+	const save = {
+		playlists: state.playlists,
+		upnext: state.upnext
+	};
 	try {
-		chrome.storage.local.set({[state.library.id]: state}, () => {
+		chrome.storage.local.set({[state.library.id]: save}, () => {
 			// console.log('State saved:', state);
 		});
 	} catch(err) {

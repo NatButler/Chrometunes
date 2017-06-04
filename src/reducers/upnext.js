@@ -1,3 +1,5 @@
+import * as playmode from '../constants/playModes';
+
 const upnext = (upnext = [], action) => {
 	switch (action.type) {
 		case 'ADD_TRACK':
@@ -18,10 +20,6 @@ const upnext = (upnext = [], action) => {
 			return [
 				...upnext.slice(action.index)
 			];
-		case 'LOAD_LIST':
-			return [
-				...action.tracks
-			];
 		case 'DEL_TRACK':
 			return [
 				...upnext.slice(0, action.index),
@@ -29,18 +27,22 @@ const upnext = (upnext = [], action) => {
 			];
 		case 'CLEAR_TRACKS':
 			return [];
-		case 'SKIP_TRACK':
-			switch (action.playmode) {
-				case 'normal':
+		case 'PLAY_TRACK':
+			switch (action.mode) {
+				case playmode.NORMAL:
 					return upnext.slice(1);
-				case 'repeat':
+				case playmode.REPEAT:
 					return [
 						...upnext.slice(1),
-						action.currentTrack
+						action.prevTrack
 					];
 				default:
 					return upnext;
 			}
+		case 'LOAD_LIST':
+			return [
+				...action.tracks
+			];
 		default:
 			return upnext;
 	}

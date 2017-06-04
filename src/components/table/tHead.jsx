@@ -2,7 +2,7 @@ import React from 'react';
 
 const THead = ({ colHeads }) => {
 	const ths = colHeads.map( (heading, i) => {
-		let cName = (i%2 != 1) ? 'wide' : "";
+		let cName = (i%2 != 1) ? 'wide' : '';
 		return <th key={i} className={cName}>{heading}</th>;
 	});
 

@@ -4,7 +4,7 @@ import throttle from 'lodash/throttle';
 import { loadState, saveState } from './localStorage';
 import { loadLibrary } from './libraryLoad';
 import getIP from './getIP';
-import { importLib, setServerUrl } from './actions/actions';
+import { importLib, setServerUrl, setCastStatus } from './actions/actions';
 
 const addLoggingToDispatch = store => {
 	const rawDispatch = store.dispatch;
@@ -34,7 +34,7 @@ const configureStore = () => {
 			persistedState.then(state => {
 				const store = createStore(
 					mediaApp,
-					state, 
+					state,
 					window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 				);
 
@@ -52,9 +52,7 @@ const configureStore = () => {
 				resolve(store);
 			});
 		})
-		.catch(reason => {
-			console.error(reason);
-		});
+		.catch(reason => { console.warn(reason); });
 	});
 }
 

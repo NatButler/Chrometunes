@@ -1,11 +1,15 @@
 import parseXML from './parseXML';
 
 export const loadLibrary = dir => {
+	// use dir arg to load previously loaded file/directory?
+
 	return new Promise( (resolve, reject) => {
 		let library;
 		
 		chrome.fileSystem.chooseEntry({ type: 'openDirectory' }, directory => {
-			directory.createReader().readEntries( results => {
+			if (!directory) { return resolve(undefined); }// reject('No directory chosen.'); }
+
+			directory.createReader().readEntries(results => {
 				let iTunesLib;
 				let mediaDir;
 				let libDir;
@@ -19,21 +23,19 @@ export const loadLibrary = dir => {
 					reject('Cannot find "iTunes Library.xml" or "iTunes Media" directory.')
 				}
 
-				chrome.fileSystem.getDisplayPath(iTunesLib, path => {
-					libDir = path;
-				});
+				chrome.fileSystem.getDisplayPath(iTunesLib, path => { libDir = path; });
 
 				iTunesLib.file(xml => {
 					let reader = new FileReader();
 					// reader.onerror = errorHandler;
-	      	reader.onload = e => {
-	      		console.time('parseXML');
-	        	library = parseXML( convertXMLString(e.target.result), libDir );
-	        	console.timeEnd('parseXML');
-	        	library.then(lib => { return resolve(lib); });
-	      	};
+					reader.onload = e => {
+						console.time('parseXML');
+						library = parseXML( convertXMLString(e.target.result), libDir );
+						console.timeEnd('parseXML');
+						library.then(lib => { return resolve(lib); }).catch(reason => { console.warn(reason); });
+					}
 
-	      	reader.readAsText(xml);
+					reader.readAsText(xml);
 				});
 
 			});

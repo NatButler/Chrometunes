@@ -1,30 +1,43 @@
-import * as playmodes from '../constants/playModes';
+import upnext from './upnext';
+import * as playstate from '../constants/playStates';
+import * as playmode from '../constants/playModes';
 
 const playback = (
 	playback = {
-		state: 'disabled',
-		mode: playmodes.NORMAL,
+		status: playstate.IDLE,
+		mode: playmode.NORMAL,
 		track: '',
 		volume: 1
 	}, action) => {
 	switch (action.type) {
 		case 'PLAY_TRACK':
+			upnext(undefined, action);
 			return {...playback,
 				track: action.track
 			}
-		case 'SET_PLAYBACK':
+		case 'PLAY_FROM': {
 			return {...playback,
-				state: action.state
+				track: action.track
+			}
+		}
+		case 'STOPPED':
+			return {...playback,
+				track: '',
+				status: playstate.IDLE
+			}
+		case 'SET_PLAYBACK_STATE':
+			return {...playback,
+				status: action.state
 			}
 		case 'TOGGLE_PLAYBACK':
-			if ( playback.state === 'pause' ) {
+			if ( playback.status !== playstate.PLAY ) {
 				return {...playback,
-					state: 'play'
+					status: playstate.PLAY
 				}
 			}
 			else {
 				return {...playback,
-					state: 'pause'
+					status: playstate.PAUSE
 				}
 			}
 		case 'SET_PLAYMODE':
@@ -32,34 +45,30 @@ const playback = (
 				mode: action.mode
 			}
 		case 'TOGGLE_PLAYMODE':
-			if (playback.mode === playmodes.NORMAL) { 
+			if (playback.mode === playmode.NORMAL) { 
 				return {...playback,
-					mode: playmodes.REPEAT
+					mode: playmode.REPEAT
 				}
 			}
-			else if (playback.mode === playmodes.REPEAT) { 
+			else if (playback.mode === playmode.REPEAT) { 
 				return {...playback,
-					mode: playmodes.REPEAT1
+					mode: playmode.REPEAT1
 				}
 			}
-			else if (playback.mode === playmodes.REPEAT1) { 
+			else if (playback.mode === playmode.REPEAT1) { 
 				return {...playback,
-					mode: playmodes.SHUFFLE
+					mode: playmode.SHUFFLE
 				}
 			}
 			else { 
 				return {...playback,
-					mode: playmodes.NORMAL
+					mode: playmode.NORMAL
 				}
 			}
 		case 'SET_VOL': 
 			return {...playback,
 				volume: action.volume
 			}
-		case 'SET_VOL': 
-			return Object.assign({}, playback, {
-				volume: action.volume
-			});
 		default:
 			return playback;
 	}

@@ -1,45 +1,53 @@
-import * as filters from './constants/filters';
+import * as filterTypes from './constants/filterTypes';
 
-export const trkFilter = (filter, prop, tracks) => {
-	let artist;
-	return tracks.filter( trk => {
-		if (prop === filters.ALBUM) {
-			if ( filterTrack(trk, prop, filter) ) {
-				if (!artist) { artist = trk.Artist; }
-				return ( filterTrack(trk, prop, filter) && filterTrack(trk, filters.ARTIST, artist) );
-			}
-		} else {
-			return filterTrack(trk, prop, filter);	
-		}
-	});
-}
-
-export const trkSearch = (query, tracks) => {
+// SEARCH
+export const trkSearch = (tracks, query) => {
 	return tracks.filter( trk => {
 		return matchTrack(query, trk);
 	});
 }
 
 const matchTrack = (query, trk) => {
-	return ( stringMatch(trk.Artist, query) || stringMatch(trk.Album, query) || stringMatch(trk.Title, query) );
-}
-
-const filterTrack = (trk, prop, filter) => {
-	return trk[prop] === filter;
+	return ( stringMatch(trk[filterTypes.ARTIST], query) || stringMatch(trk[filterTypes.ALBUM], query) || stringMatch(trk[filterTypes.TITLE], query) );
 }
 
 const stringMatch = (a, b) => {
-	// Protect against missing metadata: should be dealt with when parsing xml
-	if (a) {
+	if (a) { // Protect against missing metadata: should be dealt with when parsing xml
 		return ( a.toLowerCase().indexOf(b.toLowerCase() ) != -1);
 	}
 }
 
-export const sortByTrackNo = results => {
-	const compare = (a, b) => {
-	  return a.Track - b.Track;
+// FILTER
+export const trkFilter = (
+	tracks,
+	filter,
+	type
+) => {
+	switch(type) {
+		case filterTypes.ALBUM:
+			return sortByTrackNo( 
+				tracks.filter( (t, i) => {
+					return t[type] === filter[type] && t[filterTypes.ARTIST] === filter[filterTypes.ARTIST];
+				}) 
+			);
+		default:
+			return tracks.filter( t => {
+				return t[type] === filter;
+			});
 	}
-	return results.sort(compare);
+}
+
+// const filterTrack = (trk, type, filter) => {
+// 	return trk[type] === filter;
+// }
+
+
+// SORT
+export const sortByTrackNo = tracks => {
+	const compare = (a, b) => {
+		return a.Disc - b.Disc || a.Track - b.Track;
+	}
+	return tracks.sort(compare);
 }
 
 // Sort not working accurately across multiple columns

@@ -3,12 +3,22 @@ const app = (
 		tableW: 0,
 		colsW: 0,
 		tableHds: ['Artist', 'Duration', 'Album', 'Track', 'Title'],
-		serverUrl: ''		
+		serverAdd: '',
+		serverStatus: '',
+		castStatus: ''
 	}, action) => {
 	switch(action.type) {
 		case 'SET_SERVER_ADDR':
 			return {...app,
-				serverUrl: action.url
+				serverAdd: action.url
+			}
+		case 'SET_SERVER_STATUS':
+			return {...app,
+				serverStatus: action.status
+			}
+		case 'SET_CAST_STATUS':
+			return {...app,
+				castStatus: action.status
 			}
 		case 'SET_TABLE':
 			return {...app, 

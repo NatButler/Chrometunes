@@ -18,16 +18,12 @@ body {
 	font-family: sans-serif;	
 }
 
-#loading {
-	width: 300px;
-	margin: auto;
+div.progress {
+	height: 2px;
 }
 
-/******
-	LAYOUT
-******/
-.col-md-9 {
-	/*background: #fff;*/
+div.progress-bar {
+
 }
 
 /******
@@ -60,6 +56,7 @@ nav.navbar, .navbar-default {
 	border: 0;
 }
 
+/* Not targeting button */
 #cast-button {
 	--connected-color: #3369e8;
 }
@@ -242,7 +239,6 @@ tfoot td {
 	font-weight: 500;
 }
 
-
 /******
 	SIDE PANEL
 ******/
@@ -254,6 +250,7 @@ tfoot td {
 }
 
 #current-track {
+	position: relative;
 	display: flex;
 	justify-content: space-between;
 	background-color: #eeb211;
@@ -261,6 +258,14 @@ tfoot td {
 	height: 68px;
 	outline: 1px solid #d6a00f;
 	outline-offset: 1px;
+}
+
+#current-track.not-loaded {
+	background-color: transparent;
+}
+
+#current-track.not-loaded button.info {
+	display: none;
 }
 
 #current-track button {
@@ -274,8 +279,25 @@ tfoot td {
 	background-color: #d6a00f;
 }
 
-#current-track h5 {
-	margin-top: 4px;
+#current-track button.info {
+	position: absolute;
+	bottom: 0;
+	right: 4px;
+	padding: 0;
+	margin: 0;
+	border: 0;
+}
+
+#current-track button.info:hover {
+	background-color: inherit;
+}
+
+#current-track.not-loaded button {
+	background-color: #d6a00f;
+}
+
+#current-track.not-loaded button span {
+	opacity: 0.5;
 }
 
 /* TABS */
@@ -317,6 +339,17 @@ tfoot td {
 	top: 3px;
 }
 
+.tab-content div ul {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	width: 100%;
+	overflow-y: scroll;
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+
 .tab-content li.warning {
 	font-size: 12px;
 }
@@ -325,16 +358,8 @@ tfoot td {
 div.tab-content {
 	position: relative;
 	height: 78.8vh;
-}
-
-#up-next-ul {
-	position: absolute;
-	top: 0px;
-	bottom: 0px;
-	padding: 0px;	
-	overflow-y: scroll;
-	width: 100%;
-	margin: 0;
+	border-right: 1px solid #000;
+	border-bottom: 1px solid #000;
 }
 
 #up-next-ul li {
@@ -377,24 +402,25 @@ button.close:hover {
 	text-overflow: ellipsis;
 	color: #252525;
 	font-weight: 200;
-	margin: 5px 0 3px 0;
-}
-
-.up-next-item .title-wrap {
-	width: 100%;
-	height: 23px;
-	padding-top: 1px;
-}
-
-.up-next-item .artist-wrap {
-	margin-bottom: 6px;
+	margin: 4px 0 3px 0;
 }
 
 .up-next-item h5 {
 	white-space: nowrap;
 	width: 268px;
 	display: inline-block;
-	margin-bottom: 0px;
+	flex: 1;
+	padding-right: 7px;
+}
+
+.up-next-item .title-wrap {
+	height: 23px;
+	padding-top: 1px;
+	display: flex;
+}
+
+.up-next-item .artist-wrap {
+	margin-bottom: 6px;
 }
 
 .up-next-item h5 span.title {
@@ -403,7 +429,7 @@ button.close:hover {
 }
 
 .up-next-item span.duration {
-	float: right;
+	/* float: right; */
 	font-size: 11px;
 	padding-top: 4px;
 }
@@ -431,8 +457,13 @@ button.close:hover {
 	border: 0;
 }
 
-#up-next-controls button:hover {
-	color: #fff;
+#up-next-controls button label:hover {
+	cursor: poitner;
+}
+
+#up-next-controls button.btn[disabled] label {
+	cursor: default;
+	opacity: 0.4;
 }
 
 #up-next-controls label {
@@ -442,38 +473,32 @@ button.close:hover {
 }
 
 /* PLAYLISTS */
-#playlists-ul {
-	margin: 0;
-	padding: 5px 5px 0 20px;
-	list-style-type: none;
-}
-
 .playlist-item {
-	color: #252525;
+	display: flex;
 	margin-bottom: 2px;
+	padding: 3px;
 }
 
-.playlist-item li {
-	display: inline;
+.playlist-item:hover {
+	background-color: #f3f3f3;
 }
 
-.playlist-item li:hover {
-	text-decoration: underline;
-	cursor: pointer;
+.playlist-item a {
+	flex-grow: 1;
+	color: #000;
 }
 
-.playlist-item span {
-	cursor: pointer;
-	float: right;
-	top: 4px;
-	right: 2px;
+.playlist-item a:hover {
+	text-decoration: none;
+}
+
+.playlist-item button {
+	margin-right: 1px;
 }
 
 /* INFO TAB */
 #info ul {
-	list-style-type: none;
-	margin: 0;
-	padding: 0 2px;
+	/*padding: 3px;*/
 }
 
 #info li {
@@ -485,12 +510,11 @@ button.close:hover {
 	font-weight: 700;
 }
 
-
 /******
 	BUTTONS
 ******/
 button label:hover {
-	cursor: default;
+	cursor: pointer;
 }
 
 button.active {
@@ -512,7 +536,7 @@ button.btn:hover {
 }
 
 button.close {
-	font-size: 11px;
+	font-size: 14px;
 	color: #252525;
 	opacity: 0.5;
 }

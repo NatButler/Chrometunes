@@ -35,7 +35,7 @@ Button.propTypes = {
 
 Button.defaultProps = {
 	type: 'button',
-	className: 'btn btn-default active ',
+	className: 'btn btn-default ',
 	label: '',
 	icon: ''
 }

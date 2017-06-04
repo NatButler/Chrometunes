@@ -1,4 +1,5 @@
 export const SET_SERVER_ADDR = 'SET_SERVER_ADDR';
+export const SET_CAST_STATUS = 'SET_CAST_STATUS';
 export const SET_TABLE = 'SET_TABLE';
 export const SET_COLS = 'SET_COLS';
 
@@ -17,7 +18,8 @@ export const CLEAR_TRACKS = 'CLEAR_TRACKS';
 export const PLAY_FROM = 'PLAY_FROM';
 
 export const PLAY_TRACK = 'PLAY_TRACK';
-export const SET_PLAYBACK = 'SET_PLAYBACK';
+export const STOPPED = 'STOPPED';
+export const SET_PLAYBACK_STATE = 'SET_PLAYBACK_STATE';
 export const TOGGLE_PLAYBACK = 'TOGGLE_PLAYBACK';
 export const SET_PLAYMODE = 'SET_PLAYMODE';
 export const TOGGLE_PLAYMODE = 'TOGGLE_PLAYMODE';

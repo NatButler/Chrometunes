@@ -2,9 +2,9 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 import { addTrack, addAlbum, addRemAlbum, playTrack } from '../../actions/actions';
 
-const TBody = ({ tracks }) => {	
-	let rows = tracks.map( (trk, i) => {
-		return <TRow key={i} track={trk} />
+const TBody = ({ tracks }) => {
+	let rows = tracks.map( trk => {
+		return <TRow key={trk.PId} track={trk} />
 	});
 	return <tbody>{rows}</tbody>;
 }
@@ -12,44 +12,36 @@ const TBody = ({ tracks }) => {
 const TRow = ({ track }, { store }) => {
 	const state = store.getState();
 	const tracks = state.library.tracks;
-	let trClass;
-	if (state.playback.track) { trClass = (state.playback.track.PId === track.PId) ? 'currentTrack' : ''; }
+	const playback = state.playback;
+	let trClass = (playback.track && playback.track.PId === track.PId) ? 'currentTrack' : '';
 
 	return (
 		<tr 
 			data-id={track.PId}
 			className={trClass}
-			onDoubleClick={ () => {
+			onDoubleClick={() => {
 				store.dispatch( addRemAlbum(track, tracks) );
-				store.dispatch( playTrack('normal', [track]) );
+				store.dispatch( playTrack(playback.mode, [track], playback.track) );
 			}}
 		>
-			<td 
-				className="wide"
-			>
-				{track.Artist}
-			</td>
+			<td className="wide">{track.Artist}</td>
 			<td className="duration">{track.Duration}</td>
-			<td 
-				className="wide"
-			>
+			<td className="wide">
 				<a href="#"
-					onClick={ e => {
+					onClick={e => {
+						store.dispatch( addAlbum(track, tracks) );
 						e.preventDefault;
-						store.dispatch( addAlbum(track.Album, tracks) );
 					}}
 				>
 					{track.Album}
 				</a>
 			</td>
 			<td className="track">{track.Track}</td>
-			<td 
-				className="wide"
-			>
+			<td className="wide">
 				<a href="#"
-					onClick={ e => {
-						e.preventDefault;
+					onClick={e => {
 						store.dispatch( addTrack(track) );
+						e.preventDefault;
 					}}
 				>
 					{track.Title}

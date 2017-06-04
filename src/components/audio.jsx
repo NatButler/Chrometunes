@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 
 class AudioPlayer extends Component {
-	constructor() {
-		super();
+	shouldComponentUpdate(nextProps, nextState) {
+		return this.props.src !== nextProps.src;
 	}
 
 	render() {
+		console.log('Rendering audio.');
 		return(
 			<audio
 				id="player"
@@ -14,9 +15,7 @@ class AudioPlayer extends Component {
 				autoPlay={this.props.autoPlay}
 				preload={this.props.preload}
 				controls
-				ref={node => {
-					this.audioEl = node;
-				}}
+				ref={node => { this.audioEl = node; }}
 				src={this.props.src}
 				onEnded={this.props.endedHandler}
 				onPlay={this.props.playHandler}
@@ -26,10 +25,6 @@ class AudioPlayer extends Component {
 			>
 			</audio>
 		);
-	}
-
-	handleControls(elem) {
-
 	}
 }
 
