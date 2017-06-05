@@ -1,6 +1,6 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
-import { addTrack, addAlbum, addRemAlbum, playTrack } from '../../actions/actions';
+import { addTrack, addDisc, addRemDisc, playTrack } from '../../actions/actions';
 
 const TBody = ({ tracks }) => {
 	let rows = tracks.map( trk => {
@@ -20,7 +20,7 @@ const TRow = ({ track }, { store }) => {
 			data-id={track.PId}
 			className={trClass}
 			onDoubleClick={() => {
-				store.dispatch( addRemAlbum(track, tracks) );
+				store.dispatch( addRemDisc(track, tracks) );
 				store.dispatch( playTrack(playback.mode, [track], playback.track) );
 			}}
 		>
@@ -29,7 +29,7 @@ const TRow = ({ track }, { store }) => {
 			<td className="wide">
 				<a href="#"
 					onClick={e => {
-						store.dispatch( addAlbum(track, tracks) );
+						store.dispatch( addDisc(track, tracks) );
 						e.preventDefault;
 					}}
 				>

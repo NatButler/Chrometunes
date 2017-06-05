@@ -12,7 +12,7 @@ const upnext = (upnext = [], action) => {
 				...upnext,
 				...action.album
 			];
-		case 'ADD_REM_ALBUM':
+		case 'ADD_REM_DISC':
 			return [
 				...action.album.slice(action.index)
 			];

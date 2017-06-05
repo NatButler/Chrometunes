@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { findDOMNode } from 'react-dom';
 import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 import { playTrack, setPlayback, togglePlaymode, togglePlayback } from '../../actions/actions';
@@ -9,25 +10,21 @@ import Button from '../Button';
 import { loadMedia, player, playerController } from '../../cast';
 
 class Playback extends Component {
-	shouldComponentUpdate(nextProps, nextState) {
+	constructor() {
+		super();
+		this.audio;
+	}
+
+	shouldComponentUpdate(nextProps) {
 		const props = this.props;
-		if (props.playback.mode !== nextProps.playback.mode) {
-			return true;
-		} 
-		else if (props.upnext.length && !nextProps.upnext.length) {
-			return true;
-		}
-		else if (!props.upnext.length && nextProps.upnext.length) {
-			return true;
-		}
-		else {
-			return props.playback.track.PId !== nextProps.playback.track.PId;
-		}
+		if (props.playback.mode !== nextProps.playback.mode) { return true; } 
+		else if (props.upnext.length && !nextProps.upnext.length) { return true; }
+		else if (!props.upnext.length && nextProps.upnext.length) { return true; }
+		else { return props.playback.track.PId !== nextProps.playback.track.PId; }
 	}
 
 	render() {
 		console.log('Rendering Playback.');
-		const audioElem = document.getElementById('player');
 		const playback = this.props.playback;
 		const upnext = this.props.upnext;
 		const { store } = this.context;
@@ -44,31 +41,18 @@ class Playback extends Component {
 					icon="step-forward"
 					disabled={!upnext.length && playback.mode !== playmode.REPEAT1 ? 'disabled' : ''}
 					handler={ () => {
-						if (playback.mode !== playmode.REPEAT1) {
-							store.dispatch( playTrack(playback.mode, upnext, playback.track) );
-						} else {
-							audioElem.load();
-						}
+						if (playback.mode !== playmode.REPEAT1) { store.dispatch( playTrack(playback.mode, upnext, playback.track) ); } 
+						else { this.audio.load(); }
 					}}
 				/>
 
 				<AudioPlayer
+					ref={ component => { this.audio = findDOMNode(component) }}
 					className="audio"
 					src={src}
-					endedHandler={ () => {
-						if (playback.mode !== playmode.REPEAT1 && upnext.length > 0) {
-							store.dispatch( playTrack(playback.mode, upnext, playback.track) );
-						}
-						else if (playback.mode === playmode.REPEAT1) {
-							audioElem.load();
-						}
-						else {
-							store.dispatch( setPlayback(playstate.STOPPED) );
-						}
-					}}
-					playHandler={ () => { this.playToggle(); }}
-					pauseHandler={ () => { this.playToggle(); }}
-					// errorHandler={ err => { console.error('Error:', err); }}
+					endedHandler={ () => { this.onEnded(playback, upnext); }}
+					playHandler={ () => { store.dispatch( setPlayback(playstate.PLAY) ); }}
+					pauseHandler={ () => { store.dispatch( setPlayback(playstate.PAUSE) ); }}
 				/>
 
 				<Button
@@ -84,11 +68,21 @@ class Playback extends Component {
 		return server + dir.slice(dir.indexOf('iTunes'));
 	}
 
-	playToggle() {
+	onEnded(playback, upnext) {
 		const { store } = this.context;
-		store.dispatch( togglePlayback() );
-		if (player.isPaused) { playerController.playOrPause(); }
+		if (playback.mode !== playmode.REPEAT1 && upnext.length > 0) {
+			console.log('Playing track...');
+			store.dispatch( playTrack(playback.mode, upnext, playback.track) );
+		}
+		else if (playback.mode === playmode.REPEAT1) { this.audio.load(); }
+		else { store.dispatch( setPlayback(playstate.IDLE) ); }
 	}
+
+	// playToggle() {
+	// 	const { store } = this.context;
+	// 	store.dispatch( togglePlayback() );
+	// 	if (player.isPaused) { playerController.playOrPause(); }
+	// }
 
 	cast(src, type) {
 		if (player.isConnected) {

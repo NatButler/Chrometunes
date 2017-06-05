@@ -25,7 +25,7 @@ const parseXML = (xml, dir) => {
 
 					if 			(key === 'Total Time') 		{ trk['Duration'] 		= calcDuration(prop); }
 					else if (key === 'Disc Number') 	{ trk['Disc'] 				= +prop; }
-					else if (key === 'Disc Count') 		{ trk['DiscCount'] 		= +prop; }
+					else if (key === 'Disc Count') 		{ trk['Disc count'] 	= +prop; }
 					else if (key === 'Track Number') 	{ trk['Track'] 				= +prop; }
 					else if (key === 'Track Count') 	{	trk['TrackCount'] 	= +prop; }
 					else if (key === 'Year') 					{ trk['Year'] 				= +prop; }

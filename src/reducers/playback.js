@@ -20,16 +20,19 @@ const playback = (
 				track: action.track
 			}
 		}
-		case 'STOPPED':
-			return {...playback,
-				track: '',
-				status: playstate.IDLE
-			}
 		case 'SET_PLAYBACK_STATE':
-			return {...playback,
-				status: action.state
+			switch(action.state) {
+				case playstate.IDLE:
+					return {...playback,
+						track: '',
+						status: playstate.IDLE
+					}
+				default:
+					return {...playback,
+						status: action.state
+					}					
 			}
-		case 'TOGGLE_PLAYBACK':
+		case 'TOGGLE_PLAYBACK_STATE':
 			if ( playback.status !== playstate.PLAY ) {
 				return {...playback,
 					status: playstate.PLAY

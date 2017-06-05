@@ -48,13 +48,13 @@ export const clearFiltered = () => ({
 export const addTrack = track => ({ 
 	type: types.ADD_TRACK, track 
 });
-export const addAlbum = (track, tracks) => ({
+export const addDisc = (track, tracks) => ({
 	type: types.ADD_ALBUM,
-	album: trkFilter(tracks, track, filterTypes.ALBUM)
+	album: trkFilter(tracks, track, filterTypes.ALBUM, track.Disc)
 });
-export const addRemAlbum = (track, tracks) => ({
-	type: types.ADD_REM_ALBUM,
-	album: trkFilter(tracks, track, filterTypes.ALBUM),
+export const addRemDisc = (track, tracks) => ({
+	type: types.ADD_REM_DISC,
+	album: trkFilter(tracks, track, filterTypes.ALBUM, track.Disc),
 	index: track.Track-1
 });
 export const playFrom = (trk, trackIdx) => ({
@@ -113,7 +113,7 @@ export const setPlayback = state => ({
 	type: types.SET_PLAYBACK_STATE, state 
 });
 export const togglePlayback = () => ({ 
-	type: types.TOGGLE_PLAYBACK
+	type: types.TOGGLE_PLAYBACK_STATE
 });
 export const setPlaymode = mode => ({
 	type: types.SET_PLAYMODE, mode

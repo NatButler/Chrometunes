@@ -5,7 +5,7 @@ import THead from './tHead';
 import TBody from './tBody';
 
 class Table extends Component {
-	// shouldComponentUpdate(nextProps, nextState) {
+	// shouldComponentUpdate(nextProps) {
 	// 	console.log(this.props, nextProps);
 	// }
 

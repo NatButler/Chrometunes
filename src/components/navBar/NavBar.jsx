@@ -9,10 +9,13 @@ import { trkSearch } from '../../librarySearch';
 class NavBar extends Component {
 	constructor() {
 		super();
+		this.state = {
+			filter: ''
+		};
 		this.timer;
 	}
 
-	shouldComponentUpdate(nextProps, nextState) {
+	shouldComponentUpdate(nextProps) {
 		return this.props.filter !== nextProps.filter || this.props.query !== nextProps.query;
 	}
 
@@ -34,10 +37,11 @@ class NavBar extends Component {
 					name="genres"
 					className="form-inline"
 					id="genres"
-					onChange={ () => { 
+					onChange={ () => {
+						this.state.filter = this.select.value;
 						this.handleFilter(this.select.value);
 					}}
-					value={props.filter}
+					value={this.state.filter}
 				>
 					<option value="">{'[ ' + props.filterType + ' ]'}</option>
 					{genreList}

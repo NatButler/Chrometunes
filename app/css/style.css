@@ -358,8 +358,9 @@ tfoot td {
 div.tab-content {
 	position: relative;
 	height: 78.8vh;
-	border-right: 1px solid #000;
-	border-bottom: 1px solid #000;
+	border-right: 1px solid gray;
+	border-bottom: 1px solid #ccc;
+	/* border-left: 1px solid #f3f3f3; */
 }
 
 #up-next-ul li {
@@ -369,10 +370,26 @@ div.tab-content {
 	margin-bottom: 2px;
 	background: #f7f7f7;
 	border: 1px solid #f3f3f3;
+	border-top: 1px solid #dedede;
+	/* border-left: 1px solid #f7f7f7; */
 }
 
 #up-next-ul li:last-child {
 	margin-bottom: 0;
+}
+
+#up-next-ul li.help {
+	height: 100%;
+	background-color: #fff;
+	padding: 0 10px;
+}
+
+#up-next-ul li.help p {
+	text-align: center;
+	font-size: 25px;
+	color: #ccc;
+	font-weight: 300;
+	margin: 15px 0;
 }
 
 .up-next-item {

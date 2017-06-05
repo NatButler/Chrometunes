@@ -11,16 +11,15 @@ export const CLEAR_FILTERED = 'CLEAR_FILTERED';
 
 export const ADD_TRACK = 'ADD_TRACK';
 export const ADD_ALBUM = 'ADD_ALBUM';
-export const ADD_REM_ALBUM = 'ADD_REM_ALBUM';
+export const ADD_REM_DISC = 'ADD_REM_DISC';
 export const DEL_TRACK = 'DEL_TRACK';
 export const SKIP_TRACK = 'SKIP_TRACK';
 export const CLEAR_TRACKS = 'CLEAR_TRACKS';
 export const PLAY_FROM = 'PLAY_FROM';
 
 export const PLAY_TRACK = 'PLAY_TRACK';
-export const STOPPED = 'STOPPED';
 export const SET_PLAYBACK_STATE = 'SET_PLAYBACK_STATE';
-export const TOGGLE_PLAYBACK = 'TOGGLE_PLAYBACK';
+export const TOGGLE_PLAYBACK_STATE = 'TOGGLE_PLAYBACK_STATE';
 export const SET_PLAYMODE = 'SET_PLAYMODE';
 export const TOGGLE_PLAYMODE = 'TOGGLE_PLAYMODE';
 

@@ -1,4 +1,4 @@
-import * as filterTypes from './constants/filterTypes';
+import * as filterType from './constants/filterTypes';
 
 // SEARCH
 export const trkSearch = (tracks, query) => {
@@ -8,7 +8,7 @@ export const trkSearch = (tracks, query) => {
 }
 
 const matchTrack = (query, trk) => {
-	return ( stringMatch(trk[filterTypes.ARTIST], query) || stringMatch(trk[filterTypes.ALBUM], query) || stringMatch(trk[filterTypes.TITLE], query) );
+	return ( stringMatch(trk[filterType.ARTIST], query) || stringMatch(trk[filterType.ALBUM], query) || stringMatch(trk[filterType.TITLE], query) );
 }
 
 const stringMatch = (a, b) => {
@@ -21,13 +21,17 @@ const stringMatch = (a, b) => {
 export const trkFilter = (
 	tracks,
 	filter,
-	type
+	type,
+	disc
 ) => {
 	switch(type) {
-		case filterTypes.ALBUM:
-			return sortByTrackNo( 
+		case filterType.ALBUM:
+			return sortByTrackNo(
 				tracks.filter( (t, i) => {
-					return t[type] === filter[type] && t[filterTypes.ARTIST] === filter[filterTypes.ARTIST];
+					if (disc) {
+						return t[type] === filter[type] && t[filterType.ARTIST] === filter[filterType.ARTIST] && t[filterType.DISC] === filter[filterType.DISC];	
+					}
+					return t[type] === filter[type] && t[filterType.ARTIST] === filter[filterType.ARTIST];
 				}) 
 			);
 		default:

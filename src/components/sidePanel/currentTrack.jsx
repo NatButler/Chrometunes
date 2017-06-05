@@ -5,12 +5,12 @@ import Button from '../Button';
 import * as playstate from '../../constants/playStates';
 
 class NowPlaying extends Component {
-	shouldComponentUpdate(nextProps, nextState) {
+	shouldComponentUpdate(nextProps) {
 		return this.props.playback.mode === nextProps.playback.mode;
 	}
 
 	render() {
-		console.log('Rendering Current Track.');
+		console.log('Rendering Current track.');
 		const audio = document.getElementById('player');
 		const playback = this.props.playback;
 		const track = (playback.track) ? <Item trk={playback.track} /> : <div></div>;
@@ -21,7 +21,7 @@ class NowPlaying extends Component {
 					icon={(playback.status === playstate.PLAY) ? playstate.PAUSE : playstate.PLAY}
 					className="playback"
 					disabled={(playback.track) ? '' : 'disabled'}
-					handler={ () => {
+					handler={() => {
 						(playback.status === playstate.PLAY) ? audio.pause() : audio.play();
 					}}
 				/>
@@ -31,7 +31,7 @@ class NowPlaying extends Component {
 				<Button
 					icon="info-sign"
 					className="info"
-					handler={ () => {
+					handler={() => {
 						$('#tabs a[href="#info"]').tab('show');
 					}}
 				/>

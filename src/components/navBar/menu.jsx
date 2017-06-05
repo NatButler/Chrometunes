@@ -8,8 +8,8 @@ import { setPlaymode } from '../../actions/actions';
 import * as playmode from '../../constants/playModes';
 
 class Menu extends Component {
-	shouldComponentUpdate(nextProps, nextState) {
-		return !nextProps.isUpnext || !nextProps.isPlaylists || this.props.playmode !== nextProps.playmode;
+	shouldComponentUpdate(nextProps) {
+		return !this.props.isUpnext && nextProps.isUpnext || this.props.isUpnext && !nextProps.isUpnext || !this.props.isPlaylist && nextProps.isPlaylist || this.props.isPlaylist && !nextProps.isPlaylist || this.props.playmode !== nextProps.playmode;
 	}
 
 	render() {

@@ -1835,7 +1835,7 @@ exports.connect = _connect2["default"];
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-exports.delPlaylist = exports.loadPlaylist = exports.saveList = exports.togglePlaymode = exports.setPlaymode = exports.togglePlayback = exports.setPlayback = exports.playTrack = exports.clearTracks = exports.delTrack = exports.playFrom = exports.addRemAlbum = exports.addAlbum = exports.addTrack = exports.clearFiltered = exports.clearSearch = exports.filterLib = exports.searchLib = exports.importLib = exports.setColWidth = exports.setTableWidth = exports.setCastStatus = exports.setServerUrl = undefined;
+exports.delPlaylist = exports.loadPlaylist = exports.saveList = exports.togglePlaymode = exports.setPlaymode = exports.togglePlayback = exports.setPlayback = exports.playTrack = exports.clearTracks = exports.delTrack = exports.playFrom = exports.addRemDisc = exports.addDisc = exports.addTrack = exports.clearFiltered = exports.clearSearch = exports.filterLib = exports.searchLib = exports.importLib = exports.setColWidth = exports.setTableWidth = exports.setCastStatus = exports.setServerUrl = undefined;
 
 var _librarySearch = __webpack_require__(64);
 
@@ -1921,16 +1921,16 @@ var addTrack = exports.addTrack = function addTrack(track) {
 		type: types.ADD_TRACK, track: track
 	};
 };
-var addAlbum = exports.addAlbum = function addAlbum(track, tracks) {
+var addDisc = exports.addDisc = function addDisc(track, tracks) {
 	return {
 		type: types.ADD_ALBUM,
-		album: (0, _librarySearch.trkFilter)(tracks, track, filterTypes.ALBUM)
+		album: (0, _librarySearch.trkFilter)(tracks, track, filterTypes.ALBUM, track.Disc)
 	};
 };
-var addRemAlbum = exports.addRemAlbum = function addRemAlbum(track, tracks) {
+var addRemDisc = exports.addRemDisc = function addRemDisc(track, tracks) {
 	return {
-		type: types.ADD_REM_ALBUM,
-		album: (0, _librarySearch.trkFilter)(tracks, track, filterTypes.ALBUM),
+		type: types.ADD_REM_DISC,
+		album: (0, _librarySearch.trkFilter)(tracks, track, filterTypes.ALBUM, track.Disc),
 		index: track.Track - 1
 	};
 };
@@ -2000,7 +2000,7 @@ var setPlayback = exports.setPlayback = function setPlayback(state) {
 };
 var togglePlayback = exports.togglePlayback = function togglePlayback() {
 	return {
-		type: types.TOGGLE_PLAYBACK
+		type: types.TOGGLE_PLAYBACK_STATE
 	};
 };
 var setPlaymode = exports.setPlaymode = function setPlaymode(mode) {
@@ -3854,6 +3854,7 @@ var TITLE = exports.TITLE = 'Title';
 var ALBUM = exports.ALBUM = 'Album';
 var ARTIST = exports.ARTIST = 'Artist';
 var GENRE = exports.GENRE = 'Genre';
+var DISC = exports.DISC = 'Disc';
 
 /***/ }),
 /* 32 */
@@ -7478,7 +7479,7 @@ exports.sortByArtist = exports.sortByTrackNo = exports.trkFilter = exports.trkSe
 
 var _filterTypes = __webpack_require__(31);
 
-var filterTypes = _interopRequireWildcard(_filterTypes);
+var filterType = _interopRequireWildcard(_filterTypes);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -7490,7 +7491,7 @@ var trkSearch = exports.trkSearch = function trkSearch(tracks, query) {
 };
 
 var matchTrack = function matchTrack(query, trk) {
-	return stringMatch(trk[filterTypes.ARTIST], query) || stringMatch(trk[filterTypes.ALBUM], query) || stringMatch(trk[filterTypes.TITLE], query);
+	return stringMatch(trk[filterType.ARTIST], query) || stringMatch(trk[filterType.ALBUM], query) || stringMatch(trk[filterType.TITLE], query);
 };
 
 var stringMatch = function stringMatch(a, b) {
@@ -7501,11 +7502,14 @@ var stringMatch = function stringMatch(a, b) {
 };
 
 // FILTER
-var trkFilter = exports.trkFilter = function trkFilter(tracks, filter, type) {
+var trkFilter = exports.trkFilter = function trkFilter(tracks, filter, type, disc) {
 	switch (type) {
-		case filterTypes.ALBUM:
+		case filterType.ALBUM:
 			return sortByTrackNo(tracks.filter(function (t, i) {
-				return t[type] === filter[type] && t[filterTypes.ARTIST] === filter[filterTypes.ARTIST];
+				if (disc) {
+					return t[type] === filter[type] && t[filterType.ARTIST] === filter[filterType.ARTIST] && t[filterType.DISC] === filter[filterType.DISC];
+				}
+				return t[type] === filter[type] && t[filterType.ARTIST] === filter[filterType.ARTIST];
 			}));
 		default:
 			return tracks.filter(function (t) {
@@ -7576,7 +7580,7 @@ var upnext = function upnext() {
 			return [].concat(_toConsumableArray(upnext), [action.track]);
 		case 'ADD_ALBUM':
 			return [].concat(_toConsumableArray(upnext), _toConsumableArray(action.album));
-		case 'ADD_REM_ALBUM':
+		case 'ADD_REM_DISC':
 			return [].concat(_toConsumableArray(action.album.slice(action.index)));
 		case 'PLAY_FROM':
 			return [].concat(_toConsumableArray(upnext.slice(action.index)));
@@ -11748,24 +11752,19 @@ var AudioPlayer = function (_Component) {
 
 	_createClass(AudioPlayer, [{
 		key: 'shouldComponentUpdate',
-		value: function shouldComponentUpdate(nextProps, nextState) {
+		value: function shouldComponentUpdate(nextProps) {
 			return this.props.src !== nextProps.src;
 		}
 	}, {
 		key: 'render',
 		value: function render() {
-			var _this2 = this;
-
-			console.log('Rendering audio.');
+			console.log('Rendering Audio.');
 			return _react2.default.createElement('audio', {
 				id: 'player',
 				className: this.props.className,
 				autoPlay: this.props.autoPlay,
 				preload: this.props.preload,
 				controls: true,
-				ref: function ref(node) {
-					_this2.audioEl = node;
-				},
 				src: this.props.src,
 				onEnded: this.props.endedHandler,
 				onPlay: this.props.playHandler,
@@ -11853,13 +11852,16 @@ var NavBar = function (_Component) {
 
 		var _this = _possibleConstructorReturn(this, (NavBar.__proto__ || Object.getPrototypeOf(NavBar)).call(this));
 
+		_this.state = {
+			filter: ''
+		};
 		_this.timer;
 		return _this;
 	}
 
 	_createClass(NavBar, [{
 		key: 'shouldComponentUpdate',
-		value: function shouldComponentUpdate(nextProps, nextState) {
+		value: function shouldComponentUpdate(nextProps) {
 			return this.props.filter !== nextProps.filter || this.props.query !== nextProps.query;
 		}
 	}, {
@@ -11892,9 +11894,10 @@ var NavBar = function (_Component) {
 						className: 'form-inline',
 						id: 'genres',
 						onChange: function onChange() {
+							_this2.state.filter = _this2.select.value;
 							_this2.handleFilter(_this2.select.value);
 						},
-						value: props.filter
+						value: this.state.filter
 					},
 					_react2.default.createElement(
 						'option',
@@ -12046,8 +12049,8 @@ var Menu = function (_Component) {
 
 	_createClass(Menu, [{
 		key: 'shouldComponentUpdate',
-		value: function shouldComponentUpdate(nextProps, nextState) {
-			return !nextProps.isUpnext || !nextProps.isPlaylists || this.props.playmode !== nextProps.playmode;
+		value: function shouldComponentUpdate(nextProps) {
+			return !this.props.isUpnext && nextProps.isUpnext || this.props.isUpnext && !nextProps.isUpnext || !this.props.isPlaylist && nextProps.isPlaylist || this.props.isPlaylist && !nextProps.isPlaylist || this.props.playmode !== nextProps.playmode;
 		}
 	}, {
 		key: 'render',
@@ -12290,6 +12293,8 @@ var _react = __webpack_require__(4);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactDom = __webpack_require__(109);
+
 var _propTypes = __webpack_require__(8);
 
 var _reactRedux = __webpack_require__(15);
@@ -12330,12 +12335,15 @@ var Playback = function (_Component) {
 	function Playback() {
 		_classCallCheck(this, Playback);
 
-		return _possibleConstructorReturn(this, (Playback.__proto__ || Object.getPrototypeOf(Playback)).apply(this, arguments));
+		var _this = _possibleConstructorReturn(this, (Playback.__proto__ || Object.getPrototypeOf(Playback)).call(this));
+
+		_this.audio;
+		return _this;
 	}
 
 	_createClass(Playback, [{
 		key: 'shouldComponentUpdate',
-		value: function shouldComponentUpdate(nextProps, nextState) {
+		value: function shouldComponentUpdate(nextProps) {
 			var props = this.props;
 			if (props.playback.mode !== nextProps.playback.mode) {
 				return true;
@@ -12353,7 +12361,6 @@ var Playback = function (_Component) {
 			var _this2 = this;
 
 			console.log('Rendering Playback.');
-			var audioElem = document.getElementById('player');
 			var playback = this.props.playback;
 			var upnext = this.props.upnext;
 			var store = this.context.store;
@@ -12375,29 +12382,25 @@ var Playback = function (_Component) {
 						if (playback.mode !== playmode.REPEAT1) {
 							store.dispatch((0, _actions.playTrack)(playback.mode, upnext, playback.track));
 						} else {
-							audioElem.load();
+							_this2.audio.load();
 						}
 					}
 				}),
 				_react2.default.createElement(_Audio2.default, {
+					ref: function ref(component) {
+						_this2.audio = (0, _reactDom.findDOMNode)(component);
+					},
 					className: 'audio',
 					src: src,
 					endedHandler: function endedHandler() {
-						if (playback.mode !== playmode.REPEAT1 && upnext.length > 0) {
-							store.dispatch((0, _actions.playTrack)(playback.mode, upnext, playback.track));
-						} else if (playback.mode === playmode.REPEAT1) {
-							audioElem.load();
-						} else {
-							store.dispatch((0, _actions.setPlayback)(playstate.STOPPED));
-						}
+						_this2.onEnded(playback, upnext);
 					},
 					playHandler: function playHandler() {
-						_this2.playToggle();
+						store.dispatch((0, _actions.setPlayback)(playstate.PLAY));
 					},
 					pauseHandler: function pauseHandler() {
-						_this2.playToggle();
+						store.dispatch((0, _actions.setPlayback)(playstate.PAUSE));
 					}
-					// errorHandler={ err => { console.error('Error:', err); }}
 				}),
 				_react2.default.createElement(_Button2.default, {
 					className: 'btn btn-default playmode ' + playback.mode,
@@ -12414,15 +12417,26 @@ var Playback = function (_Component) {
 			return server + dir.slice(dir.indexOf('iTunes'));
 		}
 	}, {
-		key: 'playToggle',
-		value: function playToggle() {
+		key: 'onEnded',
+		value: function onEnded(playback, upnext) {
 			var store = this.context.store;
 
-			store.dispatch((0, _actions.togglePlayback)());
-			if (_cast.player.isPaused) {
-				_cast.playerController.playOrPause();
+			if (playback.mode !== playmode.REPEAT1 && upnext.length > 0) {
+				console.log('Playing track...');
+				store.dispatch((0, _actions.playTrack)(playback.mode, upnext, playback.track));
+			} else if (playback.mode === playmode.REPEAT1) {
+				this.audio.load();
+			} else {
+				store.dispatch((0, _actions.setPlayback)(playstate.IDLE));
 			}
 		}
+
+		// playToggle() {
+		// 	const { store } = this.context;
+		// 	store.dispatch( togglePlayback() );
+		// 	if (player.isPaused) { playerController.playOrPause(); }
+		// }
+
 	}, {
 		key: 'cast',
 		value: function cast(src, type) {
@@ -12661,13 +12675,13 @@ var NowPlaying = function (_Component) {
 
 	_createClass(NowPlaying, [{
 		key: 'shouldComponentUpdate',
-		value: function shouldComponentUpdate(nextProps, nextState) {
+		value: function shouldComponentUpdate(nextProps) {
 			return this.props.playback.mode === nextProps.playback.mode;
 		}
 	}, {
 		key: 'render',
 		value: function render() {
-			console.log('Rendering Current Track.');
+			console.log('Rendering Current track.');
 			var audio = document.getElementById('player');
 			var playback = this.props.playback;
 			var track = playback.track ? _react2.default.createElement(_upNextItems.Item, { trk: playback.track }) : _react2.default.createElement('div', null);
@@ -12975,7 +12989,7 @@ var UpNext = function (_Component) {
 	_createClass(UpNext, [{
 		key: 'render',
 
-		// shoudlComponentUpdate(nextProps, nextState) {
+		// shoudlComponentUpdate(nextProps) {
 		// // Requires array compare (immutable.js)
 		// 	return this.props.upnext[0].PId !== nextProps.upnext[0].PId;
 		// }
@@ -12993,7 +13007,7 @@ var UpNext = function (_Component) {
 				_react2.default.createElement(
 					'ul',
 					{ id: 'up-next-ul' },
-					list
+					list.length ? list : _react2.default.createElement(Help, null)
 				)
 			);
 		}
@@ -13006,6 +13020,18 @@ var mapStateToProps = function mapStateToProps(state) {
 	return {
 		upnext: state.upnext
 	};
+};
+
+var Help = function Help() {
+	return _react2.default.createElement(
+		'li',
+		{ className: 'help' },
+		_react2.default.createElement(
+			'p',
+			null,
+			'Double click a row to play a track. Click an \'Album\' or \'Title\' to add to the list. Save a list by clicking \'SAVE\'. Clear a list by clicking \'CLEAR\'.'
+		)
+	);
 };
 
 exports.default = (0, _reactRedux.connect)(mapStateToProps)(UpNext);
@@ -13059,7 +13085,7 @@ var TRow = function TRow(_ref2, _ref3) {
 			'data-id': track.PId,
 			className: trClass,
 			onDoubleClick: function onDoubleClick() {
-				store.dispatch((0, _actions.addRemAlbum)(track, tracks));
+				store.dispatch((0, _actions.addRemDisc)(track, tracks));
 				store.dispatch((0, _actions.playTrack)(playback.mode, [track], playback.track));
 			}
 		},
@@ -13080,7 +13106,7 @@ var TRow = function TRow(_ref2, _ref3) {
 				'a',
 				{ href: '#',
 					onClick: function onClick(e) {
-						store.dispatch((0, _actions.addAlbum)(track, tracks));
+						store.dispatch((0, _actions.addDisc)(track, tracks));
 						e.preventDefault;
 					}
 				},
@@ -13206,7 +13232,7 @@ var Table = function (_Component) {
 	_createClass(Table, [{
 		key: 'render',
 
-		// shouldComponentUpdate(nextProps, nextState) {
+		// shouldComponentUpdate(nextProps) {
 		// 	console.log(this.props, nextProps);
 		// }
 
@@ -13304,16 +13330,15 @@ var CLEAR_FILTERED = exports.CLEAR_FILTERED = 'CLEAR_FILTERED';
 
 var ADD_TRACK = exports.ADD_TRACK = 'ADD_TRACK';
 var ADD_ALBUM = exports.ADD_ALBUM = 'ADD_ALBUM';
-var ADD_REM_ALBUM = exports.ADD_REM_ALBUM = 'ADD_REM_ALBUM';
+var ADD_REM_DISC = exports.ADD_REM_DISC = 'ADD_REM_DISC';
 var DEL_TRACK = exports.DEL_TRACK = 'DEL_TRACK';
 var SKIP_TRACK = exports.SKIP_TRACK = 'SKIP_TRACK';
 var CLEAR_TRACKS = exports.CLEAR_TRACKS = 'CLEAR_TRACKS';
 var PLAY_FROM = exports.PLAY_FROM = 'PLAY_FROM';
 
 var PLAY_TRACK = exports.PLAY_TRACK = 'PLAY_TRACK';
-var STOPPED = exports.STOPPED = 'STOPPED';
 var SET_PLAYBACK_STATE = exports.SET_PLAYBACK_STATE = 'SET_PLAYBACK_STATE';
-var TOGGLE_PLAYBACK = exports.TOGGLE_PLAYBACK = 'TOGGLE_PLAYBACK';
+var TOGGLE_PLAYBACK_STATE = exports.TOGGLE_PLAYBACK_STATE = 'TOGGLE_PLAYBACK_STATE';
 var SET_PLAYMODE = exports.SET_PLAYMODE = 'SET_PLAYMODE';
 var TOGGLE_PLAYMODE = exports.TOGGLE_PLAYMODE = 'TOGGLE_PLAYMODE';
 
@@ -13514,7 +13539,7 @@ var parseXML = function parseXML(xml, dir) {
 					} else if (key === 'Disc Number') {
 						trk['Disc'] = +prop;
 					} else if (key === 'Disc Count') {
-						trk['DiscCount'] = +prop;
+						trk['Disc count'] = +prop;
 					} else if (key === 'Track Number') {
 						trk['Track'] = +prop;
 					} else if (key === 'Track Count') {
@@ -13763,16 +13788,19 @@ var playback = function playback() {
 					track: action.track
 				});
 			}
-		case 'STOPPED':
-			return _extends({}, playback, {
-				track: '',
-				status: playstate.IDLE
-			});
 		case 'SET_PLAYBACK_STATE':
-			return _extends({}, playback, {
-				status: action.state
-			});
-		case 'TOGGLE_PLAYBACK':
+			switch (action.state) {
+				case playstate.IDLE:
+					return _extends({}, playback, {
+						track: '',
+						status: playstate.IDLE
+					});
+				default:
+					return _extends({}, playback, {
+						status: action.state
+					});
+			}
+		case 'TOGGLE_PLAYBACK_STATE':
 			if (playback.status !== playstate.PLAY) {
 				return _extends({}, playback, {
 					status: playstate.PLAY
