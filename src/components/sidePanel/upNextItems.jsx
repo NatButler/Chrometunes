@@ -2,7 +2,7 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 import Button from '../Button';
 import { delTrack, togglePlayback, filterLib, playFrom, playTrack, clearSearch } from '../../actions/actions'
-import * as filterTypes from '../../constants/filterTypes';
+import * as filterType from '../../constants/filterTypes';
 
 export const UpNextItem = ({ trk, idx }, { store }) => (
 	<li>
@@ -43,7 +43,7 @@ export const Item = ({ trk, idx }, { store }) => {
 					className="up-next-artist"
 					onClick={ () => {
 						store.dispatch( clearSearch() );
-						store.dispatch( filterLib(tracks, trk[filterTypes.ARTIST], filterTypes.ARTIST) );
+						store.dispatch( filterLib(tracks, trk[filterType.ARTIST], filterType.ARTIST) );
 					}}
 				>
 					{trk.Artist}  
@@ -53,7 +53,7 @@ export const Item = ({ trk, idx }, { store }) => {
 					className="up-next-album"
 					onClick={ () => {
 						store.dispatch( clearSearch() );
-						store.dispatch( filterLib(tracks, trk, filterTypes.ALBUM) );
+						store.dispatch( filterLib(tracks, trk, filterType.ALBUM) );
 					}}
 				>
 					{trk.Album}

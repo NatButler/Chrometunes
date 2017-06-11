@@ -1,7 +1,9 @@
 const app = (
 	app = {
-		tableW: 0,
-		colsW: 0,
+		dimentions: {
+			tableW: 0,
+			colsW: 0
+		},
 		tableHds: ['Artist', 'Duration', 'Album', 'Track', 'Title'],
 		serverAdd: '',
 		serverStatus: '',

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 import MenuItem from './menuItem';
 import Button from '../Button';
@@ -9,13 +8,12 @@ import * as playmode from '../../constants/playModes';
 
 class Menu extends Component {
 	shouldComponentUpdate(nextProps) {
-		return !this.props.isUpnext && nextProps.isUpnext || this.props.isUpnext && !nextProps.isUpnext || !this.props.isPlaylist && nextProps.isPlaylist || this.props.isPlaylist && !nextProps.isPlaylist || this.props.playmode !== nextProps.playmode;
+		return this.props.playMode !== nextProps.playMode || !this.props.isUpnext && nextProps.isUpnext || this.props.isUpnext && !nextProps.isUpnext || !this.props.isPlaylists && nextProps.isPlaylists || this.props.isPlaylists && !nextProps.isPlaylists;
 	}
 
 	render() {
 		console.log('Rendering Menu.');
 		const props = this.props;
-		const { store } = this.context;
 		
 		return (
 	    <div className="dropdown">
@@ -26,7 +24,7 @@ class Menu extends Component {
 					aria-haspopup="true"
 					aria-expanded="false"
 					icon="option-vertical"
-					handler={ () => {  }}
+					handler={() => {  }}
 				/>
 
 				<ul
@@ -64,7 +62,7 @@ class Menu extends Component {
 					  		title="Repeat"
 					  		status={props.playMode === playmode.REPEAT ? 'selected' : ''}
 					  		handler={e => { 
-					  			store.dispatch( setPlaymode(playmode.REPEAT) ); 
+					  			props.changePlaymode(playmode.REPEAT); 
 			  					e.preventDefault(); 
 					  		}}
 					  	/>
@@ -72,7 +70,7 @@ class Menu extends Component {
 					  		title="Repeat 1"
 					  		status={props.playMode === playmode.REPEAT1 ? 'selected' : ''}
 					  		handler={e => { 
-					  			store.dispatch( setPlaymode(playmode.REPEAT1) );
+					  			props.changePlaymode(playmode.REPEAT1);
 			  					e.preventDefault();
 					  		}}
 					  	/>
@@ -80,7 +78,7 @@ class Menu extends Component {
 					  		title="Shuffle"
 					  		status={props.playMode === playmode.SHUFFLE ? 'selected' : ''}
 					  		handler={e => { 
-					  			store.dispatch( setPlaymode(playmode.SHUFFLE) );
+					  			props.changePlaymode(playmode.SHUFFLE);
 			  					e.preventDefault(); 
 					  		}}
 					  	/>
@@ -107,13 +105,9 @@ class Menu extends Component {
 }
 
 const mapStateToProps = state => ({
-	playMode: state.playback.mode,
-	isUpnext: state.upnext.length,
+	playMode: state.playback.nowPlaying.mode,
+	isUpnext: state.playback.upnext.length,
 	isPlaylists: state.playlists.length
 });
 
-Menu.contextTypes = {
-	store: PropTypes.object
-}
-
-export default connect(mapStateToProps)(Menu);
+export default connect(mapStateToProps, {changePlaymode: setPlaymode})(Menu);

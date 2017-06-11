@@ -1,58 +1,46 @@
-import React from 'react';
-import { PropTypes } from 'prop-types';
-import { addTrack, addDisc, addRemDisc, playTrack } from '../../actions/actions';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import TRow from './tRow';
+import { getVisibleTracks } from '../../librarySearch'
 
-const TBody = ({ tracks }) => {
-	let rows = tracks.map( trk => {
-		return <TRow key={trk.PId} track={trk} />
-	});
-	return <tbody>{rows}</tbody>;
+class TBody extends Component {
+	constructor() {
+		super();
+		this.state = {
+			visibleTrackIds: []
+		}
+	}
+
+	shouldComponentUpate(nextProps) { // Still rendering on playTrack when track isn't visible
+		return this.props.currentTrack !== nextProps.currentTrack && this.state.visibleTrackIds.includes(nextProps.currentTrack.PId);
+	}
+
+	componentWillUpdate() {
+		this.state.visibleTrackIds = [];
+	}
+
+	render() {
+		console.log('Rendering TBody.');
+		const props = this.props;
+		const tracks = (props.query ? props.search : false) || (props.filtered.length ? props.filtered : false) || props.library;
+
+		const rows = tracks.map( trk => {
+			this.state.visibleTrackIds.push(trk.PId);
+			let trClass = (props.currentTrack && props.currentTrack.PId === trk.PId) ? 'currentTrack' : '';
+			return <TRow key={trk.PId} track={trk} libTracks={props.library} trClass={trClass} />
+		});
+
+		return <tbody>{rows}</tbody>;
+	}
 }
 
-const TRow = ({ track }, { store }) => {
-	const state = store.getState();
-	const tracks = state.library.tracks;
-	const playback = state.playback;
-	let trClass = (playback.track && playback.track.PId === track.PId) ? 'currentTrack' : '';
+const mapStateToProps = state => ({
+	library: state.library.tracks,
+	filtered: state.library.filtered,
+	search: state.library.search,
+	query: state.library.query,
+	currentTrack: state.playback.nowPlaying.track
+	// visibleTracks: getVisibleTracks(state.library.tracks, state.library.artists)
+});
 
-	return (
-		<tr 
-			data-id={track.PId}
-			className={trClass}
-			onDoubleClick={() => {
-				store.dispatch( addRemDisc(track, tracks) );
-				store.dispatch( playTrack(playback.mode, [track], playback.track) );
-			}}
-		>
-			<td className="wide">{track.Artist}</td>
-			<td className="duration">{track.Duration}</td>
-			<td className="wide">
-				<a href="#"
-					onClick={e => {
-						store.dispatch( addDisc(track, tracks) );
-						e.preventDefault;
-					}}
-				>
-					{track.Album}
-				</a>
-			</td>
-			<td className="track">{track.Track}</td>
-			<td className="wide">
-				<a href="#"
-					onClick={e => {
-						store.dispatch( addTrack(track) );
-						e.preventDefault;
-					}}
-				>
-					{track.Title}
-				</a>
-			</td>
-		</tr>
-	);
-}
-
-TRow.contextTypes = {
-	store: PropTypes.object
-}
-
-export default TBody;
+export default connect(mapStateToProps)(TBody);

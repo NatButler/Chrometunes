@@ -1,18 +1,18 @@
 // Initialize
 export const castInit = () => {
-  const initializeCastApi = () => {
-    cast.framework.CastContext.getInstance().setOptions({
-      receiverApplicationId: chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
-      autoJoinPolicy: chrome.cast.AutoJoinPolicy.PAGE_SCOPED
-    });
-  }
+	const initializeCastApi = () => {
+		cast.framework.CastContext.getInstance().setOptions({
+			receiverApplicationId: chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
+			autoJoinPolicy: chrome.cast.AutoJoinPolicy.PAGE_SCOPED
+		});
+	}
 
-  window['__onGCastApiAvailable'] = isAvailable => {
-    if (isAvailable) { 
-  		console.log('Init cast.');
-    	initializeCastApi();
-    }
-  }
+	window['__onGCastApiAvailable'] = isAvailable => {
+		if (isAvailable) { 
+			console.log('Init cast.');
+			initializeCastApi();
+		}
+	}
 }
 
 // Media
@@ -29,11 +29,11 @@ const getCastSession = () => {
 }
 
 export const loadMedia = (url, type) => {
-  let req = request(url, type);
+	let req = request(url, type);
 
 	getCastSession().loadMedia(req).then(
-	  () => { console.log('Load succeed: ', player.mediaInfo); },
-	  errorCode => { console.log('Error code: ' + errorCode); }
+		() => { console.log('Load succeed: ', player.mediaInfo); },
+		errorCode => { console.log('Error code: ' + errorCode); }
 	);
 }
 
@@ -42,10 +42,10 @@ export const player = new cast.framework.RemotePlayer();
 export const playerController = new cast.framework.RemotePlayerController(player);
 
 playerController.addEventListener(
-  cast.framework.RemotePlayerEventType.IS_CONNECTED_CHANGED, () => {
-    // store.dispatch( setCastStatus(player.isConnected) );
-    console.log('Connected:', player.isConnected);
-  }
+	cast.framework.RemotePlayerEventType.IS_CONNECTED_CHANGED, () => {
+		// store.dispatch( setCastStatus(player.isConnected) );
+		console.log('Connected:', player.isConnected);
+	}
 );
 
 // const eventTypesRef = { 
@@ -69,7 +69,7 @@ playerController.addEventListener(
 // }
 
 const stopCasting = () => {
-  getCurrentSession().endSession(true);
-  // End the session and pass 'true' to indicate
-  // that receiver application should be stopped.
+	getCurrentSession().endSession(true);
+	// End the session and pass 'true' to indicate
+	// that receiver application should be stopped.
 }

@@ -41,7 +41,7 @@ class NowPlaying extends Component {
 }
 
 const mapStateToProps = state => ({
-	playback: state.playback
+	playback: state.playback.nowPlaying
 });
 
 export default connect(mapStateToProps)(NowPlaying);

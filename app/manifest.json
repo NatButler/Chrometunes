@@ -13,7 +13,8 @@
     "storage",
     { "fileSystem": ["write", "directory"] },
     "contextMenus",
-    "system.network"
+    "system.network",
+    "http://10.0.1.4:8080/"
   ],
   "sockets": {
     "tcpServer": {

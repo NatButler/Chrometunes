@@ -9,6 +9,7 @@ import { importLib, setServerUrl, setCastStatus } from './actions/actions';
 const addLoggingToDispatch = store => {
 	const rawDispatch = store.dispatch;
 	if (!console.group) { return rawDispatch; }
+	
 	return action => {
 		console.group(action.type);
 		console.log('%c prev state', 'color: gray', store.getState());
@@ -16,6 +17,7 @@ const addLoggingToDispatch = store => {
 		const returnValue = rawDispatch(action);
 		console.log('%c next state', 'color: green', store.getState());
 		console.groupEnd(action.type);
+		return returnValue;
 	}
 }
 

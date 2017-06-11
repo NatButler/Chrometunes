@@ -1,7 +1,7 @@
-import { trkFilter } from '../librarySearch';
+import { trkFilter, getArtistAlbums } from '../librarySearch';
 import * as types from '../constants/actionTypes';
-import * as filterTypes from '../constants/filterTypes';
-import * as playmodes from '../constants/playModes';
+import * as filterType from '../constants/filterTypes';
+import * as playmode from '../constants/playModes';
 
 // APP
 export const setServerUrl = url => ({
@@ -24,18 +24,19 @@ export const importLib = lib => ({
 	dir: lib.dir,
 	mediaDir: lib.mediaDir,
 	tracks: lib.tracks, 
-	genres: lib.genres
+	genres: lib.genres,
+	artists: lib.artists
 });
 export const searchLib = (results, query) => ({ 
 	type: types.SEARCH_LIB, 
 	results: results, 
 	query: query 
 });
-export const filterLib = (tracks, filter, filterType = filterTypes.GENRE) => ({ 
+export const filterLib = (tracks, filter, type = filterType.GENRE) => ({ 
 	type: types.FILTER_LIB,
-	results: trkFilter(tracks, filter, filterType),
-	filter: filter,
-	filterType: filterType
+	results: (type === filterType.ARTIST) ? getArtistAlbums(tracks, filter, type) : trkFilter(tracks, filter, type),
+	filter: (typeof(filter) === 'object') ? filter[type] : filter,
+	filterType: type
 });
 export const clearSearch = () => ({ 
 	type: types.CLEAR_SEARCH 
@@ -50,11 +51,11 @@ export const addTrack = track => ({
 });
 export const addDisc = (track, tracks) => ({
 	type: types.ADD_ALBUM,
-	album: trkFilter(tracks, track, filterTypes.ALBUM, track.Disc)
+	album: trkFilter(tracks, track, filterType.ALBUM, track.Disc)
 });
 export const addRemDisc = (track, tracks) => ({
 	type: types.ADD_REM_DISC,
-	album: trkFilter(tracks, track, filterTypes.ALBUM, track.Disc),
+	album: trkFilter(tracks, track, filterType.ALBUM, track.Disc),
 	index: track.Track-1
 });
 export const playFrom = (trk, trackIdx) => ({
@@ -70,41 +71,44 @@ export const clearTracks = () => ({
 });
 
 // PLAYBACK
-export const playTrack = (playmode, upnext, prevTrack) => {
-	if (playmode === playmodes.REPEAT && !prevTrack) {
-		playmode = playmodes.NORMAL;
+export const playTrack = (mode, upnext, prevTrack) => {
+	if (mode === playmode.REPEAT && !prevTrack) {
+		mode = playmode.NORMAL;
+	}
+	else if (mode === playmode.SHUFFLE && !upnext) {
+		mode = playmode.REPEAT1;
 	}
 
-	switch (playmode) {
-		case playmodes.NORMAL:
+	switch (mode) {
+		case playmode.NORMAL:
 			return {
 				type: types.PLAY_TRACK,
-				mode: playmode,
+				mode: mode,
 				track: upnext[0]
 			}
-		case playmodes.REPEAT:
+		case playmode.REPEAT:
 			return {
 				type: types.PLAY_TRACK,
-				mode: playmode,
+				mode: mode,
 				track: upnext[0],
 				prevTrack: prevTrack
 			}
-		case playmodes.REPEAT1: // Not currently necessary as element needs to .load() to play same track again
+		case playmode.REPEAT1: // Not currently necessary as element needs to .load() to play same track again
 			return {
 				type: types.PLAY_TRACK,
-				mode: playmode,
+				mode: mode,
 				track: prevTrack
 			}
-		case playmodes.SHUFFLE:
+		case playmode.SHUFFLE:
 			return {
 				type: types.PLAY_TRACK,
-				mode: playmode,
+				mode: mode,
 				track: upnext[randomTrack(upnext.length)]
 			}
 		default:
 			return {
 				type: types.PLAY_TRACK,
-				mode: playmode,
+				mode: mode,
 				track: upnext[0]
 			}
 	}

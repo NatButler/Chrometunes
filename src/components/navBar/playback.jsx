@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { findDOMNode } from 'react-dom';
-import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 import { playTrack, setPlayback, togglePlaymode, togglePlayback } from '../../actions/actions';
 import * as playstate from '../../constants/playStates';
@@ -20,18 +19,21 @@ class Playback extends Component {
 		if (props.playback.mode !== nextProps.playback.mode) { return true; } 
 		else if (props.upnext.length && !nextProps.upnext.length) { return true; }
 		else if (!props.upnext.length && nextProps.upnext.length) { return true; }
-		else { return props.playback.track.PId !== nextProps.playback.track.PId; }
+		else { 
+			if (props.playback.track && nextProps.playback.track) { return props.playback.track['PId'] !== nextProps.playback.track['PId']; }
+			else { return !props.playback.track && nextProps.playback.track; }
+		}
 	}
 
 	render() {
 		console.log('Rendering Playback.');
+		const props = this.props;
 		const playback = this.props.playback;
 		const upnext = this.props.upnext;
-		const { store } = this.context;
 		let src;
 		if (playback.track) {
-			src = this.audioSrc(this.props.serverAdd, playback.track.Location);
-			this.cast(src, playback.track.Type);
+			src = this.audioSrc(this.props.serverAdd, playback.track['Location']);
+			this.cast(src, playback.track['Type']);
 		}
 
  		return (
@@ -40,8 +42,8 @@ class Playback extends Component {
 					className={'btn btn-default skip '} 
 					icon="step-forward"
 					disabled={!upnext.length && playback.mode !== playmode.REPEAT1 ? 'disabled' : ''}
-					handler={ () => {
-						if (playback.mode !== playmode.REPEAT1) { store.dispatch( playTrack(playback.mode, upnext, playback.track) ); } 
+					handler={() => {
+						if (playback.mode !== playmode.REPEAT1) { props.onNextTrack(playback.mode, upnext, playback.track); } 
 						else { this.audio.load(); }
 					}}
 				/>
@@ -51,14 +53,14 @@ class Playback extends Component {
 					className="audio"
 					src={src}
 					endedHandler={ () => { this.onEnded(playback, upnext); }}
-					playHandler={ () => { store.dispatch( setPlayback(playstate.PLAY) ); }}
-					pauseHandler={ () => { store.dispatch( setPlayback(playstate.PAUSE) ); }}
+					playHandler={ () => { props.onPlaybackChange(playstate.PLAY); }}
+					pauseHandler={ () => { props.onPlaybackChange(playstate.PAUSE); }}
 				/>
 
 				<Button
 	        className={'btn btn-default playmode ' + playback.mode}
 					icon={(playback.mode === playmode.NORMAL) ? playmode.REPEAT : playback.mode}
-					handler={ () => { store.dispatch( togglePlaymode() ); }}
+					handler={() => { props.onTogglePlaymode() }}
 				/>
 			</div>
 		);
@@ -69,20 +71,13 @@ class Playback extends Component {
 	}
 
 	onEnded(playback, upnext) {
-		const { store } = this.context;
 		if (playback.mode !== playmode.REPEAT1 && upnext.length > 0) {
 			console.log('Playing track...');
-			store.dispatch( playTrack(playback.mode, upnext, playback.track) );
+			this.props.onNextTrack(playback.mode, upnext, playback.track);
 		}
 		else if (playback.mode === playmode.REPEAT1) { this.audio.load(); }
-		else { store.dispatch( setPlayback(playstate.IDLE) ); }
+		else { this.props.onPlaybackChange(playstate.IDLE); }
 	}
-
-	// playToggle() {
-	// 	const { store } = this.context;
-	// 	store.dispatch( togglePlayback() );
-	// 	if (player.isPaused) { playerController.playOrPause(); }
-	// }
 
 	cast(src, type) {
 		if (player.isConnected) {
@@ -101,19 +96,16 @@ class Playback extends Component {
 }
 
 const mapStateToProps = state => ({
-	playback: state.playback,
-	upnext: state.upnext,
+	playback: state.playback.nowPlaying,
+	upnext: state.playback.upnext,
 	serverAdd: state.app.serverAdd
 });
 
-Playback.contextTypes = {
-	store: PropTypes.object
-}
+const PlaybackControls = connect(
+	mapStateToProps, { 
+		onNextTrack: playTrack, 
+		onPlaybackChange: setPlayback, 
+		onTogglePlaymode: togglePlaymode
+	})(Playback);
 
-// const mapDispatchToProps = store.dispatch => {
-// 	return {
-
-// 	}
-// };
-
-export default connect(mapStateToProps)(Playback);
+export default PlaybackControls;

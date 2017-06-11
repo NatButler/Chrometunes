@@ -1,8 +1,6 @@
 import parseXML from './parseXML';
 
-export const loadLibrary = dir => {
-	// use dir arg to load previously loaded file/directory?
-
+export const loadLibrary = () => {
 	return new Promise( (resolve, reject) => {
 		let library;
 		
@@ -32,7 +30,7 @@ export const loadLibrary = dir => {
 						console.time('parseXML');
 						library = parseXML( convertXMLString(e.target.result), libDir );
 						console.timeEnd('parseXML');
-						library.then(lib => { return resolve(lib); }).catch(reason => { console.warn(reason); });
+						library.then(lib => { return resolve(lib); }).catch(reason => { console.error(reason); });
 					}
 
 					reader.readAsText(xml);

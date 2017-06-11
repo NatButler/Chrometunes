@@ -1,80 +1,79 @@
+import { combineReducers } from 'redux';
 import upnext from './upnext';
 import * as playstate from '../constants/playStates';
 import * as playmode from '../constants/playModes';
 
-const playback = (
-	playback = {
+const nowPlaying = (
+	nowPlaying = {
 		status: playstate.IDLE,
 		mode: playmode.NORMAL,
-		track: '',
-		volume: 1
+		track: undefined
 	}, action) => {
 	switch (action.type) {
 		case 'PLAY_TRACK':
 			upnext(undefined, action);
-			return {...playback,
+			return {...nowPlaying,
 				track: action.track
 			}
 		case 'PLAY_FROM': {
-			return {...playback,
+			return {...nowPlaying,
 				track: action.track
 			}
 		}
 		case 'SET_PLAYBACK_STATE':
 			switch(action.state) {
 				case playstate.IDLE:
-					return {...playback,
-						track: '',
+					return {...nowPlaying,
+						track: undefined,
 						status: playstate.IDLE
 					}
 				default:
-					return {...playback,
+					return {...nowPlaying,
 						status: action.state
 					}					
 			}
 		case 'TOGGLE_PLAYBACK_STATE':
-			if ( playback.status !== playstate.PLAY ) {
-				return {...playback,
+			if ( nowPlaying.status !== playstate.PLAY ) {
+				return {...nowPlaying,
 					status: playstate.PLAY
 				}
 			}
 			else {
-				return {...playback,
+				return {...nowPlaying,
 					status: playstate.PAUSE
 				}
 			}
 		case 'SET_PLAYMODE':
-			return {...playback,
+			return {...nowPlaying,
 				mode: action.mode
 			}
 		case 'TOGGLE_PLAYMODE':
-			if (playback.mode === playmode.NORMAL) { 
-				return {...playback,
-					mode: playmode.REPEAT
-				}
-			}
-			else if (playback.mode === playmode.REPEAT) { 
-				return {...playback,
-					mode: playmode.REPEAT1
-				}
-			}
-			else if (playback.mode === playmode.REPEAT1) { 
-				return {...playback,
-					mode: playmode.SHUFFLE
-				}
-			}
-			else { 
-				return {...playback,
-					mode: playmode.NORMAL
-				}
-			}
-		case 'SET_VOL': 
-			return {...playback,
-				volume: action.volume
+			switch(nowPlaying.mode) {
+				case playmode.NORMAL:
+					return {...nowPlaying,
+						mode: playmode.REPEAT
+					}
+				case playmode.REPEAT:
+					return {...nowPlaying,
+						mode: playmode.REPEAT1
+					}
+				case playmode.REPEAT1:
+					return {...nowPlaying,
+						mode: playmode.SHUFFLE
+					}
+				default:
+					return {...nowPlaying,
+						mode: playmode.NORMAL
+					}
 			}
 		default:
-			return playback;
+			return nowPlaying;
 	}
 }
+
+const playback = combineReducers({
+	nowPlaying,
+	upnext
+});
 
 export default playback;

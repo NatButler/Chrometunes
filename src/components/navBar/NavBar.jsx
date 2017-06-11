@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
-import Playback from './playback';
+import PlaybackControls from './playback';
 import Menu from './menu';
 import { filterLib, searchLib, clearSearch, clearFiltered } from '../../actions/actions';
 import { trkSearch } from '../../librarySearch';
+import * as filterTypes from '../../constants/filterTypes';
 
 class NavBar extends Component {
 	constructor() {
@@ -30,22 +30,25 @@ class NavBar extends Component {
 			<nav className="navbar navbar-default">
 				<button is="google-cast-button" id="cast-button"></button>
 
-				<Playback />
+				<PlaybackControls />
 
-				<select
-					ref={node => { this.select = node; }}
-					name="genres"
-					className="form-inline"
-					id="genres"
-					onChange={ () => {
-						this.state.filter = this.select.value;
-						this.handleFilter(this.select.value);
-					}}
-					value={this.state.filter}
-				>
-					<option value="">{'[ ' + props.filterType + ' ]'}</option>
-					{genreList}
-				</select>
+				<div id="select-wrap" className={(this.state.filter === '') ? '' : 'filter-selected'}>
+					<select
+						ref={node => { this.select = node; }}
+						name="genres"
+						className={'form-inline ' + ((this.state.filter === '') ? '' : 'filter-selected')}
+						id="filterSelect"
+						onChange={() => {
+							this.state.filter = this.select.value;
+							this.handleFilter(this.select.value);
+						}}
+						value={props.filterType !== filterTypes.GENRE ? props.filterType : this.state.filter}
+					>
+						{(props.filterType !== '' && props.filterType !== filterTypes.GENRE) ? <option value={props.filterType} disabled>{'[ ' + props.filterType + ' ]'}</option> : null}
+						<option value="">{'[ FILTER ]'}</option>
+						{genreList}
+					</select>
+				</div>
 
         <input
 					ref={node => { this.searchInput = node; }}
@@ -56,14 +59,12 @@ class NavBar extends Component {
 					spellCheck="false"
 					autoComplete="off"
 					autoFocus="true"
-					onKeyUp={ () => {
+					onKeyUp={() => {
 						if (this.searchInput.value !== props.query) {
 							this.handleSearch(this.searchInput.value);
 						}
 					}}
-					onSubmit={ () => {
-						console.log(this.searchInput.value);
-					}}
+					onSubmit={() => { console.log(this.searchInput.value); }}
         />
 
 				<Menu />
@@ -72,36 +73,30 @@ class NavBar extends Component {
 	}
 
 	handleSearch(query) {
-		const { store } = this.context;
 		const props = this.props;
 		clearTimeout( this.timer );
-		if (!query) { store.dispatch( clearSearch() ); }
+		if (!query) { props.onClearSearch(); }
 		else {
 			this.timer = (query.length >= 3) && setTimeout( () => {
 				console.time('trkSearch');
 				let results = props.filter ? trkSearch(props.filtered, query) : trkSearch(props.tracks, query);
 				console.timeEnd('trkSearch');
-				if (!results) { store.dispatch( clearSearch() ); }
-				else { store.dispatch( searchLib(results, query) ); }
+				if (!results) { props.onClearSearch(); }
+				else { props.onSearch(results, query); }
 			}, 200);
 		}
 	}
 
 	handleFilter(filter) {
-		const { store } = this.context;
-		const props = this.props
+		const props = this.props;
 		if (!filter) {
-			store.dispatch( clearFiltered() );
+			props.onClearFilter();
 			if (props.query) { this.handleSearch(props.query); }
 		} else {
-			store.dispatch( filterLib(props.tracks, filter) );
+			props.onFilter(props.tracks, filter);
 			if (props.query) { this.handleSearch(props.query); }
 		}
 	}
-}
-
-NavBar.contextTypes = {
-	store: PropTypes.object
 }
 
 const mapStateToProps = state => ({
@@ -113,4 +108,12 @@ const mapStateToProps = state => ({
 	genres: state.library.genres
 });
 
-export default connect(mapStateToProps)(NavBar);
+const Navigation = connect(
+	mapStateToProps, {
+		onSearch: searchLib,
+		onClearSearch: clearSearch,
+		onFilter: filterLib,
+		onClearFilter: clearFiltered
+	})(NavBar);
+
+export default Navigation;

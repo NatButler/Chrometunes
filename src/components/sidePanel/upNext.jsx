@@ -25,7 +25,7 @@ class UpNext extends Component {
 }
 
 const mapStateToProps = state => ({
-	upnext: state.upnext
+	upnext: state.playback.upnext
 });
 
 const Help = () => (

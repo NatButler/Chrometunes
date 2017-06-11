@@ -5,7 +5,7 @@ import { loadPlaylist, delPlaylist } from '../../actions/actions';
 
 class Playlists extends Component {
 	render() {
-		console.log('Rendering playlists.');
+		console.log('Rendering Playlists.');
 		const playlists = this.props.playlists;
 		let lists = <li className="warning">No saved playlists.</li>;
 		if (playlists.length) {
