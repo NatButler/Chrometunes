@@ -1,100 +1,52 @@
-import * as filterType from './constants/filterTypes';
+import * as fT from './constants/filterTypes';
 
 // SEARCH
-export const trkSearch = (tracks, query) => {
-	return tracks.filter(trk => {
-		return matchTrack(query, trk);
-	});
-}
-
-const matchTrack = (query, trk) => {
-	return (stringMatch(trk[filterType.ARTIST], query) || stringMatch(trk[filterType.ALBUM], query) || stringMatch(trk[filterType.TITLE], query) );
-}
-
-const stringMatch = (a, b) => {
-	return ( a.toLowerCase().indexOf(b.toLowerCase() ) != -1);
-}
+export const trkSearch = (ts, q) => ts.filter(t => matchTrk(t, q) );
+const matchTrk = (t, q) => matchStr(t[fT.ARTIST], q) || matchStr(t[fT.ALBUM], q) || matchStr(t[fT.TITLE], q);
+const matchStr = (a, b) => a.toLowerCase().indexOf( b.toLowerCase() ) != -1;
 
 // FILTER
-export const trkFilter = (
-	tracks,
-	filter,
-	type,
-	disc
-) => {
-	switch(type) {
-		case filterType.ALBUM:
-			return tracks.filter(trk => {
-				if (disc) {
-					return matchFilter(trk, type, filter) && matchFilter(trk, filterType.ARTIST, filter) && matchFilter(trk, filterType.DISC, filter);	
-				}
-				return matchFilter(trk, type, filter) && matchFilter(trk, filterType.ARTIST, filter);
-			}).sort(sortTrkNum);
+export const trkFilter = (ts, fil, tp, dsc) => {
+	switch(tp) {
+		case fT.ALBUM:
+			return ts.filter(trk => {
+				if (dsc) { return matchProp(trk, fil, tp) && matchProp(trk, fil, fT.ARTIST) && matchProp(trk, fil, fT.DISC); }
+				return matchProp(trk, fil, tp) && matchProp(trk, fil, fT.ARTIST);
+			}).sort(rtkNumAsc);
 		default:
-			return tracks.filter(trk => {
-				return trk[type] === filter;
-			});
+			return ts.filter(trk => matchPropVal(trk, fil, tp) );
 	}
 }
 
-const matchFilter = (trk, type, filter) => {
-	return trk[type] === filter[type];
-}
+const matchProp = (a, b, p) => a[p] === b[p];
+const matchPropVal = (a, b, p) => a[p] === b;
 
-// SORT
-export const sortTrkNum = (a, b) => {
-	return a.Disc - b.Disc || a.Track - b.Track;
-}
-
-const sortAlph = (a, b) => {
-	if (a.Album < b.Album) return -1;
-	if (a.Album > b.Album) return 1;
-	return 0;
-}
-
-export const getArtistAlbums = (tracks, filter, type) => {
-	const albums = new Set();
-	const albumTrks = [];
-	const artistAlbums = tracks.filter(trk => {
-		if (trk[type] === filter) {
-			if ( !albums.has(trk[filterType.ALBUM]) ) {
-				albumTrks.push(trk);
-				albums.add(trk[filterType.ALBUM]);
+export const getArtistAlbs = (ts, fil, tp) => {
+	const albs = new Set();
+	const albTrks = [];
+	const artistAlbs = ts.filter(trk => {
+		if ( matchPropVal(trk, fil, tp) ) {
+			if ( !albs.has(trk[fT.ALBUM]) ) {
+				albTrks.push(trk);
+				albs.add(trk[fT.ALBUM]);
 			}
 			return true;
 		}
 	});
 
-	const results = albumTrks.sort(sortAlph).map( alb => trkFilter(artistAlbums, alb, filterType.ALBUM) );
+	const results = albTrks.sort(alphAsc).map(alb => trkFilter(artistAlbs, alb, fT.ALBUM) );
 	return [].concat(...results);
 }
 
-export const getVisibleTracks = (tracks, artists, type = filterType.ARTIST) => {
-	const results = artists.map(artist => getArtistAlbums(tracks, artist, type));
+// SORT
+export const sortLibrary = (tracks, artists, type = fT.ARTIST) => {
+	const results = artists.map(artist => getArtistAlbs(tracks, artist, type));
 	return [].concat(...results);
 }
 
-// const sortByArtist = (tracks) => {
-
-// }
-
-// Sort not working accurately across multiple columns
-// export const sortByArtist = results => {
-// 	const compare = (a, b) => {
-// 		let artistA = a.Artist.toLowerCase();
-// 		let artistB = b.Artist.toLowerCase();
-// 		let albumA = a.Album.toLowerCase();
-// 		let albumB = b.Album.toLowerCase();
-// 		if (artistA === artistB) {
-// 			if (albumA === albumB) {
-// 				return a.Track - b.Track;
-// 			} else {
-// 				return albumA - albumB;
-// 			}
-// 		} else {
-// 			return artistA - artistB;
-// 		}
-// 		// return (x < y) ? -1 : (x > y) ? 1 : 0;
-// 	}
-// 	return results.sort(compare);
-// }
+const rtkNumAsc = (a, b) => a.Disc - b.Disc || a.Track - b.Track;
+const alphAsc = (a, b) => {
+	if (a[fT.ALBUM] < b[fT.ALBUM]) return -1;
+	if (a[fT.ALBUM] > b[fT.ALBUM]) return 1;
+	return 0;
+}

@@ -3,18 +3,18 @@ import { connect } from 'react-redux';
 import MenuItem from './menuItem';
 import Button from '../Button';
 import { loadLibrary } from '../../libraryLoad';
-import { setPlaymode } from '../../actions/actions';
+import { saveList, setPlaymode } from '../../actions/actions';
 import * as playmode from '../../constants/playModes';
 
 class Menu extends Component {
 	shouldComponentUpdate(nextProps) {
-		return this.props.playMode !== nextProps.playMode || !this.props.isUpnext && nextProps.isUpnext || this.props.isUpnext && !nextProps.isUpnext || !this.props.isPlaylists && nextProps.isPlaylists || this.props.isPlaylists && !nextProps.isPlaylists;
+		return this.props.playMode !== nextProps.playMode || !this.props.upnext.length && nextProps.upnext.length || this.props.upnext.length && !nextProps.upnext.length || !this.props.isPlaylists && nextProps.isPlaylists || this.props.isPlaylists && !nextProps.isPlaylists;
 	}
 
 	render() {
-		console.log('Rendering Menu.');
+		console.log('Menu.');
 		const props = this.props;
-		
+
 		return (
 	    <div className="dropdown">
 				<Button
@@ -41,16 +41,17 @@ class Menu extends Component {
 			  	<MenuItem
 			  		title="Load playlist"
 			  		status={props.isPlaylists ? '' : 'disabled'}
-			  		handler={e => { 
+			  		handler={e => {
 			  			$('#tabs a[href="#playlists"]').tab('show');
 			  			e.preventDefault(); 
 			  		}}
 			  	/>
 					<MenuItem
 			  		title="Save playlist"
-			  		status={props.isUpnext ? '' : 'disabled'}
-			  		handler={e => { 
-					  	this.searchInput.focus();
+			  		status={props.upnext.length ? '' : 'disabled'}
+			  		handler={e => {
+			  			$('#tabs a[href="#playlists"]').tab('show');
+			  			props.onSaveList(props.upnext, props.currentTrack);
 			  			e.preventDefault(); 
 			  		}}
 			  	/>
@@ -61,8 +62,8 @@ class Menu extends Component {
 							<MenuItem
 					  		title="Repeat"
 					  		status={props.playMode === playmode.REPEAT ? 'selected' : ''}
-					  		handler={e => { 
-					  			props.changePlaymode(playmode.REPEAT); 
+					  		handler={e => {
+					  			props.playMode === playmode.REPEAT ? props.changePlaymode(playmode.NORMAL) : props.changePlaymode(playmode.REPEAT);
 			  					e.preventDefault(); 
 					  		}}
 					  	/>
@@ -70,7 +71,7 @@ class Menu extends Component {
 					  		title="Repeat 1"
 					  		status={props.playMode === playmode.REPEAT1 ? 'selected' : ''}
 					  		handler={e => { 
-					  			props.changePlaymode(playmode.REPEAT1);
+					  			props.playMode === playmode.REPEAT1 ? props.changePlaymode(playmode.NORMAL) : props.changePlaymode(playmode.REPEAT1);
 			  					e.preventDefault();
 					  		}}
 					  	/>
@@ -78,7 +79,7 @@ class Menu extends Component {
 					  		title="Shuffle"
 					  		status={props.playMode === playmode.SHUFFLE ? 'selected' : ''}
 					  		handler={e => { 
-					  			props.changePlaymode(playmode.SHUFFLE);
+					  			props.playMode === playmode.SHUFFLE ? props.changePlaymode(playmode.NORMAL) : props.changePlaymode(playmode.SHUFFLE);
 			  					e.preventDefault(); 
 					  		}}
 					  	/>
@@ -106,8 +107,9 @@ class Menu extends Component {
 
 const mapStateToProps = state => ({
 	playMode: state.playback.nowPlaying.mode,
-	isUpnext: state.playback.upnext.length,
+	currentTrack: state.playback.nowPlaying.track,
+	upnext: state.playback.upnext,
 	isPlaylists: state.playlists.length
 });
 
-export default connect(mapStateToProps, {changePlaymode: setPlaymode})(Menu);
+export default connect(mapStateToProps, {onSaveList: saveList, changePlaymode: setPlaymode})(Menu);

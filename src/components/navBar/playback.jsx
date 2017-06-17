@@ -17,16 +17,15 @@ class Playback extends Component {
 	shouldComponentUpdate(nextProps) {
 		const props = this.props;
 		if (props.playback.mode !== nextProps.playback.mode) { return true; } 
-		else if (props.upnext.length && !nextProps.upnext.length) { return true; }
-		else if (!props.upnext.length && nextProps.upnext.length) { return true; }
-		else { 
-			if (props.playback.track && nextProps.playback.track) { return props.playback.track['PId'] !== nextProps.playback.track['PId']; }
-			else { return !props.playback.track && nextProps.playback.track; }
-		}
+		if (props.upnext.length && !nextProps.upnext.length) { return true; }
+		if (!props.upnext.length && nextProps.upnext.length) { return true; }
+		if (props.playback.track && nextProps.playback.track) { return props.playback.track['PId'] !== nextProps.playback.track['PId']; }
+		if (props.upnext.length !== nextProps.upnext.length && !props.playback.track && !nextProps.playback.track) { return false; }
+		else { return !props.playback.track && nextProps.playback.track; }
 	}
 
 	render() {
-		console.log('Rendering Playback.');
+		console.log('Playback.');
 		const props = this.props;
 		const playback = this.props.playback;
 		const upnext = this.props.upnext;
@@ -43,7 +42,7 @@ class Playback extends Component {
 					icon="step-forward"
 					disabled={!upnext.length && playback.mode !== playmode.REPEAT1 ? 'disabled' : ''}
 					handler={() => {
-						if (playback.mode !== playmode.REPEAT1) { props.onNextTrack(playback.mode, upnext, playback.track); } 
+						if (playback.mode !== playmode.REPEAT1) { props.onNextTrack(props.lib, props.index, playback.mode, upnext, playback.track['PId']); } 
 						else { this.audio.load(); }
 					}}
 				/>
@@ -72,8 +71,7 @@ class Playback extends Component {
 
 	onEnded(playback, upnext) {
 		if (playback.mode !== playmode.REPEAT1 && upnext.length > 0) {
-			console.log('Playing track...');
-			this.props.onNextTrack(playback.mode, upnext, playback.track);
+			this.props.onNextTrack(this.props.lib, this.props.index, playback.mode, upnext, playback.track['PId']);
 		}
 		else if (playback.mode === playmode.REPEAT1) { this.audio.load(); }
 		else { this.props.onPlaybackChange(playstate.IDLE); }
@@ -98,7 +96,9 @@ class Playback extends Component {
 const mapStateToProps = state => ({
 	playback: state.playback.nowPlaying,
 	upnext: state.playback.upnext,
-	serverAdd: state.app.serverAdd
+	serverAdd: state.app.serverAdd,
+	lib: state.library.tracks,
+	index: state.library.index
 });
 
 const PlaybackControls = connect(

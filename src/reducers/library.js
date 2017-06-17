@@ -1,33 +1,32 @@
-// import * as filterTypes from '../constants/filterTypes';
+// import * as fT from '../constants/filterTypes';
 
 const library = (
 	library = {
 		id: '',
-		dir: '',
-		mediaDir: '',
 		tracks: [],
+		index: [],
 		genres: [],
-		artists: [],
-		search: [],
 		query: '',
-		filtered: [],
+		search: [],
 		filter: '',
+		filtered: [],
 		filterType: ''
 	}, action) => {
 	switch (action.type) {
 		case 'IMPORT_LIB':
 			return {...library, 
 				id: action.id,
-				dir: action.dir,
-				mediaDir: action.mediaDir,
 				tracks: action.tracks, 
 				genres: action.genres,
-				artists: action.artists
+				index: action.index
+			}
+		case 'QUERY':
+			return {...library,
+				query: action.query
 			}
 		case 'SEARCH_LIB':
 			return {...library,
-				search: action.results,
-				query: action.query
+				search: action.tracks
 			}
 		case 'FILTER_LIB':
 			return {...library,
@@ -52,7 +51,3 @@ const library = (
 }
 
 export default library;
-
-// export const getVisibleTracks = library => {
-
-// }

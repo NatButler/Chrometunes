@@ -10,7 +10,7 @@ class NowPlaying extends Component {
 	}
 
 	render() {
-		console.log('Rendering Current track.');
+		console.log('Current track.');
 		const audio = document.getElementById('player');
 		const playback = this.props.playback;
 		const track = (playback.track) ? <Item trk={playback.track} /> : <div></div>;
@@ -25,9 +25,7 @@ class NowPlaying extends Component {
 						(playback.status === playstate.PLAY) ? audio.pause() : audio.play();
 					}}
 				/>
-
 				{track}
-				
 				<Button
 					icon="info-sign"
 					className="info"

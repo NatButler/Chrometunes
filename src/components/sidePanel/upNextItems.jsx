@@ -1,8 +1,8 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
 import Button from '../Button';
-import { delTrack, togglePlayback, filterLib, playFrom, playTrack, clearSearch } from '../../actions/actions'
-import * as filterType from '../../constants/filterTypes';
+import { delTrack, filterLib, playFrom, clearSearch } from '../../actions/actions'
+import * as fT from '../../constants/filterTypes';
 
 export const UpNextItem = ({ trk, idx }, { store }) => (
 	<li>
@@ -22,14 +22,13 @@ UpNextItem.contextTypes = {
 }
 
 export const Item = ({ trk, idx }, { store }) => {
-	const tracks = store.getState().library.tracks;
+	const lib = store.getState().library.tracks;
 
 	return (
 		<div
 			className="up-next-item"
-			onDoubleClick={ () => {
+			onDoubleClick={() => {
 				store.dispatch( playFrom(trk, idx) );
-				// store.dispatch( playTrack(store.getState().playback.status, [trk]) );
 			}}
 		>
 			<div className="title-wrap">
@@ -41,9 +40,15 @@ export const Item = ({ trk, idx }, { store }) => {
 			<div className="artist-wrap">
 				<h6
 					className="up-next-artist"
-					onClick={ () => {
-						store.dispatch( clearSearch() );
-						store.dispatch( filterLib(tracks, trk[filterType.ARTIST], filterType.ARTIST) );
+					onClick={() => {
+						let state = store.getState().library;
+						if (state.query) {
+							store.dispatch( clearSearch() );
+							$('#searchInput').val('').focus();
+						}
+						if (state.filter !== trk[fT.ARTIST]) {
+							store.dispatch( filterLib(lib, trk[fT.ARTIST], fT.ARTIST) );
+						}
 					}}
 				>
 					{trk.Artist}  
@@ -51,9 +56,15 @@ export const Item = ({ trk, idx }, { store }) => {
 				<span className="divider"> | </span>
 				<h6
 					className="up-next-album"
-					onClick={ () => {
-						store.dispatch( clearSearch() );
-						store.dispatch( filterLib(tracks, trk, filterType.ALBUM) );
+					onClick={() => {
+						let state = store.getState().library;
+						if (state.query) { 
+							store.dispatch( clearSearch() ); 
+							$('#searchInput').val('').focus();
+						}
+						if (state.filter !== trk[fT.ALBUM]) {
+							store.dispatch( filterLib(lib, trk, fT.ALBUM) );
+						}
 					}}
 				>
 					{trk.Album}

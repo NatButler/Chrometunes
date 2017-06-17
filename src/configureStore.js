@@ -1,6 +1,6 @@
 import { createStore } from 'redux';
 import mediaApp from './reducers/reducer';
-import throttle from 'lodash/throttle';
+import throttle from 'lodash.throttle';
 import { loadState, saveState } from './localStorage';
 import { loadLibrary } from './libraryLoad';
 import getIP from './getIP';

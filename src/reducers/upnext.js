@@ -41,7 +41,7 @@ const upnext = (upnext = [], action) => {
 			}
 		case 'LOAD_LIST':
 			return [
-				...action.tracks
+				...action.list
 			];
 		default:
 			return upnext;

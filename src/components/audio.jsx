@@ -7,7 +7,7 @@ class AudioPlayer extends Component {
 	}
 
 	render() {
-		console.log('Rendering Audio.');
+		console.log('Audio.');
 		return(
 			<audio
 				id="player"

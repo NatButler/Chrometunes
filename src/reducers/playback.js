@@ -1,12 +1,12 @@
 import { combineReducers } from 'redux';
 import upnext from './upnext';
-import * as playstate from '../constants/playStates';
-import * as playmode from '../constants/playModes';
+import * as pS from '../constants/playStates';
+import * as pM from '../constants/playModes';
 
 const nowPlaying = (
 	nowPlaying = {
-		status: playstate.IDLE,
-		mode: playmode.NORMAL,
+		status: pS.IDLE,
+		mode: pM.NORMAL,
 		track: undefined
 	}, action) => {
 	switch (action.type) {
@@ -22,10 +22,10 @@ const nowPlaying = (
 		}
 		case 'SET_PLAYBACK_STATE':
 			switch(action.state) {
-				case playstate.IDLE:
+				case pS.IDLE:
 					return {...nowPlaying,
 						track: undefined,
-						status: playstate.IDLE
+						status: pS.IDLE
 					}
 				default:
 					return {...nowPlaying,
@@ -33,14 +33,14 @@ const nowPlaying = (
 					}					
 			}
 		case 'TOGGLE_PLAYBACK_STATE':
-			if ( nowPlaying.status !== playstate.PLAY ) {
+			if ( nowPlaying.status !== pS.PLAY ) {
 				return {...nowPlaying,
-					status: playstate.PLAY
+					status: pS.PLAY
 				}
 			}
 			else {
 				return {...nowPlaying,
-					status: playstate.PAUSE
+					status: pS.PAUSE
 				}
 			}
 		case 'SET_PLAYMODE':
@@ -49,21 +49,21 @@ const nowPlaying = (
 			}
 		case 'TOGGLE_PLAYMODE':
 			switch(nowPlaying.mode) {
-				case playmode.NORMAL:
+				case pM.NORMAL:
 					return {...nowPlaying,
-						mode: playmode.REPEAT
+						mode: pM.REPEAT
 					}
-				case playmode.REPEAT:
+				case pM.REPEAT:
 					return {...nowPlaying,
-						mode: playmode.REPEAT1
+						mode: pM.REPEAT1
 					}
-				case playmode.REPEAT1:
+				case pM.REPEAT1:
 					return {...nowPlaying,
-						mode: playmode.SHUFFLE
+						mode: pM.SHUFFLE
 					}
 				default:
 					return {...nowPlaying,
-						mode: playmode.NORMAL
+						mode: pM.NORMAL
 					}
 			}
 		default:

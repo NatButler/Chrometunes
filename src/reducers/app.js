@@ -22,14 +22,6 @@ const app = (
 			return {...app,
 				castStatus: action.status
 			}
-		case 'SET_TABLE':
-			return {...app, 
-				tableW: action.width
-			}
-		case 'SET_COLS':
-			return {...app, 
-				colsW: action.width
-			}
 		default:
 			return app;
 	}

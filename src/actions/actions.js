@@ -1,6 +1,7 @@
-import { trkFilter, getArtistAlbums } from '../librarySearch';
+import { v4 } from 'uuid';
+import { trkFilter, getArtistAlbs } from '../librarySearch';
 import * as types from '../constants/actionTypes';
-import * as filterType from '../constants/filterTypes';
+import * as fT from '../constants/filterTypes';
 import * as playmode from '../constants/playModes';
 
 // APP
@@ -10,31 +11,24 @@ export const setServerUrl = url => ({
 export const setCastStatus = status => ({
 	type: types.SET_CAST_STATUS, status
 });
-export const setTableWidth = width => ({
-	type: types.SET_TABLE, width
-});
-export const setColWidth = width => ({
-	type: types.SET_COLS, width
-});
 
 // LIBRARY
 export const importLib = lib => ({
 	type: types.IMPORT_LIB,
 	id: lib.id,
-	dir: lib.dir,
-	mediaDir: lib.mediaDir,
 	tracks: lib.tracks, 
 	genres: lib.genres,
-	artists: lib.artists
+	index: lib.tracks.map(t => t.PId)
 });
-export const searchLib = (results, query) => ({ 
-	type: types.SEARCH_LIB, 
-	results: results, 
-	query: query 
+export const query = query => ({
+	type: types.QUERY, query
 });
-export const filterLib = (tracks, filter, type = filterType.GENRE) => ({ 
+export const searchLib = tracks => ({ 
+	type: types.SEARCH_LIB, tracks
+});
+export const filterLib = (tracks, filter, type = fT.GENRE) => ({ 
 	type: types.FILTER_LIB,
-	results: (type === filterType.ARTIST) ? getArtistAlbums(tracks, filter, type) : trkFilter(tracks, filter, type),
+	results: (type === fT.ARTIST) ? getArtistAlbs(tracks, filter, type) : trkFilter(tracks, filter, type),
 	filter: (typeof(filter) === 'object') ? filter[type] : filter,
 	filterType: type
 });
@@ -47,16 +41,16 @@ export const clearFiltered = () => ({
 
 // UP NEXT
 export const addTrack = track => ({ 
-	type: types.ADD_TRACK, track 
+	type: types.ADD_TRACK, track
 });
 export const addDisc = (track, tracks) => ({
 	type: types.ADD_ALBUM,
-	album: trkFilter(tracks, track, filterType.ALBUM, track.Disc)
+	album: trkFilter(tracks, track, fT.ALBUM, track.Disc).map(t => t.PId)
 });
 export const addRemDisc = (track, tracks) => ({
 	type: types.ADD_REM_DISC,
-	album: trkFilter(tracks, track, filterType.ALBUM, track.Disc),
-	index: track.Track-1
+	album: trkFilter(tracks, track, fT.ALBUM, track.Disc).map(t => t.PId),
+	index: track.Track
 });
 export const playFrom = (trk, trackIdx) => ({
 	type: types.PLAY_FROM,
@@ -66,16 +60,19 @@ export const playFrom = (trk, trackIdx) => ({
 export const delTrack = index => ({ 
 	type: types.DEL_TRACK, index 
 });
-export const clearTracks = () => ({ 
+export const clearTracks = () => ({
 	type: types.CLEAR_TRACKS 
+});
+export const loadPlaylist = list => ({ 
+	type: types.LOAD_LIST, list
 });
 
 // PLAYBACK
-export const playTrack = (mode, upnext, prevTrack) => {
-	if (mode === playmode.REPEAT && !prevTrack) {
+export const playTrack = (lib, index, mode, upnext, prevTrk) => {
+	if (mode === playmode.REPEAT && !prevTrk) {
 		mode = playmode.NORMAL;
 	}
-	else if (mode === playmode.SHUFFLE && !upnext) {
+	else if (mode === playmode.SHUFFLE) {
 		mode = playmode.REPEAT1;
 	}
 
@@ -84,20 +81,20 @@ export const playTrack = (mode, upnext, prevTrack) => {
 			return {
 				type: types.PLAY_TRACK,
 				mode: mode,
-				track: upnext[0]
+				track: lib[index.indexOf(upnext[0])]
 			}
 		case playmode.REPEAT:
 			return {
 				type: types.PLAY_TRACK,
 				mode: mode,
-				track: upnext[0],
-				prevTrack: prevTrack
+				track: lib[index.indexOf(upnext[0])],
+				prevTrack: prevTrk
 			}
 		case playmode.REPEAT1: // Not currently necessary as element needs to .load() to play same track again
 			return {
 				type: types.PLAY_TRACK,
 				mode: mode,
-				track: prevTrack
+				track: prevTrk
 			}
 		case playmode.SHUFFLE:
 			return {
@@ -109,7 +106,7 @@ export const playTrack = (mode, upnext, prevTrack) => {
 			return {
 				type: types.PLAY_TRACK,
 				mode: mode,
-				track: upnext[0]
+				track: lib[index.indexOf(upnext[0])]
 			}
 	}
 }
@@ -127,19 +124,18 @@ export const togglePlaymode = () => ({
 });
 
 // PLAYLISTS
-export const saveList = (upnext, currentTrack, title = 'Untitled') => {
-	let list = {};
-	list[title] = (currentTrack) ? [currentTrack, ...upnext] : upnext;
-	return {
-		type: types.SAVE_LIST,
-		list: list
-	}
-}
-export const loadPlaylist = tracks => ({ 
-	type: types.LOAD_LIST, tracks 
+export const saveList = (upnext, currentTrack) => ({
+	type: types.SAVE_LIST,
+	id: v4(),
+	tracks: currentTrack ? [currentTrack['PId'], ...upnext] : upnext
 });
-export const delPlaylist = index => ({ 
-	type: types.DEL_LIST, index 
+export const namePlaylist = (id, title = 'Untitled') => ({
+	type: types.NAME_LIST,
+	id: id,
+	title: title
+});
+export const delPlaylist = idx => ({ 
+	type: types.DEL_LIST, idx
 });
 
 // UTILS

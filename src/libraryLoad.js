@@ -2,42 +2,49 @@ import parseXML from './parseXML';
 
 export const loadLibrary = () => {
 	return new Promise( (resolve, reject) => {
-		let library;
-		
-		chrome.fileSystem.chooseEntry({ type: 'openDirectory' }, directory => {
-			if (!directory) { return resolve(undefined); }// reject('No directory chosen.'); }
+		const readFile = iTunesXML => {
+			// Persist file to storage
+			// chrome.storage.local.set({'iTunesXML': chrome.fileSystem.retainEntry(iTunesXML)});
 
-			directory.createReader().readEntries(results => {
-				let iTunesLib;
-				let mediaDir;
-				let libDir;
-
-				results.forEach(res => {
-					if (res.isFile && res.name === 'iTunes Library.xml') iTunesLib = res;
-					if (res.isDirectory && res.name === 'iTunes Media') mediaDir = res;
-				});
-
-				if (!iTunesLib || !mediaDir) {
-					reject('Cannot find "iTunes Library.xml" or "iTunes Media" directory.')
+			// Read file
+			iTunesXML.file(xml => {
+				let reader = new FileReader();
+				reader.readAsText(xml);
+				// reader.onerror = errorHandler;
+				reader.onload = e => {
+					console.time('parseXML');
+					const library = parseXML( convertXMLString(e.target.result) );
+					console.timeEnd('parseXML');
+					library.then(lib => { return resolve(lib); }).catch(reason => { console.error(reason); });
 				}
-
-				chrome.fileSystem.getDisplayPath(iTunesLib, path => { libDir = path; });
-
-				iTunesLib.file(xml => {
-					let reader = new FileReader();
-					// reader.onerror = errorHandler;
-					reader.onload = e => {
-						console.time('parseXML');
-						library = parseXML( convertXMLString(e.target.result), libDir );
-						console.timeEnd('parseXML');
-						library.then(lib => { return resolve(lib); }).catch(reason => { console.error(reason); });
-					}
-
-					reader.readAsText(xml);
-				});
-
 			});
-		});
+		}
+
+		// chrome.storage.local.get('iTunesXML', file => {
+		// 	console.info('Checking storage.');
+		// 	if (file.iTunesXML) {
+		// 		chrome.fileSystem.isRestorable(file.iTunesXML, bIsRestorable => {
+  //         // the entry is still there, load the content
+  //         console.info("Restoring " + file.iTunesXML);
+  //         chrome.fileSystem.restoreEntry(file.iTunesXML, iTunesXML => {
+  //         	console.log(iTunesXML);
+  //           if (iTunesXML) {
+  //             iTunesXML.isFile ? readFile(iTunesXML) : false;
+  //           }
+  //         });
+  //       });
+		// 	} 
+		// 	else {
+		chrome.fileSystem.chooseEntry({
+			type: 'openFile', 
+			suggestedName: 'iTunes Library.xml', 
+			accepts: [{ 
+				description: 'XML file (*.xml)', 
+				extensions: ['xml'] }], 
+			acceptsAllTypes: false 
+		}, readFile );
+		// 	}
+		// });
 	});
 }
 

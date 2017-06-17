@@ -4,6 +4,7 @@ export const SET_TABLE = 'SET_TABLE';
 export const SET_COLS = 'SET_COLS';
 
 export const IMPORT_LIB = 'IMPORT_LIB';
+export const QUERY = 'QUERY';
 export const SEARCH_LIB = 'SEARCH_LIB';
 export const CLEAR_SEARCH = 'CLEAR_SEARCH';
 export const FILTER_LIB = 'FILTER_LIB';
@@ -26,3 +27,4 @@ export const TOGGLE_PLAYMODE = 'TOGGLE_PLAYMODE';
 export const SAVE_LIST = 'SAVE_LIST';
 export const LOAD_LIST = 'LOAD_LIST';
 export const DEL_LIST = 'DEL_LIST';
+export const NAME_LIST = 'NAME_LIST';
