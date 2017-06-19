@@ -17,6 +17,11 @@ export const UpNextItem = ({ trk, idx }, { store }) => (
 	</li>
 );
 
+UpNextItem.propTypes = {
+	trk: PropTypes.object.isRequired,
+	idx: PropTypes.number.isRequired
+}
+
 UpNextItem.contextTypes = {
 	store: PropTypes.object
 }
@@ -72,6 +77,11 @@ export const Item = ({ trk, idx }, { store }) => {
 			</div>
 		</div>
 	);
+}
+
+Item.propTypes = {
+	trk: PropTypes.object.isRequired,
+	idx: PropTypes.number.isRequired
 }
 
 Item.contextTypes = {

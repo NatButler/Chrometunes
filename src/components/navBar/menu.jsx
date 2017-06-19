@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import MenuItem from './menuItem';
 import Button from '../Button';
-import { loadLibrary } from '../../libraryLoad';
-import { saveList, setPlaymode } from '../../actions/actions';
+import { loadLibrary, saveList, setPlaymode } from '../../actions/actions';
 import * as playmode from '../../constants/playModes';
 
 class Menu extends Component {
@@ -34,7 +33,7 @@ class Menu extends Component {
 			  	<MenuItem
 			  		title="Load library"
 			  		handler={e => {
-			  			loadLibrary(); 
+			  			props.onImportLib(); 
 			  			e.preventDefault(); 
 			  		}}
 			  	/>
@@ -112,4 +111,4 @@ const mapStateToProps = state => ({
 	isPlaylists: state.playlists.length
 });
 
-export default connect(mapStateToProps, {onSaveList: saveList, changePlaymode: setPlaymode})(Menu);
+export default connect(mapStateToProps, {onImportLib: loadLibrary, onSaveList: saveList, changePlaymode: setPlaymode})(Menu);

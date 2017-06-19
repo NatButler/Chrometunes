@@ -1,11 +1,11 @@
-export const loadState = libID => {
+export const loadState = libId => {
 	try {
 		return new Promise(resolve => {
-			chrome.storage.local.get(libID, state => {
+			chrome.storage.local.get(libId, state => {
 				if (state === null) {
 					return undefined;
 				}
-				resolve(state[libID]);
+				resolve(state[libId].playlists);
 			});
 		});	
 	} catch(err) {
@@ -20,6 +20,7 @@ export const saveState = state => {
 	try {
 		chrome.storage.local.set({[state.library.id]: save}, () => {
 			// Log success
+			console.log('State saved.');
 		});
 	} catch(err) {
 		// Ignore write errors.

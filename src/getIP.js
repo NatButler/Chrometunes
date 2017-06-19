@@ -18,14 +18,14 @@ const getIP = () => {
 			}
 
 			const grepSDP = sdp => {
-				sdp.split('\r\n').forEach(line => {         // c.f. http://tools.ietf.org/html/rfc4566#page-39
-					if ( ~line.indexOf('a=candidate') ) {     // http://tools.ietf.org/html/rfc4566#section-5.13
-						let parts = line.split(' ');           	// http://tools.ietf.org/html/rfc5245#section-15.1
+				sdp.split('\r\n').forEach(line => {
+					if ( ~line.indexOf('a=candidate') ) {
+						let parts = line.split(' ');
 						let addr = parts[4];
 						let type = parts[7];
 						if (type === 'host') { updateDisplay(addr); }
 					} 
-					else if ( ~line.indexOf('c=') ) {           // http://tools.ietf.org/html/rfc4566#section-5.7
+					else if ( ~line.indexOf('c=') ) {
 						let parts = line.split(' ');
 						let addr = parts[2];
 						updateDisplay(addr);

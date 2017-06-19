@@ -4,6 +4,10 @@ import { UpNextItem } from './upNextItems';
 import Controls from './controls';
 
 class UpNext extends Component {
+	shouldComponentUpdate(nextProps) {
+		return this.props.upnext.length !== nextProps.upnext.length;
+	}
+
 	render() {
 		console.log('UpNext.');
 		const list = this.props.upnext.map((trk, i) => {

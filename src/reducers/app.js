@@ -1,13 +1,9 @@
 const app = (
 	app = {
-		dimentions: {
-			tableW: 0,
-			colsW: 0
-		},
-		tableHds: ['Artist', 'Duration', 'Album', 'Track', 'Title'],
 		serverAdd: '',
 		serverStatus: '',
-		castStatus: ''
+		castStatus: '',
+		tableHds: ['Artist', 'Duration', 'Album', 'Track', 'Title']
 	}, action) => {
 	switch(action.type) {
 		case 'SET_SERVER_ADDR':
@@ -21,6 +17,13 @@ const app = (
 		case 'SET_CAST_STATUS':
 			return {...app,
 				castStatus: action.status
+			}
+		case 'SET_VISIBLE_COLUMNS':
+			return {...app,
+				tableHds: [
+					...tableHds,
+					action.key
+				]
 			}
 		default:
 			return app;

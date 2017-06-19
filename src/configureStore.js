@@ -1,15 +1,11 @@
 import { createStore } from 'redux';
 import mediaApp from './reducers/reducer';
-import throttle from 'lodash.throttle';
-import { loadState, saveState } from './localStorage';
-import { loadLibrary } from './libraryLoad';
-import getIP from './getIP';
-import { importLib, setServerUrl, setCastStatus } from './actions/actions';
+import { saveState } from './localStorage';
 
 const addLoggingToDispatch = store => {
 	const rawDispatch = store.dispatch;
 	if (!console.group) { return rawDispatch; }
-	
+
 	return action => {
 		console.group(action.type);
 		console.log('%c prev state', 'color: gray', store.getState());
@@ -21,41 +17,29 @@ const addLoggingToDispatch = store => {
 	}
 }
 
+const addPromiseSupportToDispatch = store => {
+	const rawDispatch = store.dispatch;
+	return action => {
+		if (typeof action.then === 'function') {
+			return action.then(rawDispatch);
+		}
+		return rawDispatch(action);
+	}
+}
+
 const configureStore = () => {
-	return new Promise(resolve => {
-		const library = loadLibrary();
-		let server;
-		getIP().then(addr => { server = 'http://' + addr + ':8080/'; });
+	const store = createStore(
+		mediaApp,
+		window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+	);
 
-		library.then(lib => {
+	if (process.env.NODE_ENV !== 'production') {
+		store.dispatch = addLoggingToDispatch(store);
+	}
 
-			// Serve library directory: lib.dir
+	store.dispatch = addPromiseSupportToDispatch(store);
 
-			const persistedState = loadState(lib.id);
-
-			persistedState.then(state => {
-				const store = createStore(
-					mediaApp,
-					state,
-					window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-				);
-
-				if (process.env.NODE_ENV !== 'production') {
-					store.dispatch = addLoggingToDispatch(store);
-				}
-
-				store.dispatch( setServerUrl(server) );
-				store.dispatch( importLib(lib) ); 
-
-				store.subscribe(throttle( () => {
-					saveState( store.getState() );
-				}, 2000, {'leading': true} ));
-
-				resolve(store);
-			});
-		})
-		.catch(reason => { console.warn(reason); });
-	});
+	return store;
 }
 
 export default configureStore;

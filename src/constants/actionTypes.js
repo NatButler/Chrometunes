@@ -24,6 +24,7 @@ export const TOGGLE_PLAYBACK_STATE = 'TOGGLE_PLAYBACK_STATE';
 export const SET_PLAYMODE = 'SET_PLAYMODE';
 export const TOGGLE_PLAYMODE = 'TOGGLE_PLAYMODE';
 
+export const IMPORT_PLAYLISTS = 'IMPORT_PLAYLISTS';
 export const SAVE_LIST = 'SAVE_LIST';
 export const LOAD_LIST = 'LOAD_LIST';
 export const DEL_LIST = 'DEL_LIST';

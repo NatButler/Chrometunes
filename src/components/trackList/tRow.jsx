@@ -9,41 +9,41 @@ class TRow extends Component {
 
 	render() {
 		const { store } = this.context;
-		const props = this.props;
 		const playback = store.getState().playback.nowPlaying;
+		const { lib, index, track, trClass } = this.props;
 
 		return (
 			<li
 				ref="row"
-				className={props.trClass}
+				className={trClass}
 				onDoubleClick={() => {
-					store.dispatch( playTrack(props.lib, props.index, playback.mode, [props.track['PId']], playback.track) );
-					store.dispatch( addRemDisc(props.track, props.lib) );
+					store.dispatch( playTrack(lib, index, playback.mode, [track['PId']], playback.track) );
+					store.dispatch( addRemDisc(track, lib) );
 				}}
 			>
-				<div className="wide">{props.track['Artist']}</div>
-				<div className="duration">{props.track['Duration']}</div>
+				<div className="wide">{track['Artist']}</div>
+				<div className="duration">{track['Duration']}</div>
 				<div className="wide">
 					<a 
 						href="#"
 						onClick={e => {
-							store.dispatch( addDisc(props.track, props.lib) );
+							store.dispatch( addDisc(track, lib) );
 							e.preventDefault;
 						}}
 					>
-						{props.track['Album']}
+						{track['Album']}
 					</a>
 				</div>
-				<div className="track">{props.track['Track']}</div>
+				<div className="track">{track['Track']}</div>
 				<div className="wide">
 					<a 
 						href="#"
 						onClick={e => {
-							store.dispatch( addTrack(props.track['PId']) );
+							store.dispatch( addTrack(track['PId']) );
 							e.preventDefault;
 						}}
 					>
-						{props.track['Title']}
+						{track['Title']}
 					</a>
 				</div>
 			</li>
@@ -56,7 +56,7 @@ TRow.contextTypes = {
 }
 
 TRow.propTypes = {
-	track: PropTypes.object,
+	track: PropTypes.object.isRequired,
 	lib: PropTypes.array.isRequired,
 	index: PropTypes.array.isRequired,
 	trClass: PropTypes.string

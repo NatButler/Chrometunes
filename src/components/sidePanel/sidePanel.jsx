@@ -2,7 +2,7 @@ import React from 'react';
 import NowPlaying from './currentTrack';
 import Tabs from './tabs';
 import UpNext from './upNext';
-import Playlists from './playlists';
+import Playlists from './playlists/playlists';
 import Info from './Info';
 
 const SidePanel = () => (

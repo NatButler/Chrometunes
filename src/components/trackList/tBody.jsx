@@ -22,7 +22,7 @@ class TBody extends Component {
 	}
 
 	componentWillUpdate(nextProps) {
-		this.state.tracks = nextProps.filtered.length ? nextProps.filtered : nextProps.library;
+		this.state.tracks = nextProps.filtered.length ? nextProps.filtered : nextProps.lib;
 		if (nextProps.query) { this.state.tracks = trkSearch(this.state.tracks, nextProps.query); }
 		this.state.rows = {};
 	}
@@ -35,10 +35,21 @@ class TBody extends Component {
 
 	render() {
 		console.log('TBody.');
-		const props = this.props;
+		const { currentTrack, lib, index } = this.props;
 		const rows = this.state.tracks.map(trk => {
-			let trClass = (props.currentTrack && props.currentTrack.PId === trk.PId) ? 'currentTrack' : '';
-			return <TRow key={trk.PId} ref={component => {if (component) {this.state.rows[trk.PId] = component.refs.row}}} track={trk} lib={props.library} index={props.index} trClass={trClass} />;
+			let trClass = (currentTrack && currentTrack.PId === trk.PId) ? 'currentTrack' : '';
+			return (
+				<TRow 
+					key={trk.PId} 
+					ref={component => {
+						if (component) { this.state.rows[trk.PId] = component.refs.row; }
+					}}
+					track={trk} 
+					lib={lib} 
+					index={index} 
+					trClass={trClass} 
+				/>
+			);
 		});
 
 		return <ul className="col-md-12 tbody">{rows}</ul>;
@@ -54,7 +65,7 @@ class TBody extends Component {
 }
 
 const mapStateToProps = state => ({
-	library: state.library.tracks,
+	lib: state.library.tracks,
 	index: state.library.index,
 	filtered: state.library.filtered,
 	query: state.library.query,

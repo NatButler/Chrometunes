@@ -15,7 +15,7 @@ class TFoot extends Component {
 		const mode = props.playmode.replace(/^[a-z]/, str => { return str.toUpperCase(); });
 
 		return ( 
-			<footer className="col-md-9 tfoot">
+			<footer className="col-md-12 tfoot">
 				<ul>
 					<li className="track-count">{trackCount} tracks</li>
 					<li className="play-mode">{mode}</li>

@@ -1,4 +1,5 @@
 import React from 'react';
+import LoadScreen from './loadScreen';
 import NavBar from './navBar/NavBar';
 import Table from './trackList/table';
 import SidePanel from './sidePanel/sidePanel';

@@ -1,10 +1,10 @@
 import parseXML from './parseXML';
 
-export const loadLibrary = () => {
+export const fetchLibrary = () => {
 	return new Promise( (resolve, reject) => {
 		const readFile = iTunesXML => {
 			// Persist file to storage
-			// chrome.storage.local.set({'iTunesXML': chrome.fileSystem.retainEntry(iTunesXML)});
+			chrome.storage.local.set({ 'iTunesXML': chrome.fileSystem.retainEntry(iTunesXML) });
 
 			// Read file
 			iTunesXML.file(xml => {

@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { findDOMNode } from 'react-dom';
 import { connect } from 'react-redux';
 import { playTrack, setPlayback, togglePlaymode, togglePlayback } from '../../actions/actions';
-import * as playstate from '../../constants/playStates';
-import * as playmode from '../../constants/playModes';
+import * as pS from '../../constants/playStates';
+import * as pM from '../../constants/playModes';
 import AudioPlayer from '../Audio';
 import Button from '../Button';
 import { loadMedia, player, playerController } from '../../cast';
@@ -15,23 +15,23 @@ class Playback extends Component {
 	}
 
 	shouldComponentUpdate(nextProps) {
-		const props = this.props;
-		if (props.playback.mode !== nextProps.playback.mode) { return true; } 
-		if (props.upnext.length && !nextProps.upnext.length) { return true; }
-		if (!props.upnext.length && nextProps.upnext.length) { return true; }
-		if (props.playback.track && nextProps.playback.track) { return props.playback.track['PId'] !== nextProps.playback.track['PId']; }
-		if (props.upnext.length !== nextProps.upnext.length && !props.playback.track && !nextProps.playback.track) { return false; }
-		else { return !props.playback.track && nextProps.playback.track; }
+		const { lib, playback, upnext } = this.props;
+		if (lib.length !== nextProps.lib.length) { return false; }
+		if (playback.mode !== nextProps.playback.mode) { return true; } 
+		if (upnext.length && !nextProps.upnext.length) { return true; }
+		if (!upnext.length && nextProps.upnext.length) { return true; }
+		if (playback.track && nextProps.playback.track) { return playback.track['PId'] !== nextProps.playback.track['PId']; }
+		if (upnext.length !== nextProps.upnext.length && !playback.track && !nextProps.playback.track) { return false; }
+		else { return !playback.track && nextProps.playback.track; }
 	}
 
 	render() {
 		console.log('Playback.');
 		const props = this.props;
-		const playback = this.props.playback;
-		const upnext = this.props.upnext;
+		const { playback, upnext, lib, index, serverAdd } = this.props;
 		let src;
 		if (playback.track) {
-			src = this.audioSrc(this.props.serverAdd, playback.track['Location']);
+			src = this.audioSrc(serverAdd, playback.track['Location']);
 			this.cast(src, playback.track['Type']);
 		}
 
@@ -40,9 +40,9 @@ class Playback extends Component {
 				<Button
 					className={'btn btn-default skip '} 
 					icon="step-forward"
-					disabled={!upnext.length && playback.mode !== playmode.REPEAT1 ? 'disabled' : ''}
+					disabled={!upnext.length && playback.mode !== pM.REPEAT1 ? 'disabled' : ''}
 					handler={() => {
-						if (playback.mode !== playmode.REPEAT1) { props.onNextTrack(props.lib, props.index, playback.mode, upnext, playback.track['PId']); } 
+						if (playback.mode !== pM.REPEAT1) { props.onNextTrack(lib, index, playback.mode, upnext, playback.track['PId']); } 
 						else { this.audio.load(); }
 					}}
 				/>
@@ -52,13 +52,13 @@ class Playback extends Component {
 					className="audio"
 					src={src}
 					endedHandler={ () => { this.onEnded(playback, upnext); }}
-					playHandler={ () => { props.onPlaybackChange(playstate.PLAY); }}
-					pauseHandler={ () => { props.onPlaybackChange(playstate.PAUSE); }}
+					playHandler={ () => { props.onPlaybackChange(pS.PLAY); }}
+					pauseHandler={ () => { props.onPlaybackChange(pS.PAUSE); }}
 				/>
 
 				<Button
 	        className={'btn btn-default playmode ' + playback.mode}
-					icon={(playback.mode === playmode.NORMAL) ? playmode.REPEAT : playback.mode}
+					icon={(playback.mode === pM.NORMAL) ? pM.REPEAT : playback.mode}
 					handler={() => { props.onTogglePlaymode() }}
 				/>
 			</div>
@@ -70,11 +70,11 @@ class Playback extends Component {
 	}
 
 	onEnded(playback, upnext) {
-		if (playback.mode !== playmode.REPEAT1 && upnext.length > 0) {
+		if (playback.mode !== pM.REPEAT1 && upnext.length > 0) {
 			this.props.onNextTrack(this.props.lib, this.props.index, playback.mode, upnext, playback.track['PId']);
 		}
-		else if (playback.mode === playmode.REPEAT1) { this.audio.load(); }
-		else { this.props.onPlaybackChange(playstate.IDLE); }
+		else if (playback.mode === pM.REPEAT1) { this.audio.load(); }
+		else { this.props.onPlaybackChange(pS.IDLE); }
 	}
 
 	cast(src, type) {

@@ -1,18 +1,18 @@
 const { resolve } = require('path');
 
-module.exports = {
+module.exports = env => ({
 	entry: './src/main.jsx',
 	output: {
 		filename: 'app.js',
-		path: resolve(__dirname, 'app/js')
+		path: resolve(__dirname, 'app/js'),
+		pathinfo: !env.prod
 	},
+	// devtool: env.prod ? 'source-map' : 'eval',
+	bail: env.prod,
 	resolve: {
     extensions: ['.js', '.jsx']
   },
-	devServer: {
-		inline: true,
-		port: 3332
-	},
+  watch: true,
 	module: {
 		loaders: [
 			{
@@ -26,4 +26,4 @@ module.exports = {
 			}
 		]
 	}
-}
+})
