@@ -1,4 +1,4 @@
-import * as playmode from '../constants/playModes';
+import * as pM from '../constants/playModes';
 
 const upnext = (upnext = [], action) => {
 	switch (action.type) {
@@ -29,9 +29,9 @@ const upnext = (upnext = [], action) => {
 			return [];
 		case 'PLAY_TRACK':
 			switch (action.mode) {
-				case playmode.NORMAL:
+				case pM.NORMAL:
 					return upnext.slice(1);
-				case playmode.REPEAT:
+				case pM.REPEAT:
 					return [
 						...upnext.slice(1),
 						action.prevTrack

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { filterLib, clearFiltered } from '../../actions/actions';
-import * as filterTypes from '../../constants/filterTypes';
+import * as fT from '../../constants/filterTypes';
 
 class Select extends Component {
 	constructor() {
@@ -12,18 +12,18 @@ class Select extends Component {
 	}
 
 	shouldComponentUpdate(nextProps) {
-		return this.props.filterType === nextProps.filterType || this.props.filterType !== nextProps.filterType;
+		return this.props.genres.length !== nextProps.genres.length || this.props.filter !== nextProps.filter;
 	}
 
 	render() {
 		console.log('Filter.');
-		const props = this.props;
-		const genreList = props.genres.map( (genre, i) => {
+		const { filterType, filter, genres } = this.props;
+		const genreList = genres.map( (genre, i) => {
 			return <option key={i} value={genre}>{genre}</option>;
 		});
 
 		return (
-			<div id="select-wrap" className={(props.filterType !== filterTypes.GENRE) ? '' : 'filter-selected'}>
+			<div id="select-wrap" className={(filterType !== fT.GENRE) ? '' : 'filter-selected'}>
 				<select
 					ref={node => { this.select = node; }}
 					name="genres"
@@ -33,9 +33,9 @@ class Select extends Component {
 						this.state.filter = this.select.value;
 						this.handleFilter(this.select.value);
 					}}
-					value={props.filterType !== filterTypes.GENRE ? props.filterType : this.state.filter}
+					value={filterType !== fT.GENRE ? filterType : filter}
 				>
-					{(props.filterType !== '' && props.filterType !== filterTypes.GENRE) ? <option value={props.filterType} disabled>{'[ ' + props.filterType + ' ]'}</option> : null}
+					{(filterType !== '' && filterType !== fT.GENRE) ? <option value={filterType} disabled>{'[ ' + filterType + ' ]'}</option> : null}
 					<option value="">[ FILTER ]</option>
 					{genreList}
 				</select>
@@ -45,16 +45,14 @@ class Select extends Component {
 
 	handleFilter(filter) {
 		const props = this.props;
-		if (!filter) {
-			props.onClearFilter();
-		} else {
-			props.onFilter(props.lib, filter);
-		}
+		if (!filter) { props.onClearFilter(); }
+		else { props.onFilter(props.lib, filter); }
 	}
 }
 
 const mapStateToProps = state => ({
 	genres: state.library.genres,
+	filter: state.library.filter,
 	filterType: state.library.filterType,
 	lib: state.library.tracks
 });

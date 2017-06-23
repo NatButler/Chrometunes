@@ -34,8 +34,7 @@ export const getArtistAlbs = (ts, fil, tp) => {
 		}
 	});
 
-	const results = albTrks.sort(alphAsc).map(alb => trkFilter(artistAlbs, alb, fT.ALBUM) );
-	return [].concat(...results);
+	return [].concat(...albTrks.sort(alphAsc).map(alb => trkFilter(artistAlbs, alb, fT.ALBUM) ));
 }
 
 // SORT

@@ -5,7 +5,7 @@ import { query, clearSearch } from '../../actions/actions';
 class Input extends Component {
 	constructor() {
 		super();
-		this.input;
+		this.timer;
 	}
 
 	shouldComponentUpdate(nextProps) {
@@ -16,17 +16,15 @@ class Input extends Component {
 		console.log('Search.');
 		return(
 		  <input
-				ref={node => { this.input = node; }}
 				type="text"
 				id="searchInput"
 				name="q"
-				// placeholder="Search"
 				spellCheck="false"
 				autoComplete="off"
 				autoFocus="true"
-				onKeyUp={() => {
-					if (this.input.value !== this.props.query) {
-						this.handleSearch(this.input.value);
+				onKeyUp={e => {
+					if (e.target.value !== this.props.query) {
+						this.handleSearch(e.target.value);
 					}
 				}}
 		  />

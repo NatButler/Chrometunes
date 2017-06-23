@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import Log from '../log';
+import Button from '../Button';
 
 class TFoot extends Component {
 	shouldComponentUpdate(nextProps) {
@@ -9,6 +11,7 @@ class TFoot extends Component {
 	render() {
 		console.log('TFoot.');
 		const props = this.props;
+		let consoleToggle = 'menu-down' || 'menu-up';
 		const filter = props.filter ? ` [${props.filterType}] ${props.filter}` : ' ALL';
 		const query = props.query ? ` : "${props.query}"` : '';
 		const trackCount = (props.query ? props.search.toString() : false) || props.filtered || props.lib;
@@ -20,7 +23,19 @@ class TFoot extends Component {
 					<li className="track-count">{trackCount} tracks</li>
 					<li className="play-mode">{mode}</li>
 					<li className="filter-info"><h4>Filter: </h4>{filter}{query}</li>
+					<li className="log-button">
+						<Button
+							className="log-button"
+							icon={consoleToggle}
+							dataToggle="collapse"
+							// dataTarget="#log"
+							handler={() => {
+								$('.collapse').collapse('toggle');	
+							}}
+						/>
+					</li>
 				</ul>
+				<Log />
 			</footer>
 		);
 	}

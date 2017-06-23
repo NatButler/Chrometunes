@@ -81,7 +81,7 @@ export const Item = ({ trk, idx }, { store }) => {
 
 Item.propTypes = {
 	trk: PropTypes.object.isRequired,
-	idx: PropTypes.number.isRequired
+	idx: PropTypes.number
 }
 
 Item.contextTypes = {

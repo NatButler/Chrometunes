@@ -5,7 +5,8 @@ import Controls from './controls';
 
 class UpNext extends Component {
 	shouldComponentUpdate(nextProps) {
-		return this.props.upnext.length !== nextProps.upnext.length;
+		const { upnext } = this.props;
+		return upnext[0] !== nextProps.upnext[0] || upnext[upnext.length-1] !== nextProps.upnext[nextProps.upnext.length-1];
 	}
 
 	render() {

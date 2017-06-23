@@ -13,6 +13,10 @@ class Playlists extends Component {
 		}
 	}
 
+	shouldComponentUpdate(nextProps) {
+		return this.props.libId === nextProps.libId || this.props.playlists !== nextProps.playlists;
+	}
+
 	render() {
 		console.log('Playlists.');
 		const playlists = this.props.playlists;

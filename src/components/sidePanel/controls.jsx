@@ -10,7 +10,7 @@ const Controls = ({ isDisabled, upnext }, { store }) => {
 			<Button
 				label="SAVE"
 				// icon="floppy-disk"
-				disabled={isDisabled ? 'disabled' : ''}
+				disabled={isDisabled}
 				handler={() => {
 					store.dispatch( saveList(upnext, currentTrack) );
 					$('#tabs a[href="#playlists"]').tab('show');
@@ -20,7 +20,7 @@ const Controls = ({ isDisabled, upnext }, { store }) => {
 			<Button
 				label="CLEAR"
 				// icon="trash"
-				disabled={isDisabled ? 'disabled' : ''}
+				disabled={isDisabled}
 				handler={() => {
 					store.dispatch( clearTracks() );
 				}}

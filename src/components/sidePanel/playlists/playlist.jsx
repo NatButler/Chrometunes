@@ -1,6 +1,7 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
 import Button from '../../Button';
+import { saveState } from '../../../localStorage';
 import { loadPlaylist, delPlaylist } from '../../../actions/actions';
 
 const Playlist = ({idx, id, list, title}, { store }) => {
@@ -21,6 +22,7 @@ const Playlist = ({idx, id, list, title}, { store }) => {
 				className="close"
 				handler={() => {
 					store.dispatch( delPlaylist(idx) );
+					saveState( store.getState() );
 				}}
 			/>
 		</li>

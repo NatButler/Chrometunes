@@ -20,7 +20,7 @@ class NowPlaying extends Component {
 				<Button
 					icon={(playback.status === playstate.PLAY) ? playstate.PAUSE : playstate.PLAY}
 					className="playback"
-					disabled={(playback.track) ? '' : 'disabled'}
+					disabled={!playback.track}
 					handler={() => {
 						(playback.status === playstate.PLAY) ? audio.pause() : audio.play();
 					}}

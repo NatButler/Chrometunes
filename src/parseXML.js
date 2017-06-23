@@ -2,9 +2,7 @@ import { sortLibrary } from './librarySearch';
 
 const parseXML = xml => {
 	return new Promise( (resolve, reject) => {
-		if (!xml.getElementsByTagName('dict')[0]) { reject('Failed to read XML file.'); }
-
-		xml = xml.getElementsByTagName('dict')[0];
+		xml = xml.getElementsByTagName('dict')[0] || reject('Failed to read XML file.');
 		const tracksNode = xml.getElementsByTagName('dict')[0].childNodes;
 		const lib = {
 			id: xml.getElementsByTagName('string')[1].textContent,
@@ -12,9 +10,9 @@ const parseXML = xml => {
 			genres: []
 		};
 
-		let artists = [];
-		let currentArtist = '';
-		let currentGenre = '';
+		const artists = [];
+		let artist = '';
+		let genre = '';
 
 		// Iterates tracks
 		for (let i = 3, len = tracksNode.length; i < len; i = i + 4) {
@@ -28,46 +26,52 @@ const parseXML = xml => {
 			};
 
 			// For each track, return new test and remove keys as they are found
+			const keyMap = new Map ([
+				['Total Time', 		(key, prop) => { trk['Duration'] 		= getDur(prop); }],
+				['Disc Number', 	(key, prop) => { trk['Disc'] 				= +prop; }],
+				['Disc Count', 		(key, prop) => { trk[key] 					= +prop; }],
+				['Track Number', 	(key, prop) => { trk['Track'] 			= +prop; }],
+				['Track Count', 	(key, prop) => { trk['TrackCount'] 	= +prop; }],
+				['Year', 					(key, prop) => { trk[key]			 			= prop; }],
+				['Bit Rate', 			(key, prop) => { trk[key]			 			= prop; }],
+				['Sample Rate',		(key, prop) => { trk[key]						= prop; }],
+				['Artwork Count', (key, prop) => { trk['Artwork']			= +prop; }],
+				['Persistent ID',	(key, prop) => { trk['PId'] 				= prop; }],
+				['Name', 					(key, prop) => { trk['Title'] 			= prop; }],
+				['Artist', 				(key, prop) => { trk[key]		 				= prop; }],
+				['Album', 				(key, prop) => { trk[key]	 					= prop; }],
+				['Genre', 				(key, prop) => { trk[key]		 				= prop; }],
+				['Kind', 					(key, prop) => { trk['Type']				= getMime(prop); }],
+				['Comments', 			(key, prop) => { trk[key]						= prop; }],
+				['Location', 			(key, prop) => { trk[key]		 				= getLoc(prop); }]
+			]);
 
-			// Iterates keys/props of track
-			for (let j = 3, lnth = trackNodes.length; j < lnth; j = j + 3) {
-				const trackNode = trackNodes[j].nextSibling;
+			let it = 6;
+			keyMap.forEach((func, mapKey) => {
 
-				if (trackNode === null) { break; } // Only needs to check for null on last iteration
-				const key = trackNode.textContent;
-				const prop = trackNode.nextSibling.textContent;
+				for (let j = it, lnth = trackNodes.length - 1; j < lnth; j = j + 3) {
+					const trackNode = trackNodes[j].nextSibling;
+					const key = trackNode.textContent;
+					if (mapKey === key) {
+						func(key, trackNode.nextSibling.textContent);
+						it = j + 3;
+						break; 
+					} 
+				}
+			
+			});
 
-				if (key === 'Total Time') 		{ trk['Duration'] 	= calcDuration(prop); }
-				if (key === 'Disc Number') 		{ trk['Disc'] 			= +prop; }
-				if (key === 'Disc Count') 		{ trk[key] 					= +prop; }
-				if (key === 'Track Number') 	{ trk['Track'] 			= +prop; }
-				if (key === 'Track Count') 		{	trk['TrackCount'] = +prop; }
-				if (key === 'Year') 					{ trk[key]			 		= prop; }
-				if (key === 'Bit Rate') 			{ trk[key]				 	= prop; }
-				if (key === 'Sample Rate')		{	trk[key]					= prop; }
-				if (key === 'Artwork Count') 	{	trk['Artwork']		= +prop; }
-				if (key === 'Persistent ID') 	{ trk['PId'] 				= prop; }
-				if (key === 'Name') 					{ trk['Title'] 			= prop; }
-				if (key === 'Artist') 				{ trk[key]		 			= prop; }
-				if (key === 'Album') 					{ trk[key]	 				= prop; }
-				if (key === 'Genre') 					{	trk[key]		 			= prop; }
-				if (key === 'Kind') 					{ trk['Type'] 			= getMimeType(prop); }
-				if (key === 'Comments') 			{ trk[key]					= prop; }
-				if (key === 'Location') 			{ trk[key]			 		= getLoc(prop); }
-			}
-
-			if ( trk.Artist !== currentArtist ) {
-				currentArtist = trk.Artist;
+			if ( trk.Artist !== artist ) {
+				artist = trk.Artist;
 				if ( !artists.includes(trk.Artist) ) { artists.push(trk.Artist); }
 			}
-			if ( trk.Genre !== currentGenre ) {
-				currentGenre = trk.Genre;
+			if ( trk.Genre !== genre ) {
+				genre = trk.Genre;
 				if ( !lib.genres.includes(trk.Genre) ) { lib.genres.push(trk.Genre); }
 			}
 			if ( trk.Location ) { lib.tracks.push(trk); }
 		}
 
-		lib.genres.sort();
 		artists.sort();
 		lib.tracks = sortLibrary(lib.tracks, artists);
 
@@ -75,7 +79,7 @@ const parseXML = xml => {
 	});
 }
 
-const calcDuration = totalTime => {
+const getDur = totalTime => {
 	let hr = '';
 	let totalSec = totalTime.slice(0, -3);
 	let totalMin = totalSec / 60;
@@ -93,7 +97,7 @@ const calcDuration = totalTime => {
 	return hr + min + ':' + sec;
 }
 
-const getMimeType = type => {
+const getMime = type => {
 	switch(type) {
 		case 'MPEG audio file':
 			return 'audio/mp3';

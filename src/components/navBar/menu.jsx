@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import MenuItem from './menuItem';
 import Button from '../Button';
-import { loadLibrary, saveList, setPlaymode } from '../../actions/actions';
+import { loadLibrary, saveList, setPlaymode, setInfobarPos } from '../../actions/actions';
 import * as playmode from '../../constants/playModes';
 
 class Menu extends Component {
 	shouldComponentUpdate(nextProps) {
-		return this.props.playMode !== nextProps.playMode || !this.props.upnext.length && nextProps.upnext.length || this.props.upnext.length && !nextProps.upnext.length || !this.props.isPlaylists && nextProps.isPlaylists || this.props.isPlaylists && !nextProps.isPlaylists;
+		const props = this.props;
+		return props.playMode !== nextProps.playMode || !props.upnext.length && nextProps.upnext.length || props.upnext.length && !nextProps.upnext.length || !props.isPlaylists && nextProps.isPlaylists || props.isPlaylists && !nextProps.isPlaylists || props.infobar !== nextProps.infobar;
 	}
 
 	render() {
@@ -90,12 +91,28 @@ class Menu extends Component {
 			  	<li className="dropdown-submenu">
 				    <a className="dropdown-item" href="#">View</a>
 						<ul className="dropdown-menu dropdown-menu-right">
+					  	<MenuItem
+					  		title="Infobar top"
+					  		status={props.infobar === 'top' ? 'selected' : ''}
+					  		handler={e => {
+					  			$('.tfoot').toggleClass('top');
+					  			props.setInfobarPos(props.infobar === 'top' ? '' : 'top');
+			  					e.preventDefault();
+					  		}}
+					  	/>
 					  	<li><a className="dropdown-item" href="#">Compact</a></li>
 					  	<li><a className="dropdown-item" href="#">Night mode</a></li>
 					  </ul>
 					</li>
+					<li><a className="dropdown-item" href="#">Settings</a></li>
 			  	<li role="separator" className="divider"></li>
-					<li><a className="dropdown-item" href="#">Console</a></li>
+					<MenuItem
+			  		title="Log"
+			  		handler={e => {
+							$('.collapse').collapse('toggle');	
+	  					e.preventDefault(); 
+			  		}}
+			  	/>
 			  	<li role="separator" className="divider"></li>
 			  	<li><a className="dropdown-item" href="#">Help</a></li>
 				</ul>
@@ -108,7 +125,8 @@ const mapStateToProps = state => ({
 	playMode: state.playback.nowPlaying.mode,
 	currentTrack: state.playback.nowPlaying.track,
 	upnext: state.playback.upnext,
-	isPlaylists: state.playlists.length
+	isPlaylists: state.playlists.length,
+	infobar: state.app.infobarPos
 });
 
-export default connect(mapStateToProps, {onImportLib: loadLibrary, onSaveList: saveList, changePlaymode: setPlaymode})(Menu);
+export default connect(mapStateToProps, {onImportLib: loadLibrary, onSaveList: saveList, changePlaymode: setPlaymode, setInfobarPos: setInfobarPos})(Menu);

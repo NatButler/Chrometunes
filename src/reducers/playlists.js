@@ -1,9 +1,7 @@
 const playlists = (playlists = [], action) => {
 	switch (action.type) {
 		case 'IMPORT_PLAYLISTS':
-			console.log('Importing playlists.');
 			return [
-				...playlists,
 				...action.lists
 			];
 		case 'SAVE_LIST':

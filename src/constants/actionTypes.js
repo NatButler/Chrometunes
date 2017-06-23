@@ -1,7 +1,7 @@
 export const SET_SERVER_ADDR = 'SET_SERVER_ADDR';
 export const SET_CAST_STATUS = 'SET_CAST_STATUS';
-export const SET_TABLE = 'SET_TABLE';
-export const SET_COLS = 'SET_COLS';
+export const SET_VISIBLE_COLUMNS = 'SET_VISIBLE_COLUMNS';
+export const SET_INFOBAR_POS = 'SET_INFOBAR_POS';
 
 export const IMPORT_LIB = 'IMPORT_LIB';
 export const QUERY = 'QUERY';

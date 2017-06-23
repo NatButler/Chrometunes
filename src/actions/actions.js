@@ -1,17 +1,22 @@
 import { v4 } from 'uuid';
 import { fetchLibrary } from '../libraryFetch';
 import { loadState } from '../localStorage';
+import getIP from '../getIP';
 import { trkFilter, getArtistAlbs } from '../librarySearch';
 import * as aT from '../constants/actionTypes';
 import * as fT from '../constants/filterTypes';
 import * as pM from '../constants/playModes';
 
 // APP
-export const setServerUrl = url => ({
-	type: aT.SET_SERVER_ADDR, url
+const setServerUrl = ip => ({
+	type: aT.SET_SERVER_ADDR, 
+	addr: 'http://' + ip + ':8080/'
 });
 export const setCastStatus = status => ({
 	type: aT.SET_CAST_STATUS, status
+});
+export const setInfobarPos = pos => ({
+	type: aT.SET_INFOBAR_POS, pos
 });
 
 // LIBRARY
@@ -20,8 +25,8 @@ const importLib = lib => {
 	return {
 		type: aT.IMPORT_LIB,
 		id: lib.id,
-		tracks: lib.tracks, 
-		genres: lib.genres,
+		tracks: lib.tracks,
+		genres: lib.genres.sort(),
 		index: lib.tracks.map(t => t.PId)
 	}
 };
@@ -77,9 +82,6 @@ export const playTrack = (lib, index, mode, upnext, prevTrk) => {
 	if (mode === pM.REPEAT && !prevTrk) {
 		mode = pM.NORMAL;
 	}
-	else if (mode === pM.SHUFFLE) {
-		mode = pM.REPEAT1;
-	}
 
 	switch (mode) {
 		case pM.NORMAL:
@@ -95,24 +97,11 @@ export const playTrack = (lib, index, mode, upnext, prevTrk) => {
 				track: lib[index.indexOf(upnext[0])],
 				prevTrack: prevTrk
 			}
-		// Not currently necessary as element needs to .load() to play same track again
-		case pM.REPEAT1: 
-			return {
-				type: aT.PLAY_TRACK,
-				mode: mode,
-				track: prevTrk
-			}
 		case pM.SHUFFLE:
 			return {
 				type: aT.PLAY_TRACK,
 				mode: mode,
-				track: upnext[randomTrack(upnext.length)]
-			}
-		default:
-			return {
-				type: aT.PLAY_TRACK,
-				mode: mode,
-				track: lib[index.indexOf(upnext[0])]
+				track: lib[index.indexOf(upnext[randomTrack(upnext.length)])]
 			}
 	}
 }
@@ -153,15 +142,14 @@ export const loadLibrary = () =>
 	fetchLibrary().then(lib => 
 		importLib(lib)
 	);
-
 export const loadPlaylists = libId =>
-	loadState(libId).then(lists =>
-		importPlaylists(lists)
+	loadState(libId).then(state =>
+		importPlaylists(state.playlists)
 	);
-
-export const getIP = () => {
-		// getIP().then(addr => { server = 'http://' + addr + ':8080/'; });
-}
+export const obtainIP = () =>
+		getIP().then(ip =>
+			setServerUrl(ip)
+		);
 
 // UTILS
 const randomTrack = len => {

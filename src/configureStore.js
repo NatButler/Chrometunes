@@ -1,45 +1,20 @@
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
+import promise from 'redux-promise';
+import { createLogger } from 'redux-logger';
 import mediaApp from './reducers/reducer';
-import { saveState } from './localStorage';
-
-const addLoggingToDispatch = store => {
-	const rawDispatch = store.dispatch;
-	if (!console.group) { return rawDispatch; }
-
-	return action => {
-		console.group(action.type);
-		console.log('%c prev state', 'color: gray', store.getState());
-		console.log('%c action', 'color: blue', action);
-		const returnValue = rawDispatch(action);
-		console.log('%c next state', 'color: green', store.getState());
-		console.groupEnd(action.type);
-		return returnValue;
-	}
-}
-
-const addPromiseSupportToDispatch = store => {
-	const rawDispatch = store.dispatch;
-	return action => {
-		if (typeof action.then === 'function') {
-			return action.then(rawDispatch);
-		}
-		return rawDispatch(action);
-	}
-}
 
 const configureStore = () => {
-	const store = createStore(
-		mediaApp,
-		window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-	);
-
+	const middlewares = [promise];
 	if (process.env.NODE_ENV !== 'production') {
-		store.dispatch = addLoggingToDispatch(store);
+		middlewares.push(createLogger());
 	}
 
-	store.dispatch = addPromiseSupportToDispatch(store);
-
-	return store;
+	return createStore(
+		mediaApp,
+		// Persisted state would be here
+		applyMiddleware(...middlewares),
+		window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+	);
 }
 
 export default configureStore;

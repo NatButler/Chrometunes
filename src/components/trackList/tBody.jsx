@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import TRow from './tRow';
-import { trkSearch } from '../../librarySearch';
-import { searchLib } from '../../actions/actions';
+import { trkSearch, trkFilter } from '../../librarySearch';
+import { searchLib, filterLib } from '../../actions/actions';
 
 class TBody extends Component {
 	constructor() {
@@ -12,7 +12,7 @@ class TBody extends Component {
 			rows: {}
 		}
 	}
-
+	
 	componentWillReceiveProps(nextProps) {
 		this.updateRow(this.props.currentTrack, nextProps.currentTrack);
 	}
@@ -36,7 +36,7 @@ class TBody extends Component {
 	render() {
 		console.log('TBody.');
 		const { currentTrack, lib, index } = this.props;
-		const rows = this.state.tracks.map(trk => {
+		const rows = this.state.tracks.map( (trk, i) => {
 			let trClass = (currentTrack && currentTrack.PId === trk.PId) ? 'currentTrack' : '';
 			return (
 				<TRow 
@@ -47,7 +47,7 @@ class TBody extends Component {
 					track={trk} 
 					lib={lib} 
 					index={index} 
-					trClass={trClass} 
+					trClass={trClass}
 				/>
 			);
 		});
@@ -57,16 +57,14 @@ class TBody extends Component {
 
 	componentDidUpdate() {
 		if (this.props.query) { this.props.onSearch(this.state.tracks); }
-	}
-
-	componentDidMount() {
-		// Render tracks after initial app render - load library?
+		// if (this.props.filter) { this.props.onFilter(this.state.tracks); }
 	}
 }
 
 const mapStateToProps = state => ({
 	lib: state.library.tracks,
 	index: state.library.index,
+	// filter: state.library.filter,
 	filtered: state.library.filtered,
 	query: state.library.query,
 	currentTrack: state.playback.nowPlaying.track

@@ -1,16 +1,12 @@
 export const loadState = libId => {
-	try {
-		return new Promise(resolve => {
-			chrome.storage.local.get(libId, state => {
-				if (state === null) {
-					return undefined;
-				}
-				resolve(state[libId].playlists);
-			});
-		});	
-	} catch(err) {
-		return undefined;
-	}
+	return new Promise(resolve => {
+		chrome.storage.local.get(libId, state => {
+			if (state[libId] === undefined) {
+				return undefined;
+			}
+			resolve(state[libId]);
+		});
+	});
 }
 
 export const saveState = state => {

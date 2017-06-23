@@ -3,7 +3,7 @@ import { PropTypes } from 'prop-types';
 
 class AudioPlayer extends Component {
 	shouldComponentUpdate(nextProps) {
-		return this.props.src !== nextProps.src;
+		return this.props.src !== nextProps.src || this.props.loop !== nextProps.loop;
 	}
 
 	render() {
@@ -14,13 +14,17 @@ class AudioPlayer extends Component {
 				className={this.props.className}
 				autoPlay={this.props.autoPlay}
 				preload={this.props.preload}
-				controls
+				controls={this.props.controls}
+				loop={this.props.loop}
+				muted={this.props.muted}
 				src={this.props.src}
 				onEnded={this.props.endedHandler}
 				onPlay={this.props.playHandler}
 				onPause={this.props.pauseHandler}
 				onError={this.props.errorHandler}
 				onAbort={this.props.abortHandler}
+				onCanPlay={this.props.canPlayHandler}
+				onTimeUpdate={this.props.progressHandler}
 			>
 			</audio>
 		);
@@ -29,9 +33,10 @@ class AudioPlayer extends Component {
 
 AudioPlayer.propTypes = {
 	className: PropTypes.string,
-	autoPlay: PropTypes.string,
+	autoPlay: PropTypes.bool,
 	children: PropTypes.array,
 	listenInterval: PropTypes.number,
+	onTimeUpdate: PropTypes.func,
 	onAbort: PropTypes.func,
 	onCanPlay: PropTypes.func,
 	onCanPlayThrough: PropTypes.func,
@@ -42,11 +47,17 @@ AudioPlayer.propTypes = {
 	onPlay: PropTypes.func,
 	onSeeked: PropTypes.func,
 	preload: PropTypes.string,
+	loop: PropTypes.bool,
+	muted: PropTypes.bool,
 	src: PropTypes.string
 }
 
 AudioPlayer.defaultProps = {
-	autoPlay: 'false',
+	autoPlay: true,
+	loop: false,
+	muted: false,
+	preload: 'auto',
+	controls: false,
 	src: ''
 }
 

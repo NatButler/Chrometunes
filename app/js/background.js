@@ -20,15 +20,26 @@ const launch = data => {
 chrome.app.runtime.onLaunched.addListener(launch);
 
 
-chrome.runtime.onRestarted.addListener( () => {
-	chrome.fileSystem.restoreEntry('iTunesXML', fileEntry => {
-		console.log(fileEntry);
+chrome.app.runtime.onRestarted.addListener( () => {
+	chrome.storage.local.get('iTunesXML', file => {
+		console.info('Checking storage.');
+		if (file.iTunesXML) {
+			chrome.fileSystem.isRestorable(file.iTunesXML, bIsRestorable => {
+        // the entry is still there, load the content
+        console.info("Restoring " + file.iTunesXML);
+        chrome.fileSystem.restoreEntry(file.iTunesXML, iTunesXML => {
+        	console.log(iTunesXML);
+          if (iTunesXML) {
+            iTunesXML.isFile ? console.log(iTunesXML) : false;
+          }
+        });
+      });
+		}
 	});
 });
 
 
-chrome.runtime.onSuspend.addListener( () => {
+chrome.app.runtime.onSuspend.addListener( () => {
 	console.log('Stop casting.');
 	stopCasting();
 });
-

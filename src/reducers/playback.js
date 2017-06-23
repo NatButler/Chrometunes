@@ -11,7 +11,7 @@ const nowPlaying = (
 	}, action) => {
 	switch (action.type) {
 		case 'PLAY_TRACK':
-			upnext(undefined, action);
+			// upnext(undefined, action);
 			return {...nowPlaying,
 				track: action.track
 			}
