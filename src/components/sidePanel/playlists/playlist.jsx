@@ -4,7 +4,7 @@ import Button from '../../Button';
 import { saveState } from '../../../localStorage';
 import { loadPlaylist, delPlaylist } from '../../../actions/actions';
 
-const Playlist = ({idx, id, list, title}, { store }) => {
+const Playlist = ({id, list, title}, { store }) => {
 	return (
 		<li className="playlist-item">
 			<a 
@@ -16,12 +16,13 @@ const Playlist = ({idx, id, list, title}, { store }) => {
 				}}
 			>
 				{title}
+				<span className="list-count">{` (${list.length})`}</span>
 			</a>
 			<Button
 				icon="remove-circle"
 				className="close"
 				handler={() => {
-					store.dispatch( delPlaylist(idx) );
+					store.dispatch( delPlaylist(id) );
 					saveState( store.getState() );
 				}}
 			/>
@@ -30,7 +31,6 @@ const Playlist = ({idx, id, list, title}, { store }) => {
 }
 
 Playlist.propTypes = {
-	idx: PropTypes.number.isRequired,
 	id: PropTypes.string.isRequired,
 	list: PropTypes.array.isRequired,
 	title: PropTypes.string.isRequired

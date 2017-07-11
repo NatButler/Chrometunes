@@ -1,6 +1,6 @@
 const app = (
 	app = {
-		serverAdd: '',
+		serverAdd: 'http://localhost:8080/',
 		serverStatus: '',
 		castStatus: '',
 		tableHds: ['Artist', 'Duration', 'Album', 'Track', 'Title'],

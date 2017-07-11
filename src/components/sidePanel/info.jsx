@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-// const jsmediatags = window.jsmediatags;
 
 class Info extends Component {
 	constructor() {
 		super();
+		this.artwork;
 	}
 	
 	render() {
@@ -26,6 +26,7 @@ class Info extends Component {
 					} else {
 						if (this.artwork) { this.artwork.src = '../img/artwork.jpg'; }
 					}
+					console.log('Re-rendering artwork');
 					return (
 						<li key={i} className={this.repSpace(key, '-').toLowerCase()}>
 							<img ref={node => {this.artwork = node}} className="artwork img-thumbnail" src={'../img/artwork.jpg'} />

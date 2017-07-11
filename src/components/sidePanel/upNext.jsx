@@ -6,7 +6,7 @@ import Controls from './controls';
 class UpNext extends Component {
 	shouldComponentUpdate(nextProps) {
 		const { upnext } = this.props;
-		return upnext[0] !== nextProps.upnext[0] || upnext[upnext.length-1] !== nextProps.upnext[nextProps.upnext.length-1];
+		return upnext[0] !== nextProps.upnext[0] || upnext[upnext.length-1] !== nextProps.upnext[nextProps.upnext.length-1] || upnext.length !== nextProps.upnext.length;
 	}
 
 	render() {
@@ -17,7 +17,7 @@ class UpNext extends Component {
 
 		return (
 			<div id="up-next" className="tab-pane active" role="tab-pane">
-				<Controls isDisabled={!list.length} upnext={this.props.upnext} />
+				<Controls isDisabled={!list.length} />
 				<ul id="up-next-ul">{(list.length) ? list : <Help />}</ul>
 			</div>
 		);		

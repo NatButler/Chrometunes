@@ -11,10 +11,12 @@
   },
   "permissions": [
     "storage",
-    { "fileSystem": ["write", "directory"] },
+    { "fileSystem": ["write", "retainEntries", "directory"] },
     "contextMenus",
     "system.network",
-    "http://10.0.1.4:8080/"
+    "http://localhost:8080/",
+    "http://10.0.1.4:8080/",
+    "http://192.168.1.104:8080/"
   ],
   "sockets": {
     "tcpServer": {

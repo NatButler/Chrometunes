@@ -24,9 +24,9 @@ class Playlists extends Component {
 		if (playlists.length) {
 			lists = playlists.map( (list, i) => {
 				if (list.title === undefined) {
-					return <NewPlaylist key={list.id} idx={i} id={list.id} />;
+					return <NewPlaylist key={list.id} id={list.id} />;
 				}
-				return <Playlist key={list.id} idx={i} id={list.id} list={list.tracks} title={list.title} />;
+				return <Playlist key={list.id} id={list.id} list={list.tracks} title={list.title} />;
 			});
 		}
 

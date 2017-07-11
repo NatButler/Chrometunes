@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { saveState } from '../../../localStorage';
 import { delPlaylist, namePlaylist } from '../../../actions/actions';
 
-const NewPlaylist = ({ idx, id }, { store }) => {
+const NewPlaylist = ({ id }, { store }) => {
 	let input;
 	const handleNewList = () => {
-		if (!input.value) { store.dispatch( delPlaylist(idx) ); }
+		if (!input.value) { store.dispatch( delPlaylist(id) ); }
 		else{ store.dispatch( namePlaylist(id, input.value) ); }
 		saveState( store.getState() );
 	}
@@ -37,7 +37,6 @@ const NewPlaylist = ({ idx, id }, { store }) => {
 }
 
 NewPlaylist.propTypes = {
-	idx: PropTypes.number.isRequired,
 	id: PropTypes.string.isRequired
 }
 

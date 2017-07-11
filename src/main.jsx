@@ -13,7 +13,7 @@ castInit();
 
 const store = configureStore();
 store.dispatch( loadLibrary() );
-store.dispatch( obtainIP() );
+// store.dispatch( obtainIP() );
 
 render(
 	<Root store={store} />, 

@@ -12,10 +12,7 @@ const playlists = (playlists = [], action) => {
 		case 'NAME_LIST':
 			return playlists.map(l => playlist(l, action));
 		case 'DEL_LIST':
-			return [
-				...playlists.slice(0, action.idx),
-				...playlists.slice(action.idx + 1)
-			];
+			return playlists.filter(l => l.id !== action.id);
 		default:
 			return playlists;
 	}

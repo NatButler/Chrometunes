@@ -1,13 +1,12 @@
 {
   "presets": [
-    "es2015",
-    "react"
+    "react",
+    ["env", {
+      "targets": {
+        "chrome": 57
+      },
+      "modules": false
+    }]
   ],
-  "plugins": ["transform-object-rest-spread"],
-  "env": {
-    "targets": {
-    	"chrome": 57
-    },
-    "modules": false
-  }
+  "plugins": ["transform-object-rest-spread"]
 }

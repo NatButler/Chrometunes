@@ -5,7 +5,7 @@ export const fetchLibrary = () => {
 		const readFile = iTunesXML => {
 			// Persist file to storage
 			if (iTunesXML) {
-				chrome.storage.local.set({ 'iTunesXML': chrome.fileSystem.retainEntry(iTunesXML) });
+				persistToStorage(iTunesXML);
 				
 				// Read file
 				iTunesXML.file(xml => {
@@ -22,6 +22,22 @@ export const fetchLibrary = () => {
 			}
 		}
 
+		// const readDir = iTunesDir => {
+		// 	if (iTunesDir) {
+		// 		persistToStorage(iTunesDir);
+
+
+
+
+
+
+		// 	}
+		// }
+
+		const persistToStorage = path => {
+				chrome.storage.local.set({ 'path': chrome.fileSystem.retainEntry(path) });
+		}
+
 		chrome.fileSystem.chooseEntry({
 			type: 'openFile', 
 			suggestedName: 'iTunes Library.xml', 
@@ -30,6 +46,10 @@ export const fetchLibrary = () => {
 				extensions: ['xml'] }], 
 			acceptsAllTypes: false 
 		}, readFile );
+
+		// chrome.fileSystem.chooseEntry({
+		// 	type: 'openDirectory'
+		// }, readDir );
 	});
 }
 

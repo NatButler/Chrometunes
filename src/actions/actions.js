@@ -133,8 +133,8 @@ export const namePlaylist = (id, title = 'Untitled') => ({
 	id: id,
 	title: title
 });
-export const delPlaylist = idx => ({ 
-	type: aT.DEL_LIST, idx
+export const delPlaylist = id => ({ 
+	type: aT.DEL_LIST, id
 });
 
 // ASYNC
@@ -147,9 +147,9 @@ export const loadPlaylists = libId =>
 		importPlaylists(state.playlists)
 	);
 export const obtainIP = () =>
-		getIP().then(ip =>
-			setServerUrl(ip)
-		);
+	getIP().then(ip =>
+		setServerUrl(ip)
+	);
 
 // UTILS
 const randomTrack = len => {

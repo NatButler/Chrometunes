@@ -19,12 +19,33 @@ class ProgressBar extends Component {
 						this.props.audio.currentTime = clickTime;
 					}
 				}}
+				onMouseEnter={e => {
+					if (this.props.audio && this.props.audio.src) {
+						this.position.style.visibility = 'visible';
+					}
+				}}
+				onMouseLeave={e => {
+					if (this.props.audio && this.props.audio.src) {
+						this.position.style.visibility = 'hidden';
+					}
+				}}
+				onMouseMove={e => {
+					if (this.props.audio && this.props.audio.src) {
+						this.position.style.width = (e.pageX - this.progress.offsetLeft) + 'px';
+					}
+				}}
 			>
 				<div
 					ref="progress"
 					className="progress-bar" 
 					role="progressbar"
 				>
+				</div>
+				<div
+					ref={node => this.position = node}
+					className="position-bar"
+					role="progressbar"
+				>	
 				</div>
 				<div
 					ref="buffer"

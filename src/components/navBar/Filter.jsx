@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import Button from '../Button';
 import { filterLib, clearFiltered } from '../../actions/actions';
 import * as fT from '../../constants/filterTypes';
 
@@ -18,17 +19,25 @@ class Select extends Component {
 	render() {
 		console.log('Filter.');
 		const { filterType, filter, genres } = this.props;
+		const clearButton = (filterType !== fT.GENRE) ? null : <Button
+					icon="remove"
+					className="clear-filter"
+					handler={() => {
+						this.props.onClearFilter();
+					}}
+				/>;
 		const genreList = genres.map( (genre, i) => {
 			return <option key={i} value={genre}>{genre}</option>;
 		});
 
 		return (
 			<div id="select-wrap" className={(filterType !== fT.GENRE) ? '' : 'filter-selected'}>
+				{clearButton}
 				<select
 					ref={node => { this.select = node; }}
 					name="genres"
-					className={'form-inline ' + ((this.state.filter === '') ? '' : 'filter-selected')}
-					id="filterSelect"
+					className={'form-inline ' + ((filterType !== fT.GENRE) ? '' : 'filter-selected')}
+					id="filter-select"
 					onChange={() => {
 						this.state.filter = this.select.value;
 						this.handleFilter(this.select.value);
