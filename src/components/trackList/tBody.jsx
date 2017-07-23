@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import TRow from './tRow';
-import { trkSearch, trkFilter } from '../../librarySearch';
-import { loadLibrary, searchLib, filterLib } from '../../actions/actions';
+import Alert from '../Alert';
+import { trkSearch } from '../../librarySearch';
+import { loadLibrary, searchLib } from '../../actions/actions';
 
 class TBody extends Component {
 	constructor() {
@@ -11,10 +12,16 @@ class TBody extends Component {
 		this.state = {
 			tracks: [],
 			rows: {},
-			rowsIdx: [],
-			start: 0
-		}
-		this.maxVis = 1000;
+			rowsIdx: []
+		};
+		this.scroll = {
+			start: 0,
+			range: 500,
+			// rowH: 16,
+			up: 800,
+			down: 8000,
+			amount: 250
+		};
 	}
 	
 	componentWillReceiveProps(nextProps) {
@@ -30,7 +37,6 @@ class TBody extends Component {
 		if (nextProps.query) { this.state.tracks = trkSearch(this.state.tracks, nextProps.query); }
 		this.state.rows = {};
 		this.state.rowsIdx = [];
-		this.tbody.scrollTop = 0;
 		this.state.start = 0;
 	}
 
@@ -42,8 +48,8 @@ class TBody extends Component {
 
 	render() {
 		console.log('TBody.');
-		const { currentTrack, lib, index } = this.props;
-		const alert = <li className="alert alert-danger" role="alert">Library not loaded.&nbsp;<a href="#" className="alert-link" onClick={e => { this.props.onLoadLib(); e.preventDefault(); }}>Click to load library.</a></li>;
+		const { currentTrack, lib, index, alert } = this.props;
+		const alertBox = alert ? <Alert type="danger" msg={alert} action="Load library" handler={this.props.onLoadLib} /> : null;
 		const rows = this.state.tracks.map( (trk, i) => {
 			const cTrackId = (currentTrack && currentTrack.PId === trk.PId) ? 'currentTrack' : '';
 			let trClass = '';
@@ -56,9 +62,9 @@ class TBody extends Component {
 					ref={component => {
 						if (component) { this.state.rows[trk.PId] = component.refs.row; }
 					}}
-					track={trk} 
-					lib={lib} 
-					index={index} 
+					track={trk}
+					lib={lib}
+					index={index}
 					trClass={trClass}
 					id={cTrackId}
 				/>
@@ -69,48 +75,46 @@ class TBody extends Component {
 			<ul
 				ref={node => { this.tbody = node; }}
 				className="col-md-12 tbody"
-				onScroll={() => { this.handleScroll(); }}
+				onScroll={() => { 
+					if (this.state.rowsIdx.length > this.scroll.range) {
+						this.handleScroll(this.tbody.scrollTop);
+					} 
+				}}
 			>
-				{lib.length ? rows : alert}
+				{alertBox || rows}
 			</ul>
 		);
 	}
 
-	handleScroll() {
-		if (this.state.rowsIdx.length > this.maxVis) {
-			const state = this.state;
-			const rH = 16;
-			const scrollDown = this.maxVis * rH;
-			const scrollUp = 50 * rH;
-			const range = 999;
-			const amount = 500;
-			const len = (amount <= state.rowsIdx.length - (state.start + range)) ? amount : state.rowsIdx.length - (state.start + range);
-			// const rV = Math.ceil((this.tbody.clientHeight / rH), 10);
-
-			if (this.tbody.scrollTop > scrollDown) {
-				for (let i = state.start; i < state.start + amount; i++) {
-					state.rows[state.rowsIdx[i]].className = 'hidden';
-				}
-				for (let i = state.start + range; i < state.start + range + len; i++) {
-					state.rows[state.rowsIdx[i]].className = '';
-				}
-				state.start = state.start + amount;
+	handleScroll(pos) {
+		const showHide = (range, action) => {
+			for (let i = range[0]; i < range[1]; i++) {
+				this.state.rows[this.state.rowsIdx[i]].className = action;
 			}
+		}
 
-			if (this.tbody.scrollTop < scrollUp && state.start > 0) {
-			 state.start = state.start - amount;
-				for (let i = state.start; i < state.start + amount; i++) {
-					state.rows[state.rowsIdx[i]].className = '';
-				}
-				for (let i = state.start + range; i < state.start + range + len; i++) {
-					state.rows[state.rowsIdx[i]].className = 'hidden';
-				}
-			}
+		if (pos > this.scroll.down) {
+			const {start, range, amount} = this.scroll;
+			const end = start + range;
+			const len = amount <= this.state.rowsIdx.length - end ? amount : this.state.rowsIdx.length - end;
+			showHide([start, start+amount], 'hidden');
+			showHide([end, end+len], '');
+			this.scroll.start = start + amount;
+		}
+
+		if (pos < this.scroll.up && this.scroll.start > 0) {
+			const {start, range, amount} = this.scroll;
+			const end = start + range;
+			const len = amount > this.state.rowsIdx.length - end ? this.state.rowsIdx.length - end : amount;
+			showHide([start-amount, start], '');
+			showHide([end-amount, end-amount+len], 'hidden');
+			this.scroll.start = start - amount;
 		}
 	}
 
 	componentDidUpdate() {
-		const len = this.state.rowsIdx.length < this.maxVis ? this.state.rowsIdx.length : this.maxVis;
+		this.tbody.scrollTop = 0;
+		const len = this.state.rowsIdx.length < this.scroll.range ? this.state.rowsIdx.length : this.scroll.range;
 		for (let i = 0; i < len; i++) {
 			this.state.rows[this.state.rowsIdx[i]].className = '';
 		}
@@ -125,7 +129,8 @@ const mapStateToProps = state => ({
 	index: state.library.index,
 	filtered: state.library.filtered,
 	query: state.library.query,
-	currentTrack: state.playback.nowPlaying.track
+	currentTrack: state.playback.nowPlaying.track,
+	alert: state.library.alert
 });
 
 export default connect(mapStateToProps, {

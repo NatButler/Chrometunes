@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { PropTypes } from 'prop-types';
 import { findDOMNode } from 'react-dom';
 import { connect } from 'react-redux';
 import { playTrack, setPlayback, togglePlaymode } from '../../actions/actions';
@@ -14,13 +13,48 @@ class Playback extends Component {
 	constructor() {
 		super();
 		this.audio;
+		this.volume;
 		this.progressBar;
 		this.bufferBar;
 		this.timeDisplay;
 		this.state = {
 			status: pS.PAUSE,
 			canPlay: false,
-			mute: false
+			mute: false,
+			src: '',
+			type: ''
+		}
+
+		playerController.addEventListener(
+			cast.framework.RemotePlayerEventType.IS_CONNECTED_CHANGED, () => {
+				if (player.isConnected) {
+					this.audio.muted = true;
+					if (this.state.src) {
+						this.cast(this.state.src, this.state.type);
+					}
+				} else {
+					this.audio.muted = false;
+				}
+			}
+		);
+
+		playerController.addEventListener(
+			cast.framework.RemotePlayerEventType.VOLUME_LEVEL_CHANGED, () => {
+				this.volume.value = player.volumeLevel;
+			}
+		);
+
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.playback.status === pS.LOADING) {
+			this.progressBar.style.width = '0%';
+			this.bufferBar.style.width = '0%';
+			this.state.src = this.audioSrc(nextProps.server, nextProps.playback.track['Location']);
+			this.state.type = nextProps.playback.track['Type'];
+			if (player.isConnected) {
+				this.cast(this.state.src, this.state.type);
+			}
 		}
 	}
 
@@ -31,15 +65,14 @@ class Playback extends Component {
 	render() {
 		console.log('Playback.');
 		const props = this.props;
-		const { store } = this.context;
-		const { playback, lib, index, upnext, server } = this.props;
+		const { playback, lib, index, upnext } = this.props;
 		const loop = playback.mode === pM.REPEAT1 || playback.mode === pM.REPEAT && !upnext.length || playback.mode === pM.SHUFFLE && !upnext.length;
-		let src;
+		if (loop) {
+			// setCastToRepeat1
+		}
 		let dur;
 		if (playback.track) {
-			src = this.audioSrc(server, playback.track['Location']);
 			dur = playback.track['Duration'];
-			this.cast(src, playback.track['Type']);
 		}	
 
  		return (
@@ -47,7 +80,7 @@ class Playback extends Component {
  				<Audio
 					ref={ component => { this.audio = findDOMNode(component) }}
 					className="audio"
-					src={src}
+					src={this.state.src}
 					loop={loop}
 					canPlayHandler={() => { this.state.canPlay = true; }}
 					endedHandler={() => { this.onEnded(); }}
@@ -76,10 +109,7 @@ class Playback extends Component {
 						disabled={!upnext.length}
 						handler={() => {
 							const props = this.props;
-							this.progressBar.style.width = '0%';
-							this.bufferBar.style.width = '0%';	
-
-							if (props.playback.mode !== pM.REPEAT1) { 
+							if (playback.mode !== pM.REPEAT1) { 
 								props.onNextTrack(lib, index, props.playback.mode, props.upnext, props.playback.track['PId']);
 							}
 							else { this.audio.load(); }
@@ -91,24 +121,27 @@ class Playback extends Component {
 						disabled={!this.state.canPlay}
 						handler={() => {
 							playback.status !== pS.PLAY ? this.audio.play() : this.audio.pause();
+							playerController.playOrPause();
 						}}
 					/>
 					<Button
 						className="mute"
 						icon={this.state.mute ? 'volume-off' : 'volume-up'}
-						handler={() => {
-							this.handleMute();
-						}}
+						disabled={player.isConnected}
+						handler={() => { this.handleMute(); }}
 					/>
 					<input
+						ref={node => {this.volume = node}}
 						type="range"
 						name="volume"
-						min="0"
-						max="1"
+						min="0.0"
+						max="1.0"
 						step="0.01"
 						autoComplete="false"
 						onChange={e => {
 							this.audio.volume = e.target.value;
+							player.volumeLevel = +e.target.value;
+  						playerController.setVolumeLevel();
 						}}
 					/>
 				</div>
@@ -122,16 +155,15 @@ class Playback extends Component {
 						}
 					}} 
 					audio={this.audio}
+					castAudio={playerController}
+					castPlayer={player}
 					onMouseMove={e => {
 						this.position.style.width = (e.pageX - this.progress.offsetLeft) + 'px';
 					}}
 				/>
 
 				<div className="time-duration">
-					<span
-						ref={node => { if (node) { this.timeDisplay = node; } }}
-					>
-					</span>
+					<span ref={node => { if (node) { this.timeDisplay = node; } }}></span>
 					{dur ? ' / '+ dur : ''}
 				</div>
 
@@ -154,9 +186,6 @@ class Playback extends Component {
 
 	onEnded() {
 		const props = this.props;
-		this.progressBar.style.width = '0%';
-		this.bufferBar.style.width = '0%';
-	
 		if (props.upnext.length > 0) {
 			props.onNextTrack(props.lib, props.index, props.playback.mode, props.upnext, props.playback.track['PId']);
 		}
@@ -178,7 +207,6 @@ class Playback extends Component {
 	calcTime(ss) {
 		const h = 3600;
 		const m = 60;
-
 		const mH = (s, u) => Math.floor(s/u);	
 		let hr = mH(ss, h);
 		const s = ss - (hr * h) >= 0 ? ss - (hr * h) : ss;
@@ -193,17 +221,21 @@ class Playback extends Component {
 	}
 
 	cast(src, type) {
-		if (player.isConnected) {
-			console.log('Player connected.');
-			if (!player.isMediaLoaded) {
-				console.log('No media loaded.');
-				loadMedia(src, type);
+		if (!player.isMediaLoaded) {
+			console.log('Cast: loading media.');
+			this.audio.pause();
+			player.currentTime = this.audio.currentTime;
+			loadMedia(src, type, this.audio);
+		} else {
+			if (player.mediaInfo.contentId !== src) {
+				console.log('Cast: loading media.');
+				this.audio.pause();
+				player.currentTime = this.audio.currentTime;
+				loadMedia(src, type, this.audio);
 			} else {
-				if (player.mediaInfo.contentId !== src) {
-					console.log('Cast: loading media.');
-					loadMedia(src, type);				
-				}
-			} 
+				playerController.playOrPause();
+				this.audio.play();
+			}
 		}
 	}
 }
@@ -222,9 +254,5 @@ const PlaybackControls = connect(
 		onPlaybackChange: setPlayback, 
 		onTogglePlaymode: togglePlaymode
 	})(Playback);
-
-Playback.contextTypes = {
-	store: PropTypes.object
-}
 
 export default PlaybackControls;

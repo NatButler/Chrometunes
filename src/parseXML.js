@@ -48,7 +48,6 @@ const parseXML = xml => {
 
 			let it = 6;
 			keyMap.forEach((func, mapKey) => {
-
 				for (let j = it, lnth = trackNodes.length - 1; j < lnth; j = j + 3) {
 					const trackNode = trackNodes[j].nextSibling;
 					const key = trackNode.textContent;
@@ -58,7 +57,6 @@ const parseXML = xml => {
 						break; 
 					} 
 				}
-			
 			});
 
 			if ( trk.Artist !== artist ) {
@@ -81,13 +79,13 @@ const parseXML = xml => {
 
 const getDur = totalTime => {
 	let hr = '';
-	let totalSec = totalTime.slice(0, -3);
-	let totalMin = totalSec / 60;
+	const totalSec = totalTime.slice(0, -3);
+	const totalMin = totalSec / 60;
 	let min = totalMin | 0;
 	let sec = Math.round( (totalMin-min) * 60 ).toString();
 
 	if (totalMin > 60) {
-		let totalHr = (min / 60) | 0;
+		const totalHr = (min / 60) | 0;
 		hr = totalHr + ':';
 		min = (totalMin | 0) - 60;
 		if (min === 0) { min = '00'; }

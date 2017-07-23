@@ -28,7 +28,6 @@ class TFoot extends Component {
 							className="log-button"
 							icon={consoleToggle}
 							dataToggle="collapse"
-							// dataTarget="#log"
 							handler={() => {
 								$('.collapse').collapse('toggle');	
 							}}

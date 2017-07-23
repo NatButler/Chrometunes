@@ -16,7 +16,7 @@ const Playlist = ({id, list, title}, { store }) => {
 				}}
 			>
 				{title}
-				<span className="list-count">{` (${list.length})`}</span>
+				<span className="list-count badge">{list.length}</span>
 			</a>
 			<Button
 				icon="remove-circle"

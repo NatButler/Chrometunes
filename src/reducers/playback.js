@@ -12,11 +12,13 @@ const nowPlaying = (
 	switch (action.type) {
 		case 'PLAY_TRACK':
 			return {...nowPlaying,
-				track: action.track
+				track: action.track,
+				status: pS.LOADING
 			}
 		case 'PLAY_FROM': {
 			return {...nowPlaying,
-				track: action.track
+				track: action.track,
+				status: pS.LOADING
 			}
 		}
 		case 'SET_PLAYBACK_STATE':

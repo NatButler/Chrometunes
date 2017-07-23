@@ -10,7 +10,8 @@ const library = (
 		search: [],
 		filter: '',
 		filtered: [],
-		filterType: ''
+		filterType: '',
+		alert: ''
 	}, action) => {
 	switch (action.type) {
 		case 'IMPORT_LIB':
@@ -18,7 +19,12 @@ const library = (
 				id: action.id,
 				tracks: action.tracks, 
 				genres: action.genres,
-				index: action.index
+				index: action.index,
+				alert: ''
+			}
+		case 'LIB_ALERT':
+			return {...library,
+				alert: action.msg
 			}
 		case 'QUERY':
 			return {...library,

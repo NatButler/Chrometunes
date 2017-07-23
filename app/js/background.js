@@ -21,6 +21,8 @@ chrome.app.runtime.onLaunched.addListener(launch);
 
 
 chrome.app.runtime.onRestarted.addListener( () => {
+  cast.framework.CastContext.getInstance().getCurrentSession().endSession(true);
+  
 	chrome.storage.local.get('iTunesXML', file => {
 		console.info('Checking storage.');
 		if (file.iTunesXML) {
@@ -39,7 +41,6 @@ chrome.app.runtime.onRestarted.addListener( () => {
 });
 
 
-chrome.app.runtime.onSuspend.addListener( () => {
-	console.log('Stop casting.');
-	stopCasting();
+chrome.app.runtime.onSuspend.addListener(() => {
+	cast.framework.CastContext.getInstance().getCurrentSession().endSession(true);
 });

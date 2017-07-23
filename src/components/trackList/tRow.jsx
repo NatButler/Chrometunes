@@ -10,7 +10,7 @@ class TRow extends Component {
 	render() {
 		const { store } = this.context;
 		const playback = store.getState().playback.nowPlaying;
-		const { lib, index, track, trClass } = this.props;
+		const { lib, index, track, trClass } = this.props;
 
 		return (
 			<li

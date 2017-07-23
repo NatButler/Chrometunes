@@ -8,7 +8,6 @@ const Controls = ({ isDisabled }, { store }) => {
 		<div id="up-next-controls" className="btn.group">
 			<Button
 				label="SAVE"
-				// icon="floppy-disk"
 				disabled={isDisabled}
 				handler={() => {
 					const state = store.getState().playback;
@@ -19,7 +18,6 @@ const Controls = ({ isDisabled }, { store }) => {
 
 			<Button
 				label="CLEAR"
-				// icon="trash"
 				disabled={isDisabled}
 				handler={() => {
 					store.dispatch( clearTracks() );

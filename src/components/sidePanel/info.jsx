@@ -15,10 +15,6 @@ class Info extends Component {
 		if (track) {
 			info = Object.keys(track).sort().map( (key, i) => {
 				let prop = track[key];
-				if (key === 'Disc') { prop = prop + ' / ' + track['Disc Count']; }
-				if (key === 'Disc Count') { return; }
-				if (key === 'Track') { prop = prop + ' / ' + track['TrackCount']; }
-				if (key === 'TrackCount') { return; }
 				if (key === 'Artwork') {
 					if (prop) {
 						const imgURL = this.buildImgURL(track.Location, track.Artist, track.Album);
@@ -33,6 +29,10 @@ class Info extends Component {
 						</li>
 					);
 				}
+				if (key === 'Disc') { prop = prop + ' / ' + track['Disc Count']; }
+				if (key === 'Disc Count') { return; }
+				if (key === 'Track') { prop = prop + ' / ' + track['TrackCount']; }
+				if (key === 'TrackCount') { return; }
 				if (key === 'PId') { return <li key={i} className="divider"></li>; }
 				if (key === 'Location') { return; }
 				return <li key={i} className={this.repSpace(key, '-').toLowerCase()}><span className="infoKey">{key}:</span> {prop}</li>;

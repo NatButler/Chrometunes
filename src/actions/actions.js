@@ -27,9 +27,13 @@ const importLib = lib => {
 		id: lib.id,
 		tracks: lib.tracks,
 		genres: lib.genres.sort(),
-		index: lib.tracks.map(t => t.PId)
+		index: lib.tracks.map(t => t.PId),
+		alert: ''
 	}
 };
+export const libAlert = msg => ({
+	type: aT.LIB_ALERT, msg
+});
 export const query = query => ({
 	type: aT.QUERY, query
 });
@@ -141,6 +145,8 @@ export const delPlaylist = id => ({
 export const loadLibrary = () => 
 	fetchLibrary().then(lib => 
 		importLib(lib)
+	).catch(reason => 
+		libAlert(reason)
 	);
 export const loadPlaylists = libId =>
 	loadState(libId).then(state =>

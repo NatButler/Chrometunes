@@ -7,11 +7,7 @@ class Input extends Component {
 	constructor() {
 		super();
 		this.timer;
-		this.input;
-	}
-
-	shouldComponentUpdate(nextProps) {
-		return false;
+		this.clearButton;
 	}
 
 	render() {
@@ -31,18 +27,23 @@ class Input extends Component {
 							this.handleSearch(e.target.value);
 						}
 						if (e.target.value.length > 2) {
-							console.log(this.clearButton);	
-							// this.clearButton.disabled = false;
+							// console.log(this.clearButton, this.clearButton.style);
+							// this.clearButton.style.visibility = 'visible';
+						} else {
+							// this.clearButton.style.visibility = 'hidden';
 						}
 					}}
 			  />
 				<Button
 					ref={node => { this.clearButton = node; }}
 					icon="remove"
-					disabled={true}
-					className={(this.input) ? (this.input.value.length < 2) ? 'clear-search disabled' : 'clear-search' : 'clear-search'}
+					// disabled={(this.input) ? (this.input.value.length < 2) ? true : false : true}
+					className="clear-search"
 					handler={() => {
 						this.props.onClearSearch();
+						// this.clearButton.value = '';
+						// this.clearButton.style.visibility = 'hidden';
+						// console.log(this.clearButton.style);
 					}}
 				/>
 			</div>
@@ -54,9 +55,9 @@ class Input extends Component {
 		clearTimeout( this.timer );
 		if (query.length < 2 && props.query.length) { props.onClearSearch(); }
 		else {
-			this.timer = (query.length >= 2) && setTimeout( () => {
+			this.timer = (query.length >= 2) && setTimeout(() => {
 				props.onSearch(query);
-			}, 300);
+			}, 500);
 		}
 	}
 }

@@ -4,6 +4,7 @@ export const SET_VISIBLE_COLUMNS = 'SET_VISIBLE_COLUMNS';
 export const SET_INFOBAR_POS = 'SET_INFOBAR_POS';
 
 export const IMPORT_LIB = 'IMPORT_LIB';
+export const LIB_ALERT = 'LIB_ALERT';
 export const QUERY = 'QUERY';
 export const SEARCH_LIB = 'SEARCH_LIB';
 export const CLEAR_SEARCH = 'CLEAR_SEARCH';

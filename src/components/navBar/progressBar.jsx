@@ -17,6 +17,8 @@ class ProgressBar extends Component {
 						let clickPos = (e.pageX - this.progress.offsetLeft) / this.progress.offsetWidth;
 						let clickTime = clickPos * this.props.audio.duration;
 						this.props.audio.currentTime = clickTime;
+						this.props.castPlayer.currentTime = clickTime;
+						this.props.castAudio.seek();
 					}
 				}}
 				onMouseEnter={e => {
@@ -59,7 +61,9 @@ class ProgressBar extends Component {
 }
 
 ProgressBar.propTypes = {
-	audio: PropTypes.object
+	audio: PropTypes.object,
+	castAudio: PropTypes.object,
+	castPlayer: PropTypes.object
 }
 
 export default ProgressBar;

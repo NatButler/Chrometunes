@@ -11,31 +11,23 @@ export const fetchLibrary = () => {
 				iTunesXML.file(xml => {
 					let reader = new FileReader();
 					reader.readAsText(xml);
-					// reader.onerror = errorHandler;
+					reader.onerror = err => {
+						reject('Read file failed: ' + err.toString());
+					}
 					reader.onload = e => {
 						console.time('parseXML');
 						const library = parseXML( convertXMLString(e.target.result) );
 						console.timeEnd('parseXML');
-						library.then(lib => { return resolve(lib); }).catch(reason => { console.error(reason); });
+						library.then(lib => { return resolve(lib); }).catch(err => { reject(err); });
 					}
 				});
+			} else {
+				reject('No file selected.');
 			}
 		}
 
-		// const readDir = iTunesDir => {
-		// 	if (iTunesDir) {
-		// 		persistToStorage(iTunesDir);
-
-
-
-
-
-
-		// 	}
-		// }
-
 		const persistToStorage = path => {
-				chrome.storage.local.set({ 'path': chrome.fileSystem.retainEntry(path) });
+			chrome.storage.local.set({ 'path': chrome.fileSystem.retainEntry(path) });
 		}
 
 		chrome.fileSystem.chooseEntry({
@@ -54,9 +46,9 @@ export const fetchLibrary = () => {
 }
 
 const convertXMLString = xml => {
-	if (typeof window.DOMParser != 'undefined') {
+	if (typeof window.DOMParser != undefined) {
 		return ( new window.DOMParser() ).parseFromString(xml, 'text/xml');
 	} else {
-		throw new Error('No XML parser found');
+		throw new Error('No XML parser found.');
 	}
 }

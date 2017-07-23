@@ -15,11 +15,9 @@ export const saveState = state => {
 	};
 	try {
 		chrome.storage.local.set({[state.library.id]: save}, () => {
-			// Log success
 			console.log('State saved.');
 		});
 	} catch(err) {
-		// Ignore write errors.
 		console.error(err);
 	}
 }

@@ -257,6 +257,7 @@ nav input:focus {
 	right: 7px;
 	background-color: inherit;
 	border: 0;
+	visibility: hidden;
 }
 
 .search-wrap button.clear-search[disabled] {
@@ -349,6 +350,14 @@ nav .dropdown-menu .divider {
 	margin: 0;
 	padding: 0;
 	list-style-type: none;
+}
+
+.table-wrap div.table-alert {
+	margin: 10px;
+}
+
+.table-wrap div.table-alert button {
+	margin-left: 10px;
 }
 
 .table-wrap ul li, .table-wrap ul li div {
@@ -589,7 +598,7 @@ div.log p.alert::before {
 	background-color: #eeb211;
 	margin: 15px 14px 14px;
 	min-height: 68px;
-	outline: 1px solid #d6a00f;
+	outline: 1px solid #6b5007;
 	outline-offset: 1px;
 	line-height: 1.42857143;
 	overflow: hidden;
@@ -610,11 +619,11 @@ div.log p.alert::before {
 	border-right: 1px solid #d6a00f;
 }
 
-#current-track button:hover {
+#current-track button[disabled], #current-track button:hover {
 	background-color: #d6a00f;
 }
 
-#current-track button.info {
+#current-track img.loading, #current-track button.info {
 	position: absolute;
 	bottom: 0;
 	right: 4px;
@@ -627,6 +636,12 @@ div.log p.alert::before {
 	background-color: inherit;
 }
 
+#current-track img.loading {
+	width: 14px;
+	height: 14px;
+	bottom: 3px;
+}
+
 #current-track.not-loaded button {
 	background-color: #d6a00f;
 	overflow: hidden;
@@ -634,6 +649,10 @@ div.log p.alert::before {
 
 #current-track.not-loaded button span {
 	opacity: 0.5;
+}
+
+#current-track h5 span {
+	font-weight: 600;
 }
 
 /* TABS */
@@ -686,7 +705,6 @@ div.log p.alert::before {
 	margin: 0;
 	padding: 0;
 	list-style-type: none;
-	/* background-color: #fcfffb; */
 }
 
 .tab-content li.warning {
@@ -708,6 +726,10 @@ div.tab-content {
 	margin-bottom: 2px;
 	background: #f7f7f7;
 	border: 1px solid #f3f3f3;
+}
+
+#up-next-ul li:hover {
+	background-color: #dedede;
 }
 
 #up-next-ul li:last-child {
@@ -785,12 +807,11 @@ button.close:hover {
 }
 
 .up-next-item h5 span.title {
-	font-weight: 400;
+	font-weight: 500;
 	font-size: 13px;
 }
 
 .up-next-item span.duration {
-	/* float: right; */
 	font-size: 11px;
 	padding-top: 4px;
 }
@@ -838,7 +859,7 @@ button.close:hover {
 .playlist-item, .new-playlist {
 	display: flex;
 	margin: 0 0 3px;
-	padding: 0;-
+	padding: 0;
 	size: 13px;
 	border: 1px solid #f3f3f3;
 }
@@ -860,15 +881,14 @@ button.close:hover {
 }
 
 .playlist-item button {
-	/* margin-right: 1px; */
-	px; */
 	background-color: #ccc;
 	padding: 2px 8px;
-	background-color: #ccc;
 }
 
 .playlist-item span.list-count {
-	color: #808080;
+	color: #fff;
+	margin-left: 10px;
+	margin-bottom: 3px;
 }
 
 .new-playlist {

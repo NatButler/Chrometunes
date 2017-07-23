@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Item } from './upNextItems';
 import Button from '../Button';
-import * as playstate from '../../constants/playStates';
+import * as pS from '../../constants/playStates';
+import { playerController } from '../../cast';
 
 class NowPlaying extends Component {
 	shouldComponentUpdate(nextProps) {
@@ -11,28 +12,32 @@ class NowPlaying extends Component {
 
 	render() {
 		console.log('Current track.');
+		const { track, status } = this.props.playback;
 		const audio = document.getElementById('player');
-		const playback = this.props.playback;
-		const track = (playback.track) ? <Item trk={playback.track} /> : <div></div>;
+		const details = (track) ? <Item trk={track} /> : null;
+		const loading = (status === pS.LOADING) ? <img className="loading" src="img/loading-small.gif" /> : null;
 
 		return (
-			<div id="current-track" className={(playback.track) ? '' : 'not-loaded'}>
+			<div id="current-track" className={(track) ? '' : 'not-loaded'}>
 				<Button
-					icon={(playback.status === playstate.PLAY) ? playstate.PAUSE : playstate.PLAY}
+					icon={(status === pS.PLAY) ? pS.PAUSE : pS.PLAY}
 					className="playback"
-					disabled={!playback.track}
+					disabled={status === pS.LOADING || !track}
 					handler={() => {
-						(playback.status === playstate.PLAY) ? audio.pause() : audio.play();
+						(status === pS.PLAY) ? audio.pause() : audio.play();
+						playerController.playOrPause();
 					}}
 				/>
-				{track}
-				<Button
-					icon="info-sign"
-					className="info"
-					handler={() => {
-						$('#tabs a[href="#info"]').tab('show');
-					}}
-				/>
+				{details}
+				{loading ||
+					<Button
+						icon="info-sign"
+						className="info"
+						handler={() => {
+							$('#tabs a[href="#info"]').tab('show');
+						}}
+					/>
+				}
 			</div>
 		);
 	}

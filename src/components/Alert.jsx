@@ -1,21 +1,31 @@
-import React, { Comonent } from 'react';
+import React from 'react';
+import { PropTypes } from 'prop-types';
+import Button from './Button';
 
-class Alert extends Component {
-	shouldComponentUpdate(nextProps) {
-		return false;
-	}
+const Alert = ({type, msg, action, handler}) => {
+	const button = action ?
+		<Button  
+			className="alert-button"
+			label={action}
+			// dataDismiss="alert"
+			handler={handler}
+		/> : null;
+	return (
+		<div
+			className={"table-alert alert alert-" + type}
+			role="alert"
+		>
+			{msg}
+			{button}
+		</div>
+	);
+}
 
-	render() {
-		const props = this.props;
-
-		return (
-			<div className="collapse" id="collapseExample">
-			  <div className="well">
-			    <span className="warning"></span>
-			  </div>
-			</div>
-		);
-	}
+Alert.propTypes = {
+	type: PropTypes.string,
+	msg: PropTypes.string,
+	action: PropTypes.string,
+	handler: PropTypes.func
 }
 
 export default Alert;

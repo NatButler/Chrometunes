@@ -3,14 +3,14 @@ import { PropTypes } from 'prop-types';
 
 class Button extends Component {
 	shouldComponentUpdate(nextProps) {
-		return this.props.icon !== nextProps.icon || this.props.disabled !== nextProps.disabled || this.props.className !== nextProps.className;
+		return this.props.disabled !== nextProps.disabled || this.props.icon !== nextProps.icon || this.props.className !== nextProps.className;
 	}
 
 	render() {
 		const props = this.props;
 		let icon = props.icon !== '' ? <span className={'glyphicon glyphicon-' + props.icon}></span> : '';
 		let label = props.label !== '' && props.icon == '' ? <label>{props.label}</label> : '';
-		
+
 		return(
 			<button
 				type={props.type}
@@ -20,6 +20,7 @@ class Button extends Component {
 				onClick={props.handler}
 				data-toggle={props.dataToggle}
 				data-target={props.dataTarget}
+				data-dismiss={props.dataDismiss}
 			>
 				{icon}
 				{label}
@@ -37,7 +38,8 @@ Button.propTypes = {
 	disabled: PropTypes.bool,
 	handler: PropTypes.func.isRequired,
 	dataToggle: PropTypes.string,
-	dataTarget: PropTypes.string
+	dataTarget: PropTypes.string,
+	dataDismiss: PropTypes.string
 }
 
 Button.defaultProps = {
