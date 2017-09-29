@@ -22,7 +22,7 @@ export const fetchLibrary = () => {
 					}
 				});
 			} else {
-				reject('No file selected.');
+				reject('No library loaded.');
 			}
 		}
 

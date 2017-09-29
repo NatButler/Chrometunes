@@ -155,6 +155,8 @@ export const loadPlaylists = libId =>
 export const obtainIP = () =>
 	getIP().then(ip =>
 		setServerUrl(ip)
+	).catch(err => 
+		libAlert(err)
 	);
 
 // UTILS

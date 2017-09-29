@@ -1,3 +1,3 @@
 # Chrometunes
 
-Cast your iTunes® library.
+Chromecast™ your iTunes® library.

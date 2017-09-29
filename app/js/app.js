@@ -1426,7 +1426,7 @@ const loadLibrary = () => __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__lib
 const loadPlaylists = libId => __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__localStorage__["b" /* loadState */])(libId).then(state => importPlaylists(state.playlists));
 /* harmony export (immutable) */ __webpack_exports__["c"] = loadPlaylists;
 
-const obtainIP = () => __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__getIP__["a" /* default */])().then(ip => setServerUrl(ip));
+const obtainIP = () => __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__getIP__["a" /* default */])().then(ip => setServerUrl(ip)).catch(err => libAlert(err));
 /* harmony export (immutable) */ __webpack_exports__["b"] = obtainIP;
 
 
@@ -14621,7 +14621,7 @@ const fetchLibrary = () => {
 					};
 				});
 			} else {
-				reject('No file selected.');
+				reject('No library loaded.');
 			}
 		};
 
