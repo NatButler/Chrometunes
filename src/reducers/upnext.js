@@ -25,6 +25,20 @@ const upnext = (upnext = [], action) => {
 				...upnext.slice(0, action.index),
 				...upnext.slice(action.index + 1)
 			];
+		case 'DND_TRACK_UP':
+			return [
+				...upnext.slice(0, action.destIdx), 
+				upnext[action.currIdx], 
+				...upnext.slice(action.destIdx, action.currIdx), 
+				...upnext.slice(action.currIdx+1) 
+			];
+		case 'DND_TRACK_DOWN':
+			return [
+				...upnext.slice(0, action.currIdx), 
+				...upnext.slice(action.currIdx+1, action.destIdx+1), 
+				upnext[action.currIdx],
+				...upnext.slice(action.destIdx+1)
+			];
 		case 'CLEAR_TRACKS':
 			return [];
 		case 'PLAY_TRACK':

@@ -59,17 +59,22 @@ const parseXML = xml => {
 				}
 			});
 
+			// Add artist if doesn't already exist
 			if ( trk.Artist !== artist ) {
 				artist = trk.Artist;
 				if ( !artists.includes(trk.Artist) ) { artists.push(trk.Artist); }
 			}
+
+			// Add genre if doesn't already exist
 			if ( trk.Genre !== genre ) {
 				genre = trk.Genre;
 				if ( !lib.genres.includes(trk.Genre) ) { lib.genres.push(trk.Genre); }
 			}
+			
 			if ( trk.Location ) { lib.tracks.push(trk); }
 		}
 
+		// Sort artists alphabetically then sort library by artists
 		artists.sort();
 		lib.tracks = sortLibrary(lib.tracks, artists);
 

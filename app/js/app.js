@@ -1213,8 +1213,8 @@ module.exports = ReactComponentTreeHook;
 
 /***/ }),
 /* 10 */
-/* exports provided: setCastStatus, setInfobarPos, libAlert, query, searchLib, filterLib, clearSearch, clearFiltered, addTrack, addDisc, addRemDisc, playFrom, delTrack, clearTracks, loadPlaylist, playTrack, setPlayback, togglePlayback, setPlaymode, togglePlaymode, saveList, namePlaylist, delPlaylist, loadLibrary, loadPlaylists, obtainIP */
-/* exports used: loadLibrary, obtainIP, loadPlaylists, loadPlaylist, delPlaylist, namePlaylist, saveList, clearTracks, delTrack, playFrom, clearSearch, filterLib, searchLib, playTrack, addRemDisc, addDisc, addTrack, clearFiltered, setPlaymode, setInfobarPos, query, setPlayback, togglePlaymode */
+/* exports provided: setCastStatus, setInfobarPos, libAlert, query, searchLib, filterLib, clearSearch, clearFiltered, addTrack, addDisc, addRemDisc, playFrom, delTrack, dndTrackUp, dndTrackDown, clearTracks, loadPlaylist, playTrack, setPlayback, togglePlayback, setPlaymode, togglePlaymode, saveList, namePlaylist, delPlaylist, loadLibrary, loadPlaylists, obtainIP */
+/* exports used: loadLibrary, obtainIP, loadPlaylists, loadPlaylist, delPlaylist, namePlaylist, saveList, clearTracks, dndTrackUp, dndTrackDown, delTrack, playFrom, clearSearch, filterLib, searchLib, playTrack, addRemDisc, addDisc, addTrack, clearFiltered, setPlaymode, setInfobarPos, query, setPlayback, togglePlaymode */
 /*!********************************!*\
   !*** ./src/actions/actions.js ***!
   \********************************/
@@ -1252,7 +1252,7 @@ const setCastStatus = status => ({
 const setInfobarPos = pos => ({
 	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["c" /* SET_INFOBAR_POS */], pos
 });
-/* harmony export (immutable) */ __webpack_exports__["t"] = setInfobarPos;
+/* harmony export (immutable) */ __webpack_exports__["v"] = setInfobarPos;
 
 
 // LIBRARY
@@ -1275,12 +1275,12 @@ const libAlert = msg => ({
 const query = query => ({
 	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["f" /* QUERY */], query
 });
-/* harmony export (immutable) */ __webpack_exports__["u"] = query;
+/* harmony export (immutable) */ __webpack_exports__["w"] = query;
 
 const searchLib = tracks => ({
 	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["g" /* SEARCH_LIB */], tracks
 });
-/* harmony export (immutable) */ __webpack_exports__["m"] = searchLib;
+/* harmony export (immutable) */ __webpack_exports__["o"] = searchLib;
 
 const filterLib = (tracks, filter, type = __WEBPACK_IMPORTED_MODULE_6__constants_filterTypes__["a" /* GENRE */]) => ({
 	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["h" /* FILTER_LIB */],
@@ -1288,57 +1288,71 @@ const filterLib = (tracks, filter, type = __WEBPACK_IMPORTED_MODULE_6__constants
 	filter: typeof filter === 'object' ? filter[type] : filter,
 	filterType: type
 });
-/* harmony export (immutable) */ __webpack_exports__["l"] = filterLib;
+/* harmony export (immutable) */ __webpack_exports__["n"] = filterLib;
 
 const clearSearch = () => ({
 	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["i" /* CLEAR_SEARCH */]
 });
-/* harmony export (immutable) */ __webpack_exports__["k"] = clearSearch;
+/* harmony export (immutable) */ __webpack_exports__["m"] = clearSearch;
 
 const clearFiltered = () => ({
 	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["j" /* CLEAR_FILTERED */]
 });
-/* harmony export (immutable) */ __webpack_exports__["r"] = clearFiltered;
+/* harmony export (immutable) */ __webpack_exports__["t"] = clearFiltered;
 
 
 // UP NEXT
 const addTrack = track => ({
 	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["k" /* ADD_TRACK */], track
 });
-/* harmony export (immutable) */ __webpack_exports__["q"] = addTrack;
+/* harmony export (immutable) */ __webpack_exports__["s"] = addTrack;
 
 const addDisc = (track, tracks) => ({
 	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["l" /* ADD_ALBUM */],
 	album: __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4__librarySearch__["b" /* trkFilter */])(tracks, track, __WEBPACK_IMPORTED_MODULE_6__constants_filterTypes__["c" /* ALBUM */], track.Disc).map(t => t.PId)
 });
-/* harmony export (immutable) */ __webpack_exports__["p"] = addDisc;
+/* harmony export (immutable) */ __webpack_exports__["r"] = addDisc;
 
 const addRemDisc = (track, tracks) => ({
 	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["m" /* ADD_REM_DISC */],
 	album: __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4__librarySearch__["b" /* trkFilter */])(tracks, track, __WEBPACK_IMPORTED_MODULE_6__constants_filterTypes__["c" /* ALBUM */], track.Disc).map(t => t.PId),
 	index: track.Track
 });
-/* harmony export (immutable) */ __webpack_exports__["o"] = addRemDisc;
+/* harmony export (immutable) */ __webpack_exports__["q"] = addRemDisc;
 
 const playFrom = (trk, trackIdx) => ({
 	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["n" /* PLAY_FROM */],
 	track: trk,
 	index: trackIdx + 1
 });
-/* harmony export (immutable) */ __webpack_exports__["j"] = playFrom;
+/* harmony export (immutable) */ __webpack_exports__["l"] = playFrom;
 
 const delTrack = index => ({
 	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["o" /* DEL_TRACK */], index
 });
-/* harmony export (immutable) */ __webpack_exports__["i"] = delTrack;
+/* harmony export (immutable) */ __webpack_exports__["k"] = delTrack;
+
+const dndTrackUp = (currIdx, destIdx) => ({
+	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["p" /* DND_TRACK_UP */],
+	currIdx: currIdx,
+	destIdx: destIdx
+});
+/* harmony export (immutable) */ __webpack_exports__["i"] = dndTrackUp;
+
+const dndTrackDown = (currIdx, destIdx) => ({
+	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["q" /* DND_TRACK_DOWN */],
+	currIdx: currIdx,
+	destIdx: destIdx
+});
+/* harmony export (immutable) */ __webpack_exports__["j"] = dndTrackDown;
 
 const clearTracks = () => ({
-	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["p" /* CLEAR_TRACKS */]
+	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["r" /* CLEAR_TRACKS */]
 });
 /* harmony export (immutable) */ __webpack_exports__["h"] = clearTracks;
 
 const loadPlaylist = list => ({
-	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["q" /* LOAD_LIST */], list
+	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["s" /* LOAD_LIST */], list
 });
 /* harmony export (immutable) */ __webpack_exports__["d"] = loadPlaylist;
 
@@ -1352,69 +1366,69 @@ const playTrack = (lib, index, mode, upnext, prevTrk) => {
 	switch (mode) {
 		case __WEBPACK_IMPORTED_MODULE_7__constants_playModes__["b" /* NORMAL */]:
 			return {
-				type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["r" /* PLAY_TRACK */],
+				type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["t" /* PLAY_TRACK */],
 				mode: mode,
 				track: lib[index.indexOf(upnext[0])]
 			};
 		case __WEBPACK_IMPORTED_MODULE_7__constants_playModes__["a" /* REPEAT */]:
 			return {
-				type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["r" /* PLAY_TRACK */],
+				type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["t" /* PLAY_TRACK */],
 				mode: mode,
 				track: lib[index.indexOf(upnext[0])],
 				prevTrack: prevTrk
 			};
 		case __WEBPACK_IMPORTED_MODULE_7__constants_playModes__["c" /* SHUFFLE */]:
 			return {
-				type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["r" /* PLAY_TRACK */],
+				type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["t" /* PLAY_TRACK */],
 				mode: mode,
 				track: lib[index.indexOf(upnext[randomTrack(upnext.length)])]
 			};
 	}
 };
-/* harmony export (immutable) */ __webpack_exports__["n"] = playTrack;
+/* harmony export (immutable) */ __webpack_exports__["p"] = playTrack;
 
 const setPlayback = state => ({
-	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["s" /* SET_PLAYBACK_STATE */], state
+	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["u" /* SET_PLAYBACK_STATE */], state
 });
-/* harmony export (immutable) */ __webpack_exports__["v"] = setPlayback;
+/* harmony export (immutable) */ __webpack_exports__["x"] = setPlayback;
 
 const togglePlayback = () => ({
-	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["t" /* TOGGLE_PLAYBACK_STATE */]
+	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["v" /* TOGGLE_PLAYBACK_STATE */]
 });
 /* unused harmony export togglePlayback */
 
 const setPlaymode = mode => ({
-	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["u" /* SET_PLAYMODE */], mode
+	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["w" /* SET_PLAYMODE */], mode
 });
-/* harmony export (immutable) */ __webpack_exports__["s"] = setPlaymode;
+/* harmony export (immutable) */ __webpack_exports__["u"] = setPlaymode;
 
 const togglePlaymode = () => ({
-	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["v" /* TOGGLE_PLAYMODE */]
+	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["x" /* TOGGLE_PLAYMODE */]
 });
-/* harmony export (immutable) */ __webpack_exports__["w"] = togglePlaymode;
+/* harmony export (immutable) */ __webpack_exports__["y"] = togglePlaymode;
 
 
 // PLAYLISTS
 const importPlaylists = lists => ({
-	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["w" /* IMPORT_PLAYLISTS */],
+	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["y" /* IMPORT_PLAYLISTS */],
 	lists: lists
 });
 const saveList = (upnext, currentTrack) => ({
-	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["x" /* SAVE_LIST */],
+	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["z" /* SAVE_LIST */],
 	id: __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_uuid__["v4"])(),
 	tracks: currentTrack ? [currentTrack['PId'], ...upnext] : upnext
 });
 /* harmony export (immutable) */ __webpack_exports__["g"] = saveList;
 
 const namePlaylist = (id, title = 'Untitled') => ({
-	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["y" /* NAME_LIST */],
+	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["A" /* NAME_LIST */],
 	id: id,
 	title: title
 });
 /* harmony export (immutable) */ __webpack_exports__["f"] = namePlaylist;
 
 const delPlaylist = id => ({
-	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["z" /* DEL_LIST */], id
+	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["B" /* DEL_LIST */], id
 });
 /* harmony export (immutable) */ __webpack_exports__["e"] = delPlaylist;
 
@@ -5414,6 +5428,10 @@ const LOADING = 'loading';
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__constants_filterTypes__ = __webpack_require__(/*! ./constants/filterTypes */ 31);
 
 
+// Make use of reduce for search / sort?
+// Change structure of tracks for faster lookup: normalise data
+
+
 // SEARCH
 const trkSearch = (ts, q) => ts.filter(t => matchTrk(t, q));
 /* harmony export (immutable) */ __webpack_exports__["d"] = trkSearch;
@@ -7714,12 +7732,29 @@ module.exports = __webpack_require__(/*! ./lib/ReactDOM */ 192);
 
 const UpNextItem = ({ trk, idx }, { store }) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 	'li',
-	null,
+	{
+		draggable: true,
+		onDragStart: e => {
+			e.dataTransfer.setData('text', idx);
+		},
+		onDragOver: e => {
+			e.preventDefault();
+		},
+		onDrop: e => {
+			let currIdx = +e.dataTransfer.getData('text');
+			console.log('Dropping ' + currIdx + ' at ' + idx);
+			if (currIdx > idx) {
+				store.dispatch(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__actions_actions__["i" /* dndTrackUp */])(currIdx, idx));
+			} else {
+				store.dispatch(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__actions_actions__["j" /* dndTrackDown */])(currIdx, idx));
+			}
+		}
+	},
 	__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__Button__["a" /* default */], {
 		className: 'close',
 		icon: 'remove-circle',
 		handler: () => {
-			store.dispatch(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__actions_actions__["i" /* delTrack */])(idx));
+			store.dispatch(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__actions_actions__["k" /* delTrack */])(idx));
 		}
 	}),
 	__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Item, { trk: trk, idx: idx })
@@ -7744,7 +7779,7 @@ const Item = ({ trk, idx }, { store }) => {
 		{
 			className: 'up-next-item',
 			onDoubleClick: () => {
-				store.dispatch(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__actions_actions__["j" /* playFrom */])(trk, idx));
+				store.dispatch(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__actions_actions__["l" /* playFrom */])(trk, idx));
 			}
 		},
 		__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -7775,11 +7810,11 @@ const Item = ({ trk, idx }, { store }) => {
 					onClick: () => {
 						let state = store.getState().library;
 						if (state.query) {
-							store.dispatch(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__actions_actions__["k" /* clearSearch */])());
+							store.dispatch(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__actions_actions__["m" /* clearSearch */])());
 							$('#searchInput').val('').focus();
 						}
 						if (state.filter !== trk[__WEBPACK_IMPORTED_MODULE_4__constants_filterTypes__["b" /* ARTIST */]]) {
-							store.dispatch(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__actions_actions__["l" /* filterLib */])(lib, trk[__WEBPACK_IMPORTED_MODULE_4__constants_filterTypes__["b" /* ARTIST */]], __WEBPACK_IMPORTED_MODULE_4__constants_filterTypes__["b" /* ARTIST */]));
+							store.dispatch(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__actions_actions__["n" /* filterLib */])(lib, trk[__WEBPACK_IMPORTED_MODULE_4__constants_filterTypes__["b" /* ARTIST */]], __WEBPACK_IMPORTED_MODULE_4__constants_filterTypes__["b" /* ARTIST */]));
 						}
 					}
 				},
@@ -7797,11 +7832,11 @@ const Item = ({ trk, idx }, { store }) => {
 					onClick: () => {
 						let state = store.getState().library;
 						if (state.query) {
-							store.dispatch(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__actions_actions__["k" /* clearSearch */])());
+							store.dispatch(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__actions_actions__["m" /* clearSearch */])());
 							$('#searchInput').val('').focus();
 						}
 						if (state.filter !== trk[__WEBPACK_IMPORTED_MODULE_4__constants_filterTypes__["c" /* ALBUM */]]) {
-							store.dispatch(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__actions_actions__["l" /* filterLib */])(lib, trk, __WEBPACK_IMPORTED_MODULE_4__constants_filterTypes__["c" /* ALBUM */]));
+							store.dispatch(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__actions_actions__["n" /* filterLib */])(lib, trk, __WEBPACK_IMPORTED_MODULE_4__constants_filterTypes__["c" /* ALBUM */]));
 						}
 					}
 				},
@@ -12459,8 +12494,8 @@ const mapStateToProps = state => ({
 });
 
 const Filter = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_react_redux__["connect"])(mapStateToProps, {
-	onFilter: __WEBPACK_IMPORTED_MODULE_3__actions_actions__["l" /* filterLib */],
-	onClearFilter: __WEBPACK_IMPORTED_MODULE_3__actions_actions__["r" /* clearFiltered */]
+	onFilter: __WEBPACK_IMPORTED_MODULE_3__actions_actions__["n" /* filterLib */],
+	onClearFilter: __WEBPACK_IMPORTED_MODULE_3__actions_actions__["t" /* clearFiltered */]
 })(Select);
 
 /* harmony default export */ __webpack_exports__["a"] = (Filter);
@@ -12797,7 +12832,7 @@ const mapStateToProps = state => ({
 	infobar: state.app.infobarPos
 });
 
-/* harmony default export */ __webpack_exports__["a"] = (__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_react_redux__["connect"])(mapStateToProps, { onImportLib: __WEBPACK_IMPORTED_MODULE_4__actions_actions__["a" /* loadLibrary */], onSaveList: __WEBPACK_IMPORTED_MODULE_4__actions_actions__["g" /* saveList */], changePlaymode: __WEBPACK_IMPORTED_MODULE_4__actions_actions__["s" /* setPlaymode */], setInfobarPos: __WEBPACK_IMPORTED_MODULE_4__actions_actions__["t" /* setInfobarPos */] })(Menu));
+/* harmony default export */ __webpack_exports__["a"] = (__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_react_redux__["connect"])(mapStateToProps, { onImportLib: __WEBPACK_IMPORTED_MODULE_4__actions_actions__["a" /* loadLibrary */], onSaveList: __WEBPACK_IMPORTED_MODULE_4__actions_actions__["g" /* saveList */], changePlaymode: __WEBPACK_IMPORTED_MODULE_4__actions_actions__["u" /* setPlaymode */], setInfobarPos: __WEBPACK_IMPORTED_MODULE_4__actions_actions__["v" /* setInfobarPos */] })(Menu));
 
 /***/ }),
 /* 115 */
@@ -12941,6 +12976,8 @@ class Playback extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
 			dur = playback.track['Duration'];
 		}
 
+		// Removal of audio elem to only function as chromecast player
+
 		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 			'div',
 			{ className: 'playback' },
@@ -12951,6 +12988,10 @@ class Playback extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
 				className: 'audio',
 				src: this.state.src,
 				loop: loop,
+				errorHandler: () => {
+					// Feedback/warning in app needed
+					console.log('Error loading.');
+				},
 				canPlayHandler: () => {
 					this.state.canPlay = true;
 				},
@@ -13026,7 +13067,9 @@ class Playback extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
 					onChange: e => {
 						this.audio.volume = e.target.value;
 						__WEBPACK_IMPORTED_MODULE_9__cast__["c" /* player */].volumeLevel = +e.target.value;
-						__WEBPACK_IMPORTED_MODULE_9__cast__["b" /* playerController */].setVolumeLevel();
+						if (__WEBPACK_IMPORTED_MODULE_9__cast__["c" /* player */].isConnected) {
+							__WEBPACK_IMPORTED_MODULE_9__cast__["b" /* playerController */].setVolumeLevel();
+						}
 					}
 				})
 			),
@@ -13141,9 +13184,9 @@ const mapStateToProps = state => ({
 });
 
 const PlaybackControls = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2_react_redux__["connect"])(mapStateToProps, {
-	onNextTrack: __WEBPACK_IMPORTED_MODULE_3__actions_actions__["n" /* playTrack */],
-	onPlaybackChange: __WEBPACK_IMPORTED_MODULE_3__actions_actions__["v" /* setPlayback */],
-	onTogglePlaymode: __WEBPACK_IMPORTED_MODULE_3__actions_actions__["w" /* togglePlaymode */]
+	onNextTrack: __WEBPACK_IMPORTED_MODULE_3__actions_actions__["p" /* playTrack */],
+	onPlaybackChange: __WEBPACK_IMPORTED_MODULE_3__actions_actions__["x" /* setPlayback */],
+	onTogglePlaymode: __WEBPACK_IMPORTED_MODULE_3__actions_actions__["y" /* togglePlaymode */]
 })(Playback);
 
 /* harmony default export */ __webpack_exports__["a"] = (PlaybackControls);
@@ -13317,8 +13360,8 @@ const mapStateToProps = state => ({
 });
 
 const Search = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_react_redux__["connect"])(mapStateToProps, {
-	onSearch: __WEBPACK_IMPORTED_MODULE_3__actions_actions__["u" /* query */],
-	onClearSearch: __WEBPACK_IMPORTED_MODULE_3__actions_actions__["k" /* clearSearch */]
+	onSearch: __WEBPACK_IMPORTED_MODULE_3__actions_actions__["w" /* query */],
+	onClearSearch: __WEBPACK_IMPORTED_MODULE_3__actions_actions__["m" /* clearSearch */]
 })(Input);
 
 /* harmony default export */ __webpack_exports__["a"] = (Search);
@@ -13339,6 +13382,10 @@ const Search = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_react_redux__["
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_redux___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react_redux__);
 
 
+
+/*
+ * Make artwork request only if different to previous
+*/
 
 class Info extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
 	constructor() {
@@ -13917,10 +13964,11 @@ const Tabs = () => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 
 
 class UpNext extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
-	shouldComponentUpdate(nextProps) {
-		const { upnext } = this.props;
-		return upnext[0] !== nextProps.upnext[0] || upnext[upnext.length - 1] !== nextProps.upnext[nextProps.upnext.length - 1] || upnext.length !== nextProps.upnext.length;
-	}
+	// Commented out because doesn't allow for drag n drop rerender
+	// shouldComponentUpdate(nextProps) {
+	// 	const { upnext } = this.props;
+	// 	return upnext[0] !== nextProps.upnext[0] || upnext[upnext.length-1] !== nextProps.upnext[nextProps.upnext.length-1] || upnext.length !== nextProps.upnext.length;
+	// }
 
 	render() {
 		console.log('UpNext.');
@@ -13953,7 +14001,7 @@ const Help = () => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 	__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 		'p',
 		null,
-		'Double click a row to play a track. Click an \'Album\' or \'Title\' to add to the list. Save a list by clicking \'SAVE\'. Clear a list by clicking \'CLEAR\'.'
+		'Double click a row to play a track. Click an \'Album\' or \'Title\' to add to the list. Save a list by clicking \'SAVE\'. Clear a list by clicking \'CLEAR\'. Drag and drop list items to reorder playlist.'
 	)
 );
 
@@ -14071,7 +14119,7 @@ class TBody extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
 				className: 'col-md-12 tbody',
 				onScroll: () => {
 					if (this.state.rowsIdx.length > this.scroll.range) {
-						this.handleScroll(this.tbody.scrollTop);
+						this.handleScrolling(this.tbody.scrollTop);
 					}
 				}
 			},
@@ -14079,7 +14127,7 @@ class TBody extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
 		);
 	}
 
-	handleScroll(pos) {
+	handleScrolling(pos) {
 		const showHide = (range, action) => {
 			for (let i = range[0]; i < range[1]; i++) {
 				this.state.rows[this.state.rowsIdx[i]].className = action;
@@ -14128,7 +14176,7 @@ const mapStateToProps = state => ({
 
 /* harmony default export */ __webpack_exports__["a"] = (__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_react_redux__["connect"])(mapStateToProps, {
 	onLoadLib: __WEBPACK_IMPORTED_MODULE_5__actions_actions__["a" /* loadLibrary */],
-	onSearch: __WEBPACK_IMPORTED_MODULE_5__actions_actions__["m" /* searchLib */]
+	onSearch: __WEBPACK_IMPORTED_MODULE_5__actions_actions__["o" /* searchLib */]
 })(TBody));
 
 /***/ }),
@@ -14302,8 +14350,8 @@ class TRow extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
 				ref: 'row',
 				className: trClass,
 				onDoubleClick: () => {
-					store.dispatch(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__actions_actions__["n" /* playTrack */])(lib, index, playback.mode, [track['PId']], playback.track));
-					store.dispatch(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__actions_actions__["o" /* addRemDisc */])(track, lib));
+					store.dispatch(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__actions_actions__["p" /* playTrack */])(lib, index, playback.mode, [track['PId']], playback.track));
+					store.dispatch(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__actions_actions__["q" /* addRemDisc */])(track, lib));
 				}
 			},
 			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -14324,7 +14372,7 @@ class TRow extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
 					{
 						href: '#',
 						onClick: e => {
-							store.dispatch(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__actions_actions__["p" /* addDisc */])(track, lib));
+							store.dispatch(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__actions_actions__["r" /* addDisc */])(track, lib));
 							e.preventDefault;
 						}
 					},
@@ -14344,7 +14392,7 @@ class TRow extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
 					{
 						href: '#',
 						onClick: e => {
-							store.dispatch(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__actions_actions__["q" /* addTrack */])(track['PId']));
+							store.dispatch(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__actions_actions__["s" /* addTrack */])(track['PId']));
 							e.preventDefault;
 						}
 					},
@@ -14416,8 +14464,8 @@ const mapStateToProps = state => ({
 
 /***/ }),
 /* 133 */
-/* exports provided: SET_SERVER_ADDR, SET_CAST_STATUS, SET_VISIBLE_COLUMNS, SET_INFOBAR_POS, IMPORT_LIB, LIB_ALERT, QUERY, SEARCH_LIB, CLEAR_SEARCH, FILTER_LIB, CLEAR_FILTERED, ADD_TRACK, ADD_ALBUM, ADD_REM_DISC, DEL_TRACK, SKIP_TRACK, CLEAR_TRACKS, PLAY_FROM, PLAY_TRACK, SET_PLAYBACK_STATE, TOGGLE_PLAYBACK_STATE, SET_PLAYMODE, TOGGLE_PLAYMODE, IMPORT_PLAYLISTS, SAVE_LIST, LOAD_LIST, DEL_LIST, NAME_LIST */
-/* exports used: SET_SERVER_ADDR, SET_CAST_STATUS, SET_INFOBAR_POS, IMPORT_LIB, LIB_ALERT, QUERY, SEARCH_LIB, FILTER_LIB, CLEAR_SEARCH, CLEAR_FILTERED, ADD_TRACK, ADD_ALBUM, ADD_REM_DISC, PLAY_FROM, DEL_TRACK, CLEAR_TRACKS, LOAD_LIST, PLAY_TRACK, SET_PLAYBACK_STATE, TOGGLE_PLAYBACK_STATE, SET_PLAYMODE, TOGGLE_PLAYMODE, IMPORT_PLAYLISTS, SAVE_LIST, NAME_LIST, DEL_LIST */
+/* exports provided: SET_SERVER_ADDR, SET_CAST_STATUS, SET_VISIBLE_COLUMNS, SET_INFOBAR_POS, IMPORT_LIB, LIB_ALERT, QUERY, SEARCH_LIB, CLEAR_SEARCH, FILTER_LIB, CLEAR_FILTERED, ADD_TRACK, ADD_ALBUM, ADD_REM_DISC, DEL_TRACK, DND_TRACK_UP, DND_TRACK_DOWN, SKIP_TRACK, CLEAR_TRACKS, PLAY_FROM, PLAY_TRACK, SET_PLAYBACK_STATE, TOGGLE_PLAYBACK_STATE, SET_PLAYMODE, TOGGLE_PLAYMODE, IMPORT_PLAYLISTS, SAVE_LIST, LOAD_LIST, DEL_LIST, NAME_LIST */
+/* exports used: SET_SERVER_ADDR, SET_CAST_STATUS, SET_INFOBAR_POS, IMPORT_LIB, LIB_ALERT, QUERY, SEARCH_LIB, FILTER_LIB, CLEAR_SEARCH, CLEAR_FILTERED, ADD_TRACK, ADD_ALBUM, ADD_REM_DISC, PLAY_FROM, DEL_TRACK, DND_TRACK_UP, DND_TRACK_DOWN, CLEAR_TRACKS, LOAD_LIST, PLAY_TRACK, SET_PLAYBACK_STATE, TOGGLE_PLAYBACK_STATE, SET_PLAYMODE, TOGGLE_PLAYMODE, IMPORT_PLAYLISTS, SAVE_LIST, NAME_LIST, DEL_LIST */
 /*!**************************************!*\
   !*** ./src/constants/actionTypes.js ***!
   \**************************************/
@@ -14471,46 +14519,52 @@ const ADD_REM_DISC = 'ADD_REM_DISC';
 const DEL_TRACK = 'DEL_TRACK';
 /* harmony export (immutable) */ __webpack_exports__["o"] = DEL_TRACK;
 
+const DND_TRACK_UP = 'DND_TRACK_UP';
+/* harmony export (immutable) */ __webpack_exports__["p"] = DND_TRACK_UP;
+
+const DND_TRACK_DOWN = 'DND_TRACK_DOWN';
+/* harmony export (immutable) */ __webpack_exports__["q"] = DND_TRACK_DOWN;
+
 const SKIP_TRACK = 'SKIP_TRACK';
 /* unused harmony export SKIP_TRACK */
 
 const CLEAR_TRACKS = 'CLEAR_TRACKS';
-/* harmony export (immutable) */ __webpack_exports__["p"] = CLEAR_TRACKS;
+/* harmony export (immutable) */ __webpack_exports__["r"] = CLEAR_TRACKS;
 
 const PLAY_FROM = 'PLAY_FROM';
 /* harmony export (immutable) */ __webpack_exports__["n"] = PLAY_FROM;
 
 
 const PLAY_TRACK = 'PLAY_TRACK';
-/* harmony export (immutable) */ __webpack_exports__["r"] = PLAY_TRACK;
+/* harmony export (immutable) */ __webpack_exports__["t"] = PLAY_TRACK;
 
 const SET_PLAYBACK_STATE = 'SET_PLAYBACK_STATE';
-/* harmony export (immutable) */ __webpack_exports__["s"] = SET_PLAYBACK_STATE;
+/* harmony export (immutable) */ __webpack_exports__["u"] = SET_PLAYBACK_STATE;
 
 const TOGGLE_PLAYBACK_STATE = 'TOGGLE_PLAYBACK_STATE';
-/* harmony export (immutable) */ __webpack_exports__["t"] = TOGGLE_PLAYBACK_STATE;
+/* harmony export (immutable) */ __webpack_exports__["v"] = TOGGLE_PLAYBACK_STATE;
 
 const SET_PLAYMODE = 'SET_PLAYMODE';
-/* harmony export (immutable) */ __webpack_exports__["u"] = SET_PLAYMODE;
+/* harmony export (immutable) */ __webpack_exports__["w"] = SET_PLAYMODE;
 
 const TOGGLE_PLAYMODE = 'TOGGLE_PLAYMODE';
-/* harmony export (immutable) */ __webpack_exports__["v"] = TOGGLE_PLAYMODE;
+/* harmony export (immutable) */ __webpack_exports__["x"] = TOGGLE_PLAYMODE;
 
 
 const IMPORT_PLAYLISTS = 'IMPORT_PLAYLISTS';
-/* harmony export (immutable) */ __webpack_exports__["w"] = IMPORT_PLAYLISTS;
+/* harmony export (immutable) */ __webpack_exports__["y"] = IMPORT_PLAYLISTS;
 
 const SAVE_LIST = 'SAVE_LIST';
-/* harmony export (immutable) */ __webpack_exports__["x"] = SAVE_LIST;
+/* harmony export (immutable) */ __webpack_exports__["z"] = SAVE_LIST;
 
 const LOAD_LIST = 'LOAD_LIST';
-/* harmony export (immutable) */ __webpack_exports__["q"] = LOAD_LIST;
+/* harmony export (immutable) */ __webpack_exports__["s"] = LOAD_LIST;
 
 const DEL_LIST = 'DEL_LIST';
-/* harmony export (immutable) */ __webpack_exports__["z"] = DEL_LIST;
+/* harmony export (immutable) */ __webpack_exports__["B"] = DEL_LIST;
 
 const NAME_LIST = 'NAME_LIST';
-/* harmony export (immutable) */ __webpack_exports__["y"] = NAME_LIST;
+/* harmony export (immutable) */ __webpack_exports__["A"] = NAME_LIST;
 
 
 /***/ }),
@@ -14780,23 +14834,28 @@ const parseXML = xml => {
 				}
 			});
 
+			// Add artist if doesn't already exist
 			if (trk.Artist !== artist) {
 				artist = trk.Artist;
 				if (!artists.includes(trk.Artist)) {
 					artists.push(trk.Artist);
 				}
 			}
+
+			// Add genre if doesn't already exist
 			if (trk.Genre !== genre) {
 				genre = trk.Genre;
 				if (!lib.genres.includes(trk.Genre)) {
 					lib.genres.push(trk.Genre);
 				}
 			}
+
 			if (trk.Location) {
 				lib.tracks.push(trk);
 			}
 		}
 
+		// Sort artists alphabetically then sort library by artists
 		artists.sort();
 		lib.tracks = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__librarySearch__["c" /* sortLibrary */])(lib.tracks, artists);
 
@@ -15160,6 +15219,10 @@ const upnext = (upnext = [], action) => {
 			return [...upnext.slice(action.index)];
 		case 'DEL_TRACK':
 			return [...upnext.slice(0, action.index), ...upnext.slice(action.index + 1)];
+		case 'DND_TRACK_UP':
+			return [...upnext.slice(0, action.destIdx), upnext[action.currIdx], ...upnext.slice(action.destIdx, action.currIdx), ...upnext.slice(action.currIdx + 1)];
+		case 'DND_TRACK_DOWN':
+			return [...upnext.slice(0, action.currIdx), ...upnext.slice(action.currIdx + 1, action.destIdx + 1), upnext[action.currIdx], ...upnext.slice(action.destIdx + 1)];
 		case 'CLEAR_TRACKS':
 			return [];
 		case 'PLAY_TRACK':

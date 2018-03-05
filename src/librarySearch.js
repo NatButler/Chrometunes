@@ -1,5 +1,9 @@
 import * as fT from './constants/filterTypes';
 
+// Make use of reduce for search / sort?
+// Change structure of tracks for faster lookup: normalise data
+
+
 // SEARCH
 export const trkSearch = (ts, q) => ts.filter(t => matchTrk(t, q) );
 const matchTrk = (t, q) => matchStr(t[fT.ARTIST], q) || matchStr(t[fT.ALBUM], q) || matchStr(t[fT.TITLE], q);

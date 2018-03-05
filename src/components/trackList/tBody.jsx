@@ -77,7 +77,7 @@ class TBody extends Component {
 				className="col-md-12 tbody"
 				onScroll={() => { 
 					if (this.state.rowsIdx.length > this.scroll.range) {
-						this.handleScroll(this.tbody.scrollTop);
+						this.handleScrolling(this.tbody.scrollTop);
 					} 
 				}}
 			>
@@ -86,7 +86,7 @@ class TBody extends Component {
 		);
 	}
 
-	handleScroll(pos) {
+	handleScrolling(pos) {
 		const showHide = (range, action) => {
 			for (let i = range[0]; i < range[1]; i++) {
 				this.state.rows[this.state.rowsIdx[i]].className = action;

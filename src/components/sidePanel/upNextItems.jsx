@@ -1,11 +1,24 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
 import Button from '../Button';
-import { delTrack, filterLib, playFrom, clearSearch } from '../../actions/actions'
+import { delTrack, dndTrackUp, dndTrackDown, filterLib, playFrom, clearSearch } from '../../actions/actions'
 import * as fT from '../../constants/filterTypes';
 
 export const UpNextItem = ({ trk, idx }, { store }) => (
-	<li>
+	<li 
+		draggable 
+		onDragStart={e => { e.dataTransfer.setData('text', idx); }}
+		onDragOver={e => { e.preventDefault(); }}
+		onDrop={e => {
+			let currIdx = +e.dataTransfer.getData('text');
+			console.log('Dropping ' + currIdx + ' at ' + idx );
+			if (currIdx > idx) {
+				store.dispatch( dndTrackUp(currIdx, idx) ); 
+			} else {
+				store.dispatch( dndTrackDown(currIdx, idx) );
+			}
+		}}
+	>
 		<Button
 			className="close"
 			icon="remove-circle"

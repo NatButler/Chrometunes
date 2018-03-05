@@ -74,6 +74,16 @@ export const playFrom = (trk, trackIdx) => ({
 export const delTrack = index => ({ 
 	type: aT.DEL_TRACK, index 
 });
+export const dndTrackUp = (currIdx, destIdx) => ({
+	type: aT.DND_TRACK_UP,
+	currIdx: currIdx,
+	destIdx: destIdx
+});
+export const dndTrackDown = (currIdx, destIdx) => ({
+	type: aT.DND_TRACK_DOWN,
+	currIdx: currIdx,
+	destIdx: destIdx
+});
 export const clearTracks = () => ({
 	type: aT.CLEAR_TRACKS 
 });

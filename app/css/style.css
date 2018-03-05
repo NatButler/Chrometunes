@@ -696,6 +696,13 @@ div.log p.alert::before {
 	top: 3px;
 }
 
+div.tab-content {
+	flex: 1;
+	position: relative;
+	border-bottom: 1px solid #ccc;
+	margin: 2px;
+}
+
 .tab-content div ul {
 	position: absolute;
 	top: 0;
@@ -712,13 +719,6 @@ div.log p.alert::before {
 }
 
 /* UP NEXT TAB */
-div.tab-content {
-	flex: 1;
-	position: relative;
-	border-bottom: 1px solid #ccc;
-	margin: 2px;
-}
-
 #up-next-ul li {
 	display: flex;
 	justify-content: space-between;

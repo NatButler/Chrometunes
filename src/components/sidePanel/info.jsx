@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+/*
+ * Make artwork request only if different to previous
+*/
+
 class Info extends Component {
 	constructor() {
 		super();

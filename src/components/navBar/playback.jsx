@@ -75,6 +75,8 @@ class Playback extends Component {
 			dur = playback.track['Duration'];
 		}	
 
+		// Removal of audio elem to only function as chromecast player
+
  		return (
  			<div className="playback">
  				<Audio
@@ -82,6 +84,10 @@ class Playback extends Component {
 					className="audio"
 					src={this.state.src}
 					loop={loop}
+					errorHandler={() => { 
+						// Feedback/warning in app needed
+						console.log('Error loading.'); 
+					}}
 					canPlayHandler={() => { this.state.canPlay = true; }}
 					endedHandler={() => { this.onEnded(); }}
 					playHandler={() => { this.state.status = pS.PLAY; props.onPlaybackChange(pS.PLAY); }}
@@ -141,7 +147,9 @@ class Playback extends Component {
 						onChange={e => {
 							this.audio.volume = e.target.value;
 							player.volumeLevel = +e.target.value;
-  						playerController.setVolumeLevel();
+							if (player.isConnected) {
+	  						playerController.setVolumeLevel();
+							}
 						}}
 					/>
 				</div>
