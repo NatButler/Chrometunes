@@ -13,12 +13,13 @@ class Select extends Component {
 	}
 
 	shouldComponentUpdate(nextProps) {
-		return this.props.genres.length !== nextProps.genres.length || this.props.filter !== nextProps.filter;
+		return this.props.searchGenres.length !== nextProps.searchGenres.length || this.props.genres.length !== nextProps.genres.length || this.props.filter !== nextProps.filter;
 	}
 
 	render() {
 		console.log('Filter.');
-		const { filterType, filter, genres } = this.props;
+		const { filterType, filter, genres, searchGenres } = this.props;
+		let genreList;
 		const clearButton = (filterType !== fT.GENRE) ? null : <Button
 					icon="remove"
 					className="clear-filter"
@@ -26,9 +27,15 @@ class Select extends Component {
 						this.props.onClearFilter();
 					}}
 				/>;
-		const genreList = genres.map( (genre, i) => {
-			return <option key={i} value={genre}>{genre}</option>;
-		});
+		if (searchGenres.length) {
+			genreList = searchGenres.map( (genre, i) => {
+				return <option key={i} value={genre}>{genre}</option>;
+			});
+		} else {
+			genreList = genres.map( (genre, i) => {
+				return <option key={i} value={genre}>{genre}</option>;
+			});
+		}
 
 		return (
 			<div id="select-wrap" className={(filterType !== fT.GENRE) ? '' : 'filter-selected'}>
@@ -61,6 +68,7 @@ class Select extends Component {
 
 const mapStateToProps = state => ({
 	genres: state.library.genres,
+	searchGenres: state.library.searchGenres,
 	filter: state.library.filter,
 	filterType: state.library.filterType,
 	lib: state.library.tracks

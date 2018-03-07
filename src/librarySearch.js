@@ -2,6 +2,7 @@ import * as fT from './constants/filterTypes';
 
 // Make use of reduce for search / sort?
 // Change structure of tracks for faster lookup: normalise data
+// Return updated genre list, specific to search results
 
 
 // SEARCH
@@ -39,6 +40,15 @@ export const getArtistAlbs = (ts, fil, tp) => {
 	});
 
 	return [].concat(...albTrks.sort(alphAsc).map(alb => trkFilter(artistAlbs, alb, fT.ALBUM) ));
+}
+
+export const getGenres = ts => {
+	return ts.reduce( (acc, val) => {
+		if (acc.indexOf(val.Genre) === -1) {
+			acc.push(val.Genre);
+		}
+		return acc;
+	}, []);
 }
 
 // SORT

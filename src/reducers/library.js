@@ -8,6 +8,7 @@ const library = (
 		genres: [],
 		query: '',
 		search: [],
+		searchGenres: [],
 		filter: '',
 		filtered: [],
 		filterType: '',
@@ -32,7 +33,8 @@ const library = (
 			}
 		case 'SEARCH_LIB':
 			return {...library,
-				search: action.tracks
+				search: action.tracks,
+				searchGenres: action.genres
 			}
 		case 'FILTER_LIB':
 			return {...library,
@@ -43,7 +45,8 @@ const library = (
 		case 'CLEAR_SEARCH':
 			return {...library,
 				search: [],
-				query: ''
+				query: '',
+				searchGenres: []
 			}
 		case 'CLEAR_FILTERED':
 			return {...library,

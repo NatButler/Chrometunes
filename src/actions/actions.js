@@ -2,7 +2,7 @@ import { v4 } from 'uuid';
 import { fetchLibrary } from '../libraryFetch';
 import { loadState } from '../localStorage';
 import getIP from '../getIP';
-import { trkFilter, getArtistAlbs } from '../librarySearch';
+import { trkFilter, getArtistAlbs, getGenres } from '../librarySearch';
 import * as aT from '../constants/actionTypes';
 import * as fT from '../constants/filterTypes';
 import * as pM from '../constants/playModes';
@@ -38,7 +38,9 @@ export const query = query => ({
 	type: aT.QUERY, query
 });
 export const searchLib = tracks => ({ 
-	type: aT.SEARCH_LIB, tracks
+	type: aT.SEARCH_LIB, 
+	tracks: tracks,
+	genres: getGenres(tracks)
 });
 export const filterLib = (tracks, filter, type = fT.GENRE) => ({ 
 	type: aT.FILTER_LIB,

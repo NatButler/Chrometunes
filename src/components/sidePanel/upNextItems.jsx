@@ -9,9 +9,12 @@ export const UpNextItem = ({ trk, idx }, { store }) => (
 		draggable 
 		onDragStart={e => { e.dataTransfer.setData('text', idx); }}
 		onDragOver={e => { e.preventDefault(); }}
+		// onDragEnter{() => { console.log('Drag enter.'); }} // Add class to indicate hover
 		onDrop={e => {
+			if (e.stopPropagation) {
+    		e.stopPropagation();
+  		}
 			let currIdx = +e.dataTransfer.getData('text');
-			console.log('Dropping ' + currIdx + ' at ' + idx );
 			if (currIdx > idx) {
 				store.dispatch( dndTrackUp(currIdx, idx) ); 
 			} else {

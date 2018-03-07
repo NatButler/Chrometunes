@@ -1278,13 +1278,15 @@ const query = query => ({
 /* harmony export (immutable) */ __webpack_exports__["w"] = query;
 
 const searchLib = tracks => ({
-	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["g" /* SEARCH_LIB */], tracks
+	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["g" /* SEARCH_LIB */],
+	tracks: tracks,
+	genres: __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4__librarySearch__["a" /* getGenres */])(tracks)
 });
 /* harmony export (immutable) */ __webpack_exports__["o"] = searchLib;
 
 const filterLib = (tracks, filter, type = __WEBPACK_IMPORTED_MODULE_6__constants_filterTypes__["a" /* GENRE */]) => ({
 	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["h" /* FILTER_LIB */],
-	results: type === __WEBPACK_IMPORTED_MODULE_6__constants_filterTypes__["b" /* ARTIST */] ? __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4__librarySearch__["a" /* getArtistAlbs */])(tracks, filter, type) : __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4__librarySearch__["b" /* trkFilter */])(tracks, filter, type),
+	results: type === __WEBPACK_IMPORTED_MODULE_6__constants_filterTypes__["b" /* ARTIST */] ? __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4__librarySearch__["b" /* getArtistAlbs */])(tracks, filter, type) : __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4__librarySearch__["c" /* trkFilter */])(tracks, filter, type),
 	filter: typeof filter === 'object' ? filter[type] : filter,
 	filterType: type
 });
@@ -1309,13 +1311,13 @@ const addTrack = track => ({
 
 const addDisc = (track, tracks) => ({
 	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["l" /* ADD_ALBUM */],
-	album: __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4__librarySearch__["b" /* trkFilter */])(tracks, track, __WEBPACK_IMPORTED_MODULE_6__constants_filterTypes__["c" /* ALBUM */], track.Disc).map(t => t.PId)
+	album: __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4__librarySearch__["c" /* trkFilter */])(tracks, track, __WEBPACK_IMPORTED_MODULE_6__constants_filterTypes__["c" /* ALBUM */], track.Disc).map(t => t.PId)
 });
 /* harmony export (immutable) */ __webpack_exports__["r"] = addDisc;
 
 const addRemDisc = (track, tracks) => ({
 	type: __WEBPACK_IMPORTED_MODULE_5__constants_actionTypes__["m" /* ADD_REM_DISC */],
-	album: __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4__librarySearch__["b" /* trkFilter */])(tracks, track, __WEBPACK_IMPORTED_MODULE_6__constants_filterTypes__["c" /* ALBUM */], track.Disc).map(t => t.PId),
+	album: __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4__librarySearch__["c" /* trkFilter */])(tracks, track, __WEBPACK_IMPORTED_MODULE_6__constants_filterTypes__["c" /* ALBUM */], track.Disc).map(t => t.PId),
 	index: track.Track
 });
 /* harmony export (immutable) */ __webpack_exports__["q"] = addRemDisc;
@@ -5417,8 +5419,8 @@ const LOADING = 'loading';
 
 /***/ }),
 /* 43 */
-/* exports provided: trkSearch, trkFilter, getArtistAlbs, sortLibrary */
-/* exports used: getArtistAlbs, trkFilter, sortLibrary, trkSearch */
+/* exports provided: trkSearch, trkFilter, getArtistAlbs, getGenres, sortLibrary */
+/* exports used: getGenres, getArtistAlbs, trkFilter, sortLibrary, trkSearch */
 /*!******************************!*\
   !*** ./src/librarySearch.js ***!
   \******************************/
@@ -5430,11 +5432,12 @@ const LOADING = 'loading';
 
 // Make use of reduce for search / sort?
 // Change structure of tracks for faster lookup: normalise data
+// Return updated genre list, specific to search results
 
 
 // SEARCH
 const trkSearch = (ts, q) => ts.filter(t => matchTrk(t, q));
-/* harmony export (immutable) */ __webpack_exports__["d"] = trkSearch;
+/* harmony export (immutable) */ __webpack_exports__["e"] = trkSearch;
 
 const matchTrk = (t, q) => matchStr(t[__WEBPACK_IMPORTED_MODULE_0__constants_filterTypes__["b" /* ARTIST */]], q) || matchStr(t[__WEBPACK_IMPORTED_MODULE_0__constants_filterTypes__["c" /* ALBUM */]], q) || matchStr(t[__WEBPACK_IMPORTED_MODULE_0__constants_filterTypes__["d" /* TITLE */]], q);
 const matchStr = (a, b) => a.toLowerCase().indexOf(b.toLowerCase()) != -1;
@@ -5453,7 +5456,7 @@ const trkFilter = (ts, fil, tp, dsc) => {
 			return ts.filter(trk => matchPropVal(trk, fil, tp));
 	}
 };
-/* harmony export (immutable) */ __webpack_exports__["b"] = trkFilter;
+/* harmony export (immutable) */ __webpack_exports__["c"] = trkFilter;
 
 
 const matchProp = (a, b, p) => a[p] === b[p];
@@ -5474,7 +5477,18 @@ const getArtistAlbs = (ts, fil, tp) => {
 
 	return [].concat(...albTrks.sort(alphAsc).map(alb => trkFilter(artistAlbs, alb, __WEBPACK_IMPORTED_MODULE_0__constants_filterTypes__["c" /* ALBUM */])));
 };
-/* harmony export (immutable) */ __webpack_exports__["a"] = getArtistAlbs;
+/* harmony export (immutable) */ __webpack_exports__["b"] = getArtistAlbs;
+
+
+const getGenres = ts => {
+	return ts.reduce((acc, val) => {
+		if (acc.indexOf(val.Genre) === -1) {
+			acc.push(val.Genre);
+		}
+		return acc;
+	}, []);
+};
+/* harmony export (immutable) */ __webpack_exports__["a"] = getGenres;
 
 
 // SORT
@@ -5482,7 +5496,7 @@ const sortLibrary = (tracks, artists, type = __WEBPACK_IMPORTED_MODULE_0__consta
 	const results = artists.map(artist => getArtistAlbs(tracks, artist, type));
 	return [].concat(...results);
 };
-/* harmony export (immutable) */ __webpack_exports__["c"] = sortLibrary;
+/* harmony export (immutable) */ __webpack_exports__["d"] = sortLibrary;
 
 
 const rtkNumAsc = (a, b) => a.Disc - b.Disc || a.Track - b.Track;
@@ -7739,10 +7753,13 @@ const UpNextItem = ({ trk, idx }, { store }) => __WEBPACK_IMPORTED_MODULE_0_reac
 		},
 		onDragOver: e => {
 			e.preventDefault();
-		},
-		onDrop: e => {
+		}
+		// onDragEnter{() => { console.log('Drag enter.'); }} // Add class to indicate hover
+		, onDrop: e => {
+			if (e.stopPropagation) {
+				e.stopPropagation();
+			}
 			let currIdx = +e.dataTransfer.getData('text');
-			console.log('Dropping ' + currIdx + ' at ' + idx);
 			if (currIdx > idx) {
 				store.dispatch(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__actions_actions__["i" /* dndTrackUp */])(currIdx, idx));
 			} else {
@@ -12421,12 +12438,13 @@ class Select extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
 	}
 
 	shouldComponentUpdate(nextProps) {
-		return this.props.genres.length !== nextProps.genres.length || this.props.filter !== nextProps.filter;
+		return this.props.searchGenres.length !== nextProps.searchGenres.length || this.props.genres.length !== nextProps.genres.length || this.props.filter !== nextProps.filter;
 	}
 
 	render() {
 		console.log('Filter.');
-		const { filterType, filter, genres } = this.props;
+		const { filterType, filter, genres, searchGenres } = this.props;
+		let genreList;
 		const clearButton = filterType !== __WEBPACK_IMPORTED_MODULE_4__constants_filterTypes__["a" /* GENRE */] ? null : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__Button__["a" /* default */], {
 			icon: 'remove',
 			className: 'clear-filter',
@@ -12434,13 +12452,23 @@ class Select extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
 				this.props.onClearFilter();
 			}
 		});
-		const genreList = genres.map((genre, i) => {
-			return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-				'option',
-				{ key: i, value: genre },
-				genre
-			);
-		});
+		if (searchGenres.length) {
+			genreList = searchGenres.map((genre, i) => {
+				return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+					'option',
+					{ key: i, value: genre },
+					genre
+				);
+			});
+		} else {
+			genreList = genres.map((genre, i) => {
+				return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+					'option',
+					{ key: i, value: genre },
+					genre
+				);
+			});
+		}
 
 		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 			'div',
@@ -12488,6 +12516,7 @@ class Select extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
 
 const mapStateToProps = state => ({
 	genres: state.library.genres,
+	searchGenres: state.library.searchGenres,
 	filter: state.library.filter,
 	filterType: state.library.filterType,
 	lib: state.library.tracks
@@ -14062,7 +14091,7 @@ class TBody extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
 	componentWillUpdate(nextProps) {
 		this.state.tracks = nextProps.filtered.length ? nextProps.filtered : nextProps.lib;
 		if (nextProps.query) {
-			this.state.tracks = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4__librarySearch__["d" /* trkSearch */])(this.state.tracks, nextProps.query);
+			this.state.tracks = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4__librarySearch__["e" /* trkSearch */])(this.state.tracks, nextProps.query);
 		}
 		this.state.rows = {};
 		this.state.rowsIdx = [];
@@ -14834,7 +14863,7 @@ const parseXML = xml => {
 				}
 			});
 
-			// Add artist if doesn't already exist
+			// Add artist if it doesn't already exist
 			if (trk.Artist !== artist) {
 				artist = trk.Artist;
 				if (!artists.includes(trk.Artist)) {
@@ -14842,7 +14871,7 @@ const parseXML = xml => {
 				}
 			}
 
-			// Add genre if doesn't already exist
+			// Add genre if it doesn't already exist
 			if (trk.Genre !== genre) {
 				genre = trk.Genre;
 				if (!lib.genres.includes(trk.Genre)) {
@@ -14857,7 +14886,7 @@ const parseXML = xml => {
 
 		// Sort artists alphabetically then sort library by artists
 		artists.sort();
-		lib.tracks = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__librarySearch__["c" /* sortLibrary */])(lib.tracks, artists);
+		lib.tracks = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__librarySearch__["d" /* sortLibrary */])(lib.tracks, artists);
 
 		resolve(lib);
 	});
@@ -14968,6 +14997,7 @@ const library = (library = {
 	genres: [],
 	query: '',
 	search: [],
+	searchGenres: [],
 	filter: '',
 	filtered: [],
 	filterType: '',
@@ -14992,7 +15022,8 @@ const library = (library = {
 			});
 		case 'SEARCH_LIB':
 			return _extends({}, library, {
-				search: action.tracks
+				search: action.tracks,
+				searchGenres: action.genres
 			});
 		case 'FILTER_LIB':
 			return _extends({}, library, {
@@ -15003,7 +15034,8 @@ const library = (library = {
 		case 'CLEAR_SEARCH':
 			return _extends({}, library, {
 				search: [],
-				query: ''
+				query: '',
+				searchGenres: []
 			});
 		case 'CLEAR_FILTERED':
 			return _extends({}, library, {
