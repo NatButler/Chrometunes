@@ -27,7 +27,8 @@ class Input extends Component {
 							this.handleSearch(e.target.value);
 						}
 						if (e.target.value.length > 2) {
-							// console.log(this.clearButton, this.clearButton.style);
+							// Needs visibility switching funtionality (below doesn't work)
+							// console.log(this.clearButton);
 							// this.clearButton.style.visibility = 'visible';
 						} else {
 							// this.clearButton.style.visibility = 'hidden';
@@ -36,14 +37,13 @@ class Input extends Component {
 			  />
 				<Button
 					ref={node => { this.clearButton = node; }}
-					icon="remove"
+					icon="remove-sign"
 					// disabled={(this.input) ? (this.input.value.length < 2) ? true : false : true}
 					className="clear-search"
 					handler={() => {
 						this.props.onClearSearch();
-						// this.clearButton.value = '';
+						$('#searchInput').val('');
 						// this.clearButton.style.visibility = 'hidden';
-						// console.log(this.clearButton.style);
 					}}
 				/>
 			</div>

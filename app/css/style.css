@@ -257,7 +257,7 @@ nav input:focus {
 	right: 7px;
 	background-color: inherit;
 	border: 0;
-	visibility: hidden;
+	/* visibility: hidden; */
 }
 
 .search-wrap button.clear-search[disabled] {
@@ -617,6 +617,7 @@ div.log p.alert::before {
 	background-color: #eeb211;
 	border: 0;
 	border-right: 1px solid #d6a00f;
+	margin-right: 6px;
 }
 
 #current-track button[disabled], #current-track button:hover {
@@ -721,7 +722,7 @@ div.tab-content {
 /* UP NEXT TAB */
 #up-next-ul li {
 	display: flex;
-	justify-content: space-between;
+	/*justify-content: space-between;*/
 	list-style-type: none;
 	margin-bottom: 2px;
 	background: #f7f7f7;
@@ -757,10 +758,11 @@ div.tab-content {
 }
 
 .up-next-item {
-	width: 90%;
+	/*width: 90%;*/
 	overflow: hidden;
 	padding-top: 1px;
 	margin-right: 6px;
+	flex: 1;
 }
 
 li button.playback:focus, button.close:focus {
@@ -777,7 +779,7 @@ button.close:hover {
 	border-right: 1px solid #ccc;
 	background: #e3e3e3;
 	padding: 4px 4px 4px 3px;
-	margin-right: 4px;
+	margin-right: 6px;
 }
 
 .up-next-item h5, .up-next-item h6, .divider {
@@ -790,7 +792,7 @@ button.close:hover {
 
 .up-next-item h5 {
 	white-space: nowrap;
-	width: 268px;
+	/*width: 268px;*/
 	display: inline-block;
 	flex: 1;
 	padding-right: 7px;

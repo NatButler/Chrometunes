@@ -3,7 +3,9 @@ import { PropTypes } from 'prop-types';
 
 class Button extends Component {
 	shouldComponentUpdate(nextProps) {
-		return this.props.disabled !== nextProps.disabled || this.props.icon !== nextProps.icon || this.props.className !== nextProps.className;
+		return 	this.props.disabled !== nextProps.disabled || 
+						this.props.icon !== nextProps.icon || 
+						this.props.className !== nextProps.className;
 	}
 
 	render() {

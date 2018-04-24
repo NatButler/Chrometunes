@@ -59,14 +59,19 @@ class Playback extends Component {
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
-		return nextProps.playback.track !== undefined || this.props.playback.track !== nextProps.playback.track || this.state.mute !== nextState.mute || this.props.playback.mode !== nextProps.playback.mode;
+		return 	nextProps.playback.track !== undefined || 
+						this.props.playback.track !== nextProps.playback.track || 
+						this.state.mute !== nextState.mute || 
+						this.props.playback.mode !== nextProps.playback.mode;
 	}
 
 	render() {
 		console.log('Playback.');
 		const props = this.props;
 		const { playback, lib, index, upnext } = this.props;
-		const loop = playback.mode === pM.REPEAT1 || playback.mode === pM.REPEAT && !upnext.length || playback.mode === pM.SHUFFLE && !upnext.length;
+		const loop = playback.mode === pM.REPEAT1 || 
+					playback.mode === pM.REPEAT && !upnext.length || 
+					playback.mode === pM.SHUFFLE && !upnext.length;
 		if (loop) {
 			// setCastToRepeat1
 		}
@@ -116,7 +121,12 @@ class Playback extends Component {
 						handler={() => {
 							const props = this.props;
 							if (playback.mode !== pM.REPEAT1) { 
-								props.onNextTrack(lib, index, props.playback.mode, props.upnext, props.playback.track['PId']);
+								props.onNextTrack(
+									lib, index, 
+									props.playback.mode, 
+									props.upnext, 
+									props.playback.track['PId']
+								);
 							}
 							else { this.audio.load(); }
 						}}
@@ -195,10 +205,19 @@ class Playback extends Component {
 	onEnded() {
 		const props = this.props;
 		if (props.upnext.length > 0) {
-			props.onNextTrack(props.lib, props.index, props.playback.mode, props.upnext, props.playback.track['PId']);
+			props.onNextTrack(
+				props.lib, props.index, 
+				props.playback.mode, 
+				props.upnext, 
+				props.playback.track['PId']
+			);
 		}
 		else { 
 			props.onPlaybackChange(pS.IDLE);
+			// Reset progress bar
+			this.progressBar.style.width = '0%';
+			this.bufferBar.style.width = '0%';
+			this.state.src = '';
 		}
 	}
 

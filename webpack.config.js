@@ -20,10 +20,6 @@ module.exports = env => ({
 				exclude: /(node_modules|browser_components)/,
 				loader: 'babel-loader'
 			}
-			// {
-			// 	test: /\.css$/,
-			// 	use: ['style-loader', 'css-loader']
-			// }
 		]
 	}
-})
+});

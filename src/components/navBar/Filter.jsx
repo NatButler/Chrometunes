@@ -13,7 +13,9 @@ class Select extends Component {
 	}
 
 	shouldComponentUpdate(nextProps) {
-		return this.props.searchGenres.length !== nextProps.searchGenres.length || this.props.genres.length !== nextProps.genres.length || this.props.filter !== nextProps.filter;
+		return 	this.props.searchGenres.length !== nextProps.searchGenres.length || 
+						this.props.genres.length !== nextProps.genres.length || 
+						this.props.filter !== nextProps.filter;
 	}
 
 	render() {
@@ -51,7 +53,9 @@ class Select extends Component {
 					}}
 					value={filterType !== fT.GENRE ? filterType : filter}
 				>
-					{(filterType !== '' && filterType !== fT.GENRE) ? <option value={filterType} disabled>{'[ ' + filterType + ' ]'}</option> : null}
+					{(filterType !== '' && filterType !== fT.GENRE) ? 
+					<option value={filterType} disabled>{'[ ' + filterType + ' ]'}</option> : 
+					null}
 					<option value="">[ FILTER ]</option>
 					{genreList}
 				</select>

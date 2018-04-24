@@ -2,7 +2,6 @@ import * as fT from './constants/filterTypes';
 
 // Make use of reduce for search / sort?
 // Change structure of tracks for faster lookup: normalise data
-// Return updated genre list, specific to search results
 
 
 // SEARCH

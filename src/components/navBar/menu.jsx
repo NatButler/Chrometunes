@@ -8,7 +8,12 @@ import * as playmode from '../../constants/playModes';
 class Menu extends Component {
 	shouldComponentUpdate(nextProps) {
 		const props = this.props;
-		return props.playMode !== nextProps.playMode || !props.upnext.length && nextProps.upnext.length || props.upnext.length && !nextProps.upnext.length || !props.isPlaylists && nextProps.isPlaylists || props.isPlaylists && !nextProps.isPlaylists || props.infobar !== nextProps.infobar;
+		return 	props.playMode !== nextProps.playMode || 
+						!props.upnext.length && nextProps.upnext.length || 
+						props.upnext.length && !nextProps.upnext.length || 
+						!props.isPlaylists && nextProps.isPlaylists || 
+						props.isPlaylists && !nextProps.isPlaylists || 
+						props.infobar !== nextProps.infobar;
 	}
 
 	render() {
@@ -63,7 +68,9 @@ class Menu extends Component {
 					  		title="Repeat"
 					  		status={props.playMode === playmode.REPEAT ? 'selected' : ''}
 					  		handler={e => {
-					  			props.playMode === playmode.REPEAT ? props.changePlaymode(playmode.NORMAL) : props.changePlaymode(playmode.REPEAT);
+					  			props.playMode === playmode.REPEAT ? 
+					  			props.changePlaymode(playmode.NORMAL) : 
+					  			props.changePlaymode(playmode.REPEAT);
 			  					e.preventDefault(); 
 					  		}}
 					  	/>
@@ -71,7 +78,9 @@ class Menu extends Component {
 					  		title="Repeat 1"
 					  		status={props.playMode === playmode.REPEAT1 ? 'selected' : ''}
 					  		handler={e => { 
-					  			props.playMode === playmode.REPEAT1 ? props.changePlaymode(playmode.NORMAL) : props.changePlaymode(playmode.REPEAT1);
+					  			props.playMode === playmode.REPEAT1 ? 
+					  			props.changePlaymode(playmode.NORMAL) : 
+					  			props.changePlaymode(playmode.REPEAT1);
 			  					e.preventDefault();
 					  		}}
 					  	/>
@@ -79,7 +88,9 @@ class Menu extends Component {
 					  		title="Shuffle"
 					  		status={props.playMode === playmode.SHUFFLE ? 'selected' : ''}
 					  		handler={e => { 
-					  			props.playMode === playmode.SHUFFLE ? props.changePlaymode(playmode.NORMAL) : props.changePlaymode(playmode.SHUFFLE);
+					  			props.playMode === playmode.SHUFFLE ? 
+					  			props.changePlaymode(playmode.NORMAL) : 
+					  			props.changePlaymode(playmode.SHUFFLE);
 			  					e.preventDefault(); 
 					  		}}
 					  	/>
@@ -129,4 +140,8 @@ const mapStateToProps = state => ({
 	infobar: state.app.infobarPos
 });
 
-export default connect(mapStateToProps, {onImportLib: loadLibrary, onSaveList: saveList, changePlaymode: setPlaymode, setInfobarPos: setInfobarPos})(Menu);
+export default connect(mapStateToProps, {
+	onImportLib: loadLibrary, 
+	onSaveList: saveList, 
+	changePlaymode: setPlaymode, 
+	setInfobarPos: setInfobarPos})(Menu);

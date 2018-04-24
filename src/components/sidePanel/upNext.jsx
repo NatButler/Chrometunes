@@ -4,10 +4,12 @@ import { UpNextItem } from './upNextItems';
 import Controls from './controls';
 
 class UpNext extends Component {
-	// Commented out because doesn't allow for drag n drop rerender
+	// Commented out as doesn't allow for drag n drop rerender
 	// shouldComponentUpdate(nextProps) {
 	// 	const { upnext } = this.props;
-	// 	return upnext[0] !== nextProps.upnext[0] || upnext[upnext.length-1] !== nextProps.upnext[nextProps.upnext.length-1] || upnext.length !== nextProps.upnext.length;
+	// 	return 	upnext[0] !== nextProps.upnext[0] || 
+	// 					upnext[upnext.length-1] !== nextProps.upnext[nextProps.upnext.length-1] || 
+	// 					upnext.length !== nextProps.upnext.length;
 	// }
 
 	render() {
