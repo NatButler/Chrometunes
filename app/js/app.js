@@ -11748,7 +11748,7 @@ class Playback extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
 				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_8__Button__["a" /* default */], {
 					className: 'play',
 					icon: playback.status === __WEBPACK_IMPORTED_MODULE_4__constants_playStates__["b" /* PLAY */] ? __WEBPACK_IMPORTED_MODULE_4__constants_playStates__["c" /* PAUSE */] : __WEBPACK_IMPORTED_MODULE_4__constants_playStates__["b" /* PLAY */],
-					disabled: !this.state.canPlay,
+					disabled: !this.state.canPlay || !playback.track,
 					handler: () => {
 						playback.status !== __WEBPACK_IMPORTED_MODULE_4__constants_playStates__["b" /* PLAY */] ? this.audio.play() : this.audio.pause();
 						__WEBPACK_IMPORTED_MODULE_9__cast__["b" /* playerController */].playOrPause();

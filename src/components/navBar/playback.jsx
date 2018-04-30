@@ -134,7 +134,7 @@ class Playback extends Component {
 					<Button
 						className="play"
 						icon={playback.status === pS.PLAY ? pS.PAUSE : pS.PLAY}
-						disabled={!this.state.canPlay}
+						disabled={!this.state.canPlay || !playback.track}
 						handler={() => {
 							playback.status !== pS.PLAY ? this.audio.play() : this.audio.pause();
 							playerController.playOrPause();

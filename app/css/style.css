@@ -534,16 +534,15 @@ nav .dropdown-menu .divider {
 	LOG
 ******/
 div.log {
-	height: 153px;
+	/*height: 153px;*/
 	background-color: inherit;
 	position: relative;
-	flex-direction: row;
-	justify-content: center;
 	border-top: 1px solid #323232;
 	display: none;
 }
 
 div.log .log-text {
+	height: 145px;
 	flex-basis: 99.5%;
 	overflow-y: scroll;
 	resize: none;
