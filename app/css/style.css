@@ -253,11 +253,11 @@ nav input:focus {
 
 .search-wrap button.clear-search {
 	position: absolute;
-	top: 1px;
-	right: 1px;
+	top: 2px;
+	right: 3px;
 	background-color: #f7f7f7;
-	border: 0;
-	padding: 8px 10px;
+	border: 1px solid #ccc;
+	padding: 6px 10px;
 	/* visibility: hidden; */
 }
 
