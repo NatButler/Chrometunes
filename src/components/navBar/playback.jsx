@@ -43,7 +43,6 @@ class Playback extends Component {
 				this.volume.value = player.volumeLevel;
 			}
 		);
-
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -73,7 +72,7 @@ class Playback extends Component {
 					playback.mode === pM.REPEAT && !upnext.length || 
 					playback.mode === pM.SHUFFLE && !upnext.length;
 		if (loop) {
-			// setCastToRepeat1
+			// setCastToRepeat1 / reload track
 		}
 		let dur;
 		if (playback.track) {
@@ -95,14 +94,20 @@ class Playback extends Component {
 					}}
 					canPlayHandler={() => { this.state.canPlay = true; }}
 					endedHandler={() => { this.onEnded(); }}
-					playHandler={() => { this.state.status = pS.PLAY; props.onPlaybackChange(pS.PLAY); }}
-					pauseHandler={() => { this.state.status = pS.PAUSE; props.onPlaybackChange(pS.PAUSE); }}
+					playHandler={() => { 
+						this.state.status = pS.PLAY; props.onPlaybackChange(pS.PLAY); 
+					}}
+					pauseHandler={() => { 
+						this.state.status = pS.PAUSE; props.onPlaybackChange(pS.PAUSE); 
+					}}
 					progressHandler={() => {
 						let prog = this.calcPos(this.audio.currentTime, this.audio.duration, 1000);
 						this.progressBar.style.width = prog + '%';
 						
 						if (this.audio.buffered.length) {
-							let buffered = this.calcPos(this.audio.buffered.end(this.audio.buffered.length -1), this.audio.duration, 10);
+							let buffered = this.calcPos(
+								this.audio.buffered.end(this.audio.buffered.length -1), this.audio.duration, 10
+							);
 							this.bufferBar.style.width = buffered + '%';	
 						}
 

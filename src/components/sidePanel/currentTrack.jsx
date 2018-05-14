@@ -15,7 +15,7 @@ class NowPlaying extends Component {
 		const { track, status } = this.props.playback;
 		const audio = document.getElementById('player');
 		const details = (track) ? <Item trk={track} /> : null;
-		const loading = (status === pS.LOADING) ? <img className="loading" src="img/loading-small.gif" /> : null;
+		const loading = (status === pS.LOADING) ? <img className="loading" src="img/loading.gif" /> : null;
 
 		return (
 			<div id="current-track" className={(track) ? '' : 'not-loaded'}>

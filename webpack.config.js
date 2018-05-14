@@ -7,7 +7,6 @@ module.exports = env => ({
 		path: resolve(__dirname, 'app/js'),
 		pathinfo: !env.prod
 	},
-	// devtool: env.prod ? 'source-map' : 'eval',
 	bail: env.prod,
 	resolve: {
     extensions: ['.js', '.jsx']

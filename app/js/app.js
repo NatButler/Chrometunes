@@ -11677,7 +11677,7 @@ class Playback extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
 		const { playback, lib, index, upnext } = this.props;
 		const loop = playback.mode === __WEBPACK_IMPORTED_MODULE_5__constants_playModes__["d" /* REPEAT1 */] || playback.mode === __WEBPACK_IMPORTED_MODULE_5__constants_playModes__["a" /* REPEAT */] && !upnext.length || playback.mode === __WEBPACK_IMPORTED_MODULE_5__constants_playModes__["c" /* SHUFFLE */] && !upnext.length;
 		if (loop) {
-			// setCastToRepeat1
+			// setCastToRepeat1 / reload track
 		}
 		let dur;
 		if (playback.track) {
@@ -12273,7 +12273,7 @@ class NowPlaying extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
 		const { track, status } = this.props.playback;
 		const audio = document.getElementById('player');
 		const details = track ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__upNextItems__["b" /* Item */], { trk: track }) : null;
-		const loading = status === __WEBPACK_IMPORTED_MODULE_4__constants_playStates__["a" /* LOADING */] ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('img', { className: 'loading', src: 'img/loading-small.gif' }) : null;
+		const loading = status === __WEBPACK_IMPORTED_MODULE_4__constants_playStates__["a" /* LOADING */] ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('img', { className: 'loading', src: 'img/loading.gif' }) : null;
 
 		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 			'div',
